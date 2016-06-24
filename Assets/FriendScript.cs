@@ -75,7 +75,7 @@ public class FriendScript : MonoBehaviour {
             {
                 // Update Achievement Progress
                 ControllerScript.SaveData("FriendsRemoved", "1", DataType.Long);
-                ControllerScript.AchievementPanel.GetComponent<AchievementScript>().UpdateAchievementsList();
+                ControllerScript.UpdateAchievements();
             }
             catch (Exception ex)
             {
