@@ -131,8 +131,9 @@ public class Member : MonoBehaviour
             {
                 // Update Achievement Progress
                 Controller.SaveData("FriendsRemoved", "1", DataType.Long);
-                //Controller.NextView();
-            }
+				Controller.AchievementPanel.GetComponent<Achievement>().UpdateAchievementsList();
+				//Controller.NextView();
+			}
             catch (Exception ex)
             {
                 StatusText.text = "SaveData Fail. " + ex.Message;

@@ -39,7 +39,7 @@ public class Achievement : MonoBehaviour
 						DataType = DataType.Long,
 						Value = "1",
 						Key = "GroupsJoined",
-						ComparisonType = ComparisonType.Equals
+						ComparisonType = ComparisonType.GreaterOrEqual
 					}
 				}
 			});
@@ -54,7 +54,7 @@ public class Achievement : MonoBehaviour
 						DataType = DataType.Long,
 						Value = "2",
 						Key = "FriendsAdded",
-						ComparisonType = ComparisonType.Equals
+						ComparisonType = ComparisonType.GreaterOrEqual
 					}
 				}
 			});
@@ -69,7 +69,7 @@ public class Achievement : MonoBehaviour
 						DataType = DataType.Long,
 						Value = "1",
 						Key = "FriendsRemoved",
-						ComparisonType = ComparisonType.Equals
+						ComparisonType = ComparisonType.GreaterOrEqual
 					}
 				}
 			});

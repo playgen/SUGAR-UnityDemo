@@ -108,12 +108,13 @@ public class Group : MonoBehaviour
 				RequestorId = Controller.UserId.Value
 			});
 			StatusText.text = "Successfully Left the group!";
-			Controller.GroupId = null;
-			UpdateGroupsList();
 			try
 			{
 				// Update Achievement Progress
 				Controller.SaveData("GroupsLeft", "1", DataType.Long);
+				Controller.SaveGroupData("MembersLeft", "1", DataType.Long);
+				Controller.GroupId = null;
+				UpdateGroupsList();
 				Controller.UpdateAchievements();
 			}
 			catch (Exception ex)
@@ -144,6 +145,7 @@ public class Group : MonoBehaviour
 			{
 				// Update Achievement Progress
 				Controller.SaveData("GroupsJoined", "1", DataType.Long);
+				Controller.SaveGroupData("MembersJoined", "1", DataType.Long);
 				Controller.UpdateAchievements();
 			}
 			catch (Exception ex)

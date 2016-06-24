@@ -10,6 +10,7 @@ using UnityEngine.UI;
 public class Controller : MonoBehaviour
 {
 	private static UserSaveDataClientProxy _saveDataProxy;
+	private static GroupSaveDataClientProxy _groupSaveDataProxy;
 	private static GameObject[] _views;
 	private static int _viewIndex;
 	private static Achievement _achievementPanel;
@@ -34,6 +35,7 @@ public class Controller : MonoBehaviour
 	{
 		ProxyFactory = new ClientProxyFactory(BaseUri);
 		_saveDataProxy = ProxyFactory.GetUserSaveDataClientProxy;
+		_groupSaveDataProxy = ProxyFactory.GetGroupSaveDataClientProxy;
 		_gameProxy = ProxyFactory.GetGameClientProxy;
 		_views = new GameObject[Views.transform.childCount];
 		_viewIndex = 0;
@@ -143,6 +145,21 @@ public class Controller : MonoBehaviour
 			Value = value,
 			Key = key
 		});
+	}
+
+	public static void SaveGroupData(string key, string value, DataType dataType)
+	{
+		if (GroupId.HasValue)
+		{
+			var saveDataResponse = _groupSaveDataProxy.Add(new SaveDataRequest()
+			{
+				GameId = GameId,
+				ActorId = GroupId.Value,
+				DataType = dataType,
+				Value = value,
+				Key = key
+			});
+		}
 	}
 
 	public static void NextView(bool first = false)
