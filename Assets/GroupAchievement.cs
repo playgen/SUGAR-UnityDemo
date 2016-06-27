@@ -3,22 +3,22 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using PlayGen.SGA.ClientAPI;
-using PlayGen.SGA.Contracts;
+using PlayGen.SUGAR.Client;
+using PlayGen.SUGAR.Contracts;
 using UnityEngine.UI;
 
 public class GroupAchievement : MonoBehaviour
 {
-	private GroupAchievementClientProxy _groupAchievementProxy;
+	private GroupAchievementClient _groupAchievement;
 	public GameObject AchievementList;
 	public GameObject AchivementItemPrefab;
 
 	// Use this for initialization
 	void OnEnable()
 	{
-		if (_groupAchievementProxy == null)
+		if (_groupAchievement == null)
 		{
-			_groupAchievementProxy = Controller.ProxyFactory.GetGroupAchievementClientProxy;
+			_groupAchievement = Controller.Factory.GetGroupAchievementClient;
 		}
 		UpdateAchievementsList();
 	}
@@ -42,7 +42,7 @@ public class GroupAchievement : MonoBehaviour
 		}
 		try
 		{
-			var achievements = _groupAchievementProxy.GetProgress(groupId, Controller.GameId);
+			var achievements = _groupAchievement.GetProgress(groupId, Controller.GameId);
 			int counter = 0;
 			var listRect = AchievementList.GetComponent<RectTransform>().rect;
 			foreach (var achievement in achievements)
@@ -69,14 +69,14 @@ public class GroupAchievement : MonoBehaviour
 
 	public bool SetUpGroupAchievements()
 	{
-		if (_groupAchievementProxy == null)
+		if (_groupAchievement == null)
 		{
-			_groupAchievementProxy = Controller.ProxyFactory.GetGroupAchievementClientProxy;
+			_groupAchievement = Controller.Factory.GetGroupAchievementClient;
 		}
 		var gameId = Controller.GameId;
 		try
 		{
-			_groupAchievementProxy.Create(new AchievementRequest()
+			_groupAchievement.Create(new AchievementRequest()
 			{
 				GameId = gameId,
 				Name = "Gain 5 Members!",
@@ -84,14 +84,14 @@ public class GroupAchievement : MonoBehaviour
 				{
 					new AchievementCriteria()
 					{
-						DataType = DataType.Long,
+						DataType = GameDataValueType.Long,
 						Value = "1",
 						Key = "MembersJoined",
 						ComparisonType = ComparisonType.GreaterOrEqual
 					}
 				}
 			});
-			_groupAchievementProxy.Create(new AchievementRequest()
+			_groupAchievement.Create(new AchievementRequest()
 			{
 				GameId = gameId,
 				Name = "Lose 2 Members!",
@@ -99,7 +99,7 @@ public class GroupAchievement : MonoBehaviour
 				{
 					new AchievementCriteria()
 					{
-						DataType = DataType.Long,
+						DataType = GameDataValueType.Long,
 						Value = "2",
 						Key = "MembersLeft",
 						ComparisonType = ComparisonType.GreaterOrEqual

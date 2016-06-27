@@ -3,12 +3,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
-using PlayGen.SGA.ClientAPI;
-using PlayGen.SGA.Contracts;
+using PlayGen.SUGAR.Client;
+using PlayGen.SUGAR.Contracts;
 
 public class Login : MonoBehaviour
 {
-	private AccountClientProxy _accountProxy;
+	private AccountClient _account;
 	public InputField UsernameInput;
 	public InputField PasswordInput;
 	public Text StatusText;
@@ -17,7 +17,7 @@ public class Login : MonoBehaviour
 
 	void Start ()
 	{
-		_accountProxy = Controller.ProxyFactory.GetAccountClientProxy;
+		_account = Controller.Factory.GetAccountClient;
 		LoginButton.onClick.AddListener(LoginUser);
 		RegisterButton.onClick.AddListener(Register);
 	}
@@ -28,7 +28,7 @@ public class Login : MonoBehaviour
 		{
 			try
 			{
-				var accountResponse = _accountProxy.Register(CreateAccountRequest());
+				var accountResponse = _account.Register(CreateAccountRequest());
 				StatusText.text = "Successfully Registered. ID:" + accountResponse.User.Id + ". Please Login.";
 				Controller.UserId = accountResponse.User.Id;
 			}
@@ -46,7 +46,7 @@ public class Login : MonoBehaviour
 			try
 			{
 				var accountRequest = CreateAccountRequest();
-				var accountResponse = _accountProxy.Login(accountRequest);
+				var accountResponse = _account.Login(accountRequest);
 				Controller.UserId = accountResponse.User.Id;
 				Controller.LoginToken = accountResponse.Token;
 				StatusText.text = "Login Successful!";

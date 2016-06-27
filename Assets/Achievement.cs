@@ -2,33 +2,33 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using PlayGen.SGA.ClientAPI;
-using PlayGen.SGA.Contracts;
+using PlayGen.SUGAR.Client;
+using PlayGen.SUGAR.Contracts;
 using UnityEngine.UI;
 
 public class Achievement : MonoBehaviour
 {
-	private UserAchievementClientProxy _userAchievementProxy;
+	private UserAchievementClient _userAchievement;
 	public GameObject AchievementList;
 	public GameObject AchivementItemPrefab;
 
 	void OnEnable () {
-		if (_userAchievementProxy == null) {
-			_userAchievementProxy = Controller.ProxyFactory.GetUserAchievementClientProxy;
+		if (_userAchievement == null) {
+			_userAchievement = Controller.Factory.GetUserAchievementClient;
 		}
 		UpdateAchievementsList();
 	}
 
 	public bool SetUpAchievements()
 	{
-		if (_userAchievementProxy == null)
+		if (_userAchievement == null)
 		{
-			_userAchievementProxy = Controller.ProxyFactory.GetUserAchievementClientProxy;
+			_userAchievement = Controller.Factory.GetUserAchievementClient;
 		}
 		var gameId = Controller.GameId;
 		try
 		{
-			_userAchievementProxy.Create(new AchievementRequest()
+			_userAchievement.Create(new AchievementRequest()
 			{
 				GameId = gameId,
 				Name = "Join a Group!",
@@ -36,14 +36,14 @@ public class Achievement : MonoBehaviour
 				{
 					new AchievementCriteria()
 					{
-						DataType = DataType.Long,
+						DataType = GameDataValueType.Long,
 						Value = "1",
 						Key = "GroupsJoined",
 						ComparisonType = ComparisonType.GreaterOrEqual
 					}
 				}
 			});
-			_userAchievementProxy.Create(new AchievementRequest()
+			_userAchievement.Create(new AchievementRequest()
 			{
 				GameId = gameId,
 				Name = "Add 2 Friends!",
@@ -51,14 +51,14 @@ public class Achievement : MonoBehaviour
 				{
 					new AchievementCriteria()
 					{
-						DataType = DataType.Long,
+						DataType = GameDataValueType.Long,
 						Value = "2",
 						Key = "FriendsAdded",
 						ComparisonType = ComparisonType.GreaterOrEqual
 					}
 				}
 			});
-			_userAchievementProxy.Create(new AchievementRequest()
+			_userAchievement.Create(new AchievementRequest()
 			{
 				GameId = gameId,
 				Name = "Remove a Friend!",
@@ -66,7 +66,7 @@ public class Achievement : MonoBehaviour
 				{
 					new AchievementCriteria()
 					{
-						DataType = DataType.Long,
+						DataType = GameDataValueType.Long,
 						Value = "1",
 						Key = "FriendsRemoved",
 						ComparisonType = ComparisonType.GreaterOrEqual
@@ -91,7 +91,7 @@ public class Achievement : MonoBehaviour
 		}
 		try
 		{
-			var achievements = _userAchievementProxy.GetProgress(Controller.UserId.Value, Controller.GameId);
+			var achievements = _userAchievement.GetProgress(Controller.UserId.Value, Controller.GameId);
 			int counter = 0;
 			var listRect = AchievementList.GetComponent<RectTransform>().rect;
 			foreach (var achievement in achievements)

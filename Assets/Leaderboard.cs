@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
-using PlayGen.SGA.ClientAPI;
-using PlayGen.SGA.Contracts;
+using PlayGen.SUGAR.Client;
+using PlayGen.SUGAR.Contracts;
 using UnityEngine.UI;
 
 public class Leaderboard : MonoBehaviour {
 
 	//private IEnumerable<ActorResponse> _userGroups;   LEADERS
-	//private GroupMemberClientProxy _groupMemberProxy; LEADERBOARD PROXY
+	//private GroupMemberClient _groupMember; LEADERBOARD PROXY
 	public GameObject LeaderItemPrefab;
 	public GameObject LeaderboardObject;
 	public Text StatusText;

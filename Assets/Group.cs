@@ -4,13 +4,13 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using PlayGen.SGA.ClientAPI;
-using PlayGen.SGA.Contracts;
+using PlayGen.SUGAR.Client;
+using PlayGen.SUGAR.Contracts;
 
 public class Group : MonoBehaviour
 {
 	private IEnumerable<ActorResponse> _userGroups;
-	private GroupMemberClientProxy _groupMemberProxy;
+	private GroupMemberClient _groupMember;
 	public GameObject GroupItemPrefab;
 	public GameObject GroupList;
 	public Text StatusText;
@@ -18,7 +18,7 @@ public class Group : MonoBehaviour
 	// Use this for initialization
 	void Awake ()
 	{
-		_groupMemberProxy = Controller.ProxyFactory.GetGroupMemberClientProxy;
+		_groupMember = Controller.Factory.GetGroupMemberClient;
 	}
 
 	void OnEnable()
@@ -44,7 +44,7 @@ public class Group : MonoBehaviour
 	{
 		try
 		{
-			_userGroups = _groupMemberProxy.GetUserGroups(Controller.UserId.Value);
+			_userGroups = _groupMember.GetUserGroups(Controller.UserId.Value);
 			if (_userGroups.Any())
 			{
 				StatusText.text = "User already in a group!";
@@ -61,8 +61,8 @@ public class Group : MonoBehaviour
 	void UpdateGroups()
 	{
 		ClearList();
-		var groupProxy = Controller.ProxyFactory.GetGroupClientProxy;
-		var groups = groupProxy.Get();
+		var groupclient = Controller.Factory.GetGroupClient;
+		var groups = groupclient.Get();
 		int counter = 0;
 		var userGroupIds = new HashSet<int>(_userGroups.Select(x => x.Id));
 		var listRect = GroupList.GetComponent<RectTransform>().rect;
@@ -102,7 +102,7 @@ public class Group : MonoBehaviour
 	{
 		try
 		{
-			_groupMemberProxy.UpdateMember(new RelationshipStatusUpdate()
+			_groupMember.UpdateMember(new RelationshipStatusUpdate()
 			{
 				AcceptorId = groupId,
 				RequestorId = Controller.UserId.Value
@@ -111,8 +111,8 @@ public class Group : MonoBehaviour
 			try
 			{
 				// Update Achievement Progress
-				Controller.SaveData("GroupsLeft", "1", DataType.Long);
-				Controller.SaveGroupData("MembersLeft", "1", DataType.Long);
+				Controller.SaveData("GroupsLeft", "1", GameDataValueType.Long);
+				Controller.SaveGroupData("MembersLeft", "1", GameDataValueType.Long);
 				Controller.GroupId = null;
 				UpdateGroupsList();
 				Controller.UpdateAchievements();
@@ -132,7 +132,7 @@ public class Group : MonoBehaviour
 	{
 		try
 		{
-			var relationshipResponse = _groupMemberProxy.CreateMemberRequest(new RelationshipRequest()
+			var relationshipResponse = _groupMember.CreateMemberRequest(new RelationshipRequest()
 			{
 				AcceptorId = groupId,
 				RequestorId = Controller.UserId.Value,
@@ -144,8 +144,8 @@ public class Group : MonoBehaviour
 			try
 			{
 				// Update Achievement Progress
-				Controller.SaveData("GroupsJoined", "1", DataType.Long);
-				Controller.SaveGroupData("MembersJoined", "1", DataType.Long);
+				Controller.SaveData("GroupsJoined", "1", GameDataValueType.Long);
+				Controller.SaveGroupData("MembersJoined", "1", GameDataValueType.Long);
 				Controller.UpdateAchievements();
 			}
 			catch (Exception ex)

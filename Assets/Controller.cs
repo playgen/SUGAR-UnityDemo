@@ -3,21 +3,21 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using PlayGen.SGA.ClientAPI;
-using PlayGen.SGA.Contracts;
+using PlayGen.SUGAR.Client;
+using PlayGen.SUGAR.Contracts;
 using UnityEngine.UI;
 
 public class Controller : MonoBehaviour
 {
-	private static UserSaveDataClientProxy _saveDataProxy;
-	private static GroupSaveDataClientProxy _groupSaveDataProxy;
+	private static UserDataClient _saveData;
+	private static GroupSaveDataClient _groupSaveData;
 	private static GameObject[] _views;
 	private static int _viewIndex;
 	private static Achievement _achievementPanel;
 	private static GroupAchievement _groupAchievementPanel;
-	private GameClientProxy _gameProxy;
+	private GameClient _game;
 
-	public static ClientProxyFactory ProxyFactory;
+	public static ClientProxyFactory Factory;
 	public static int? UserId { get; set; }
 	public static int? GroupId { get; set; }
 	public static string LoginToken { get; set; }
@@ -33,10 +33,10 @@ public class Controller : MonoBehaviour
 
 	void Awake()
 	{
-		ProxyFactory = new ClientProxyFactory(BaseUri);
-		_saveDataProxy = ProxyFactory.GetUserSaveDataClientProxy;
-		_groupSaveDataProxy = ProxyFactory.GetGroupSaveDataClientProxy;
-		_gameProxy = ProxyFactory.GetGameClientProxy;
+		Factory = new ClientProxyFactory(BaseUri);
+		_saveData = Factory.GetUserSaveDataClient;
+		_groupSaveData = Factory.GetGroupSaveDataClient;
+		_game = Factory.GetGameClient;
 		_views = new GameObject[Views.transform.childCount];
 		_viewIndex = 0;
 		foreach (Transform child in Views.transform)
@@ -85,7 +85,7 @@ public class Controller : MonoBehaviour
 	{
 		try
 		{
-			var gameResponses = _gameProxy.Get(new string[] { GameName });
+			var gameResponses = _game.Get(new string[] { GameName });
 			foreach (var gameResponse in gameResponses)
 			{
 				if (gameResponse.Name == GameName)
@@ -106,7 +106,7 @@ public class Controller : MonoBehaviour
 	{
 		try
 		{
-			var gameResponse = _gameProxy.Create(new GameRequest
+			var gameResponse = _game.Create(new GameRequest
 			{
 				Name = GameName
 			});
@@ -135,27 +135,27 @@ public class Controller : MonoBehaviour
 		_groupAchievementPanel.UpdateAchievementsList();
 	}
 
-	public static void SaveData(string key, string value, DataType dataType)
+	public static void SaveData(string key, string value, GameDataValueType dataType)
 	{
-		var saveDataResponse = _saveDataProxy.Add(new SaveDataRequest()
+		var saveDataResponse = _saveData.Add(new SaveDataRequest()
 		{
 			GameId = GameId,
 			ActorId =  UserId.Value,
-			DataType = dataType,
+			GameDataValueType = dataType,
 			Value = value,
 			Key = key
 		});
 	}
 
-	public static void SaveGroupData(string key, string value, DataType dataType)
+	public static void SaveGroupData(string key, string value, GameDataValueType dataType)
 	{
 		if (GroupId.HasValue)
 		{
-			var saveDataResponse = _groupSaveDataProxy.Add(new SaveDataRequest()
+			var saveDataResponse = _groupSaveData.Add(new SaveDataRequest()
 			{
 				GameId = GameId,
 				ActorId = GroupId.Value,
-				DataType = dataType,
+				GameDataValueType = dataType,
 				Value = value,
 				Key = key
 			});

@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 using System;
 using System.Linq;
-using PlayGen.SGA.Contracts;
+using PlayGen.SUGAR.Contracts;
 
 public class Friend : MonoBehaviour {
 
@@ -33,10 +33,10 @@ public class Friend : MonoBehaviour {
     private void UpdateFriendsList()
     {
         ClearList();
-        var friendProxy = Controller.ProxyFactory.GetUserFriendClientProxy;
+        var friendclient = Controller.Factory.GetUserFriendClient;
         try
         {
-            var friends = friendProxy.GetFriends(Controller.UserId.Value);
+            var friends = friendclient.GetFriends(Controller.UserId.Value);
             int counter = 0;
             var listRect = FriendList.GetComponent<RectTransform>().rect;
             foreach (var friend in friends)
@@ -60,10 +60,10 @@ public class Friend : MonoBehaviour {
 
     private void RemoveFriend(int friendId)
     {
-        var friendProxy = Controller.ProxyFactory.GetUserFriendClientProxy;
+        var friend = Controller.Factory.GetUserFriendClient;
         try
         {
-            friendProxy.UpdateFriend(new RelationshipStatusUpdate()
+            friend.UpdateFriend(new RelationshipStatusUpdate()
             {
                 AcceptorId = friendId,
                 RequestorId = Controller.UserId.Value,
@@ -74,7 +74,7 @@ public class Friend : MonoBehaviour {
             try
             {
                 // Update Achievement Progress
-                Controller.SaveData("FriendsRemoved", "1", DataType.Long);
+                Controller.SaveData("FriendsRemoved", "1", GameDataValueType.Long);
                 Controller.UpdateAchievements();
             }
             catch (Exception ex)
