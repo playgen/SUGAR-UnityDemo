@@ -70,10 +70,13 @@ public class Controller : MonoBehaviour
 			{
 				if (SetUpGame())
 				{
-					if (_achievementPanel.SetUpAchievements())
+					if (SetUpGroups())
 					{
-						NextView(true);
-						return true;
+						if (_achievementPanel.SetUpAchievements())
+						{
+							NextView(true);
+							return true;
+						}
 					}
 				}
 			}
@@ -85,6 +88,31 @@ public class Controller : MonoBehaviour
 			return false;
 		}
 		return false;
+	}
+
+	private bool SetUpGroups()
+	{
+		int groupNum = 4;
+		int[] Ids = new int[groupNum];
+		var _groupClient = Factory.Group;
+		try
+		{
+			for (int i = 0; i < groupNum; i++)
+			{
+				var actorResponse = _groupClient.Create(new ActorRequest()
+				{
+					Name = "group " + i
+				});
+				Ids[i] = actorResponse.Id;
+			}
+			return true;
+		}
+		catch (Exception exception)
+		{
+			Debug.Log(exception.Message);
+		}
+		return false;
+
 	}
 
 	private bool LoginAdmin()

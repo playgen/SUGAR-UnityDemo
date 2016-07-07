@@ -213,7 +213,7 @@ public class Achievement : MonoBehaviour
 					new AchievementCriteria()
 					{
 						DataType = GameDataType.Long,
-						Value = "1",
+						Value = "5",
 						Key = "MembersJoined",
 						ComparisonType = ComparisonType.GreaterOrEqual,
 						Scope = CriteriaScope.Actor
