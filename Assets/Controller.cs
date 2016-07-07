@@ -3,21 +3,21 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Net;
 using PlayGen.SUGAR.Client;
 using PlayGen.SUGAR.Contracts;
 using UnityEngine.UI;
 
 public class Controller : MonoBehaviour
 {
-	private static UserDataClient _saveData;
-	private static GroupSaveDataClient _groupSaveData;
+	private static GameDataClient _gameDataClient;
 	private static GameObject[] _views;
 	private static int _viewIndex;
 	private static Achievement _achievementPanel;
-	private static GroupAchievement _groupAchievementPanel;
-	private GameClient _game;
+	private GameClient _gameClient;
 
-	public static ClientProxyFactory Factory;
+	public static SUGARClient Factory;
 	public static int? UserId { get; set; }
 	public static int? GroupId { get; set; }
 	public static string LoginToken { get; set; }
@@ -26,6 +26,7 @@ public class Controller : MonoBehaviour
 	public string BaseUri;
 	public GameObject Views;
 	public GameObject BtnPanel;
+	public GameObject LoginPanel;
 	public static GameObject AchievementPanel;
 	public static GameObject GroupAchievementPanel;
 	public static Button NextButton;
@@ -33,10 +34,9 @@ public class Controller : MonoBehaviour
 
 	void Awake()
 	{
-		Factory = new ClientProxyFactory(BaseUri);
-		_saveData = Factory.GetUserSaveDataClient;
-		_groupSaveData = Factory.GetGroupSaveDataClient;
-		_game = Factory.GetGameClient;
+		Factory = new SUGARClient(BaseUri);
+		_gameDataClient = Factory.GameData;
+		_gameClient = Factory.Game;
 		_views = new GameObject[Views.transform.childCount];
 		_viewIndex = 0;
 		foreach (Transform child in Views.transform)
@@ -52,7 +52,10 @@ public class Controller : MonoBehaviour
 		AchievementPanel = BtnPanel.transform.FindChild("AchievementPanel").gameObject;
 		GroupAchievementPanel = BtnPanel.transform.FindChild("GroupAchievementPanel").gameObject;
 		_achievementPanel = AchievementPanel.GetComponent<Achievement>();
-		_groupAchievementPanel = GroupAchievementPanel.GetComponent<GroupAchievement>();
+	}
+
+	void Start()
+	{
 		if (!SetUp())
 		{
 			Debug.LogError("Setup Failed");
@@ -61,23 +64,49 @@ public class Controller : MonoBehaviour
 
 	private bool SetUp()
 	{
-		if (!CheckGame())
+		if (LoginAdmin())
 		{
-			if (SetUpGame())
+			if (!CheckGame())
 			{
-				if (_achievementPanel.SetUpAchievements() && _groupAchievementPanel.SetUpGroupAchievements())
+				if (SetUpGame())
 				{
-					NextView(true);
-					return true;
+					if (_achievementPanel.SetUpAchievements())
+					{
+						NextView(true);
+						return true;
+					}
 				}
 			}
-		}
-		else
-		{
-			NextView(true);
-			return true;
+			else
+			{
+				NextView(true);
+				return true;
+			}
+			return false;
 		}
 		return false;
+	}
+
+	private bool LoginAdmin()
+	{
+		var loginScript = LoginPanel.GetComponent<Login>();
+		try
+		{
+			loginScript.GetLoginAccountResponse("admin", "admin");
+			return true;
+		}
+		catch
+		{
+			try
+			{
+				loginScript.GetRegisterAccountResponse("admin", "admin", true);
+				return true;
+			}
+			catch (Exception exception)
+			{
+				throw new Exception(exception.Message);
+			}
+		}
 	}
 
 
@@ -85,7 +114,7 @@ public class Controller : MonoBehaviour
 	{
 		try
 		{
-			var gameResponses = _game.Get(new string[] { GameName });
+			var gameResponses = _gameClient.Get(GameName);
 			foreach (var gameResponse in gameResponses)
 			{
 				if (gameResponse.Name == GameName)
@@ -100,13 +129,14 @@ public class Controller : MonoBehaviour
 			Debug.Log("Failed to find game." + ex.Message);
 		}
 		return false;
+
 	}
 
 	private bool SetUpGame()
 	{
 		try
 		{
-			var gameResponse = _game.Create(new GameRequest
+			var gameResponse = _gameClient.Create(new GameRequest
 			{
 				Name = GameName
 			});
@@ -131,35 +161,19 @@ public class Controller : MonoBehaviour
 
 	public static void UpdateAchievements()
 	{
-		_achievementPanel.UpdateAchievementsList();
-		_groupAchievementPanel.UpdateAchievementsList();
+		_achievementPanel.UpdateAchivementLists();
 	}
 
-	public static void SaveData(string key, string value, GameDataValueType dataType)
+	public static void SaveData(int actorId, string key, string value, GameDataType dataType)
 	{
-		var saveDataResponse = _saveData.Add(new SaveDataRequest()
+		var saveDataResponse = _gameDataClient.Add(new GameDataRequest()
 		{
 			GameId = GameId,
-			ActorId =  UserId.Value,
-			GameDataValueType = dataType,
+			ActorId = actorId,
+			GameDataType = dataType,
 			Value = value,
 			Key = key
 		});
-	}
-
-	public static void SaveGroupData(string key, string value, GameDataValueType dataType)
-	{
-		if (GroupId.HasValue)
-		{
-			var saveDataResponse = _groupSaveData.Add(new SaveDataRequest()
-			{
-				GameId = GameId,
-				ActorId = GroupId.Value,
-				GameDataValueType = dataType,
-				Value = value,
-				Key = key
-			});
-		}
 	}
 
 	public static void NextView(bool first = false)

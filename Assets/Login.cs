@@ -8,7 +8,7 @@ using PlayGen.SUGAR.Contracts;
 
 public class Login : MonoBehaviour
 {
-	private AccountClient _account;
+	private AccountClient _accountClient;
 	public InputField UsernameInput;
 	public InputField PasswordInput;
 	public Text StatusText;
@@ -17,18 +17,18 @@ public class Login : MonoBehaviour
 
 	void Start ()
 	{
-		_account = Controller.Factory.GetAccountClient;
+		_accountClient = Controller.Factory.Account;
 		LoginButton.onClick.AddListener(LoginUser);
-		RegisterButton.onClick.AddListener(Register);
+		RegisterButton.onClick.AddListener(RegisterUser);
 	}
 
-	private void Register()
+	private void RegisterUser()
 	{
 		if (CheckFields())
 		{
 			try
 			{
-				var accountResponse = _account.Register(CreateAccountRequest());
+				var accountResponse = GetRegisterAccountResponse(UsernameInput.text, PasswordInput.text);
 				StatusText.text = "Successfully Registered. ID:" + accountResponse.User.Id + ". Please Login.";
 				Controller.UserId = accountResponse.User.Id;
 			}
@@ -39,16 +39,22 @@ public class Login : MonoBehaviour
 		}
 	}
 
+	public AccountResponse GetRegisterAccountResponse(string username, string password, bool autoLogin = false)
+	{
+		var accountRequest = CreateAccountRequest(username, password, autoLogin);
+		return _accountClient.Register(accountRequest);
+	}
+
+
 	private void LoginUser()
 	{
 		if (CheckFields())
 		{
 			try
 			{
-				var accountRequest = CreateAccountRequest();
-				var accountResponse = _account.Login(accountRequest);
+				var accountResponse = GetLoginAccountResponse(UsernameInput.text, PasswordInput.text);
 				Controller.UserId = accountResponse.User.Id;
-				Controller.LoginToken = accountResponse.Token;
+				//Controller.LoginToken = accountResponse.Token;
 				StatusText.text = "Login Successful!";
 				Controller.ActivateAchievementPanels();
 				Controller.NextView();
@@ -57,8 +63,14 @@ public class Login : MonoBehaviour
 			{
 				StatusText.text = "Failed Login. " + ex.Message;
 			}
-		
 		}
+	}
+
+	public AccountResponse GetLoginAccountResponse(string username, string password)
+	{
+		var accountRequest = CreateAccountRequest(username, password);
+		return _accountClient.Login(accountRequest);
+		
 	}
 
 	private bool CheckFields()
@@ -72,13 +84,15 @@ public class Login : MonoBehaviour
 		return true;
 	}
 
-	private AccountRequest CreateAccountRequest()
+	private AccountRequest CreateAccountRequest(string user, string pass, bool autoLogin = false)
 	{
 		
 		return new AccountRequest()
 		{
-			Name = UsernameInput.text,
-			Password = PasswordInput.text
+			Name = user,
+			Password = pass,
+			AutoLogin = autoLogin
+
 		};
 	}
    

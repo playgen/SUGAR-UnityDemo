@@ -33,7 +33,7 @@ public class Friend : MonoBehaviour {
     private void UpdateFriendsList()
     {
         ClearList();
-        var friendclient = Controller.Factory.GetUserFriendClient;
+        var friendclient = Controller.Factory.UserFriend;
         try
         {
             var friends = friendclient.GetFriends(Controller.UserId.Value);
@@ -60,7 +60,7 @@ public class Friend : MonoBehaviour {
 
     private void RemoveFriend(int friendId)
     {
-        var friend = Controller.Factory.GetUserFriendClient;
+        var friend = Controller.Factory.UserFriend;
         try
         {
             friend.UpdateFriend(new RelationshipStatusUpdate()
@@ -74,7 +74,7 @@ public class Friend : MonoBehaviour {
             try
             {
                 // Update Achievement Progress
-                Controller.SaveData("FriendsRemoved", "1", GameDataValueType.Long);
+                Controller.SaveData(Controller.UserId.Value, "FriendsRemoved", "1", GameDataType.Long);
                 Controller.UpdateAchievements();
             }
             catch (Exception ex)

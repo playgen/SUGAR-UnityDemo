@@ -18,7 +18,7 @@ public class Group : MonoBehaviour
 	// Use this for initialization
 	void Awake ()
 	{
-		_groupMember = Controller.Factory.GetGroupMemberClient;
+		_groupMember = Controller.Factory.GroupMember;
 	}
 
 	void OnEnable()
@@ -61,7 +61,7 @@ public class Group : MonoBehaviour
 	void UpdateGroups()
 	{
 		ClearList();
-		var groupclient = Controller.Factory.GetGroupClient;
+		var groupclient = Controller.Factory.Group;
 		var groups = groupclient.Get();
 		int counter = 0;
 		var userGroupIds = new HashSet<int>(_userGroups.Select(x => x.Id));
@@ -111,8 +111,8 @@ public class Group : MonoBehaviour
 			try
 			{
 				// Update Achievement Progress
-				Controller.SaveData("GroupsLeft", "1", GameDataValueType.Long);
-				Controller.SaveGroupData("MembersLeft", "1", GameDataValueType.Long);
+				Controller.SaveData(Controller.UserId.Value, "GroupsLeft", "1", GameDataType.Long);
+				Controller.SaveData(groupId, "MembersLeft", "1", GameDataType.Long);			// ERRR?
 				Controller.GroupId = null;
 				UpdateGroupsList();
 				Controller.UpdateAchievements();
@@ -144,8 +144,8 @@ public class Group : MonoBehaviour
 			try
 			{
 				// Update Achievement Progress
-				Controller.SaveData("GroupsJoined", "1", GameDataValueType.Long);
-				Controller.SaveGroupData("MembersJoined", "1", GameDataValueType.Long);
+				Controller.SaveData(Controller.UserId.Value, "GroupsJoined", "1", GameDataType.Long);
+				Controller.SaveData(groupId, "MembersJoined", "1", GameDataType.Long);
 				Controller.UpdateAchievements();
 			}
 			catch (Exception ex)

@@ -17,8 +17,8 @@ public class Member : MonoBehaviour
 
 	void Awake()
 	{
-		_friend = Controller.Factory.GetUserFriendClient;
-		_groupMember = Controller.Factory.GetGroupMemberClient;
+		_friend = Controller.Factory.UserFriend;
+		_groupMember = Controller.Factory.GroupMember;
 	}
 
 	void OnEnable()
@@ -81,7 +81,7 @@ public class Member : MonoBehaviour
 
 	void AddFriend(int memberId)
 	{
-		var userFriend = Controller.Factory.GetUserFriendClient;
+		var userFriend = Controller.Factory.UserFriend;
 		try
 		{
 			// Add friend
@@ -98,8 +98,8 @@ public class Member : MonoBehaviour
 			try
 			{
 				// Update Achievement Progress
-				Controller.SaveData("FriendsAdded", "1", GameDataValueType.Long);
-				Controller.AchievementPanel.GetComponent<Achievement>().UpdateAchievementsList();
+				Controller.SaveData(Controller.UserId.Value, "FriendsAdded", "1", GameDataType.Long);
+				Controller.AchievementPanel.GetComponent<Achievement>().UpdateAchivementLists();
 			}
 			catch (Exception ex)
 			{
@@ -116,7 +116,7 @@ public class Member : MonoBehaviour
 
 	private void RemoveFriend(int friendId)
 	{
-		var friend = Controller.Factory.GetUserFriendClient;
+		var friend = Controller.Factory.UserFriend;
 		try
 		{
 			friend.UpdateFriend(new RelationshipStatusUpdate()
@@ -130,8 +130,8 @@ public class Member : MonoBehaviour
 			try
 			{
 				// Update Achievement Progress
-				Controller.SaveData("FriendsRemoved", "1", GameDataValueType.Long);
-				Controller.AchievementPanel.GetComponent<Achievement>().UpdateAchievementsList();
+				Controller.SaveData(Controller.UserId.Value, "FriendsRemoved", "1", GameDataType.Long);
+				Controller.AchievementPanel.GetComponent<Achievement>().UpdateAchivementLists();
 				//Controller.NextView();
 			}
 			catch (Exception ex)
