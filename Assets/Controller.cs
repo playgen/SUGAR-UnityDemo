@@ -28,6 +28,7 @@ public class Controller : MonoBehaviour
 	public GameObject Views;
 	public GameObject BtnPanel;
 	public GameObject LoginPanel;
+	public static Text SkillText;
 	public static GameObject AchievementPanel;
 	public static GameObject GroupAchievementPanel;
 	public static Button NextButton;
@@ -53,6 +54,8 @@ public class Controller : MonoBehaviour
 		AchievementPanel = BtnPanel.transform.FindChild("AchievementPanel").gameObject;
 		GroupAchievementPanel = BtnPanel.transform.FindChild("GroupAchievementPanel").gameObject;
 		_achievementPanel = AchievementPanel.GetComponent<Achievement>();
+		var skillMeasure = BtnPanel.transform.FindChild("SkillMeasure").gameObject;
+		SkillText = skillMeasure.GetComponent<Text>();
 	}
 
 	void Start()
@@ -94,6 +97,22 @@ public class Controller : MonoBehaviour
 		return prev;
 	}
 
+	private static void UpdateSkill()
+	{
+		Debug.Log("UpdateAchievements");
+		var skillClient = Factory.Skill;
+		try
+		{
+			var responses = skillClient.GetGameProgress(UserId.Value.ToString(), GameId.ToString());
+			var response = responses.FirstOrDefault();
+			SkillText.text = response.Name + ": " + response.Progress;			// MAKE THIS WORK
+		}
+		catch(Exception exception)
+		{
+			Debug.Log("Error updating skill: " + exception.Message);
+		}
+	}
+
 	private bool SetUpSkills()
 	{
 		var skillClient = Factory.Skill;
@@ -111,7 +130,7 @@ public class Controller : MonoBehaviour
 					{
 						DataType = GameDataType.Long,
 						Value = "10",
-						Key = "SocialSkill",
+						Key = "FriendsAdded",
 						ComparisonType = ComparisonType.Equals,
 						Scope = CriteriaScope.Actor
 
@@ -269,6 +288,7 @@ public class Controller : MonoBehaviour
 
 	public static void UpdateAchievements()
 	{
+		UpdateSkill();
 		_achievementPanel.UpdateAchivementLists();
 	}
 
