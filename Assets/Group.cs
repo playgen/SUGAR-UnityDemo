@@ -52,9 +52,9 @@ public class Group : MonoBehaviour
 			}
 			UpdateGroups();
 		}
-		catch (Exception ex)
+		catch (Exception exception)
 		{
-			StatusText.text = "Failed to get user's Groups" + ex.Message;
+			StatusText.text = "Failed to get user's Groups" + exception.Message;
 		}
 	}
 
@@ -144,7 +144,7 @@ public class Group : MonoBehaviour
 			try
 			{
 				// Update Achievement Progress
-				Controller.SaveData(Controller.UserId.Value, "GroupsJoined", "1", GameDataType.Long);
+				Controller.SaveData(Controller.UserId.Value, "GroupsJoined", "1", GameDataType.Long);	//error
 				Controller.SaveData(groupId, "MembersJoined", "1", GameDataType.Long);
 				Controller.UpdateAchievements();
 			}

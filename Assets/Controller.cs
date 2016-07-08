@@ -22,6 +22,7 @@ public class Controller : MonoBehaviour
 	public static int? GroupId { get; set; }
 	public static string LoginToken { get; set; }
 	public static int GameId { get; set; }
+	public static int LeaderboardId { get; set; }
 	public string GameName;
 	public string BaseUri;
 	public GameObject Views;
@@ -64,29 +65,108 @@ public class Controller : MonoBehaviour
 
 	private bool SetUp()
 	{
-		if (LoginAdmin())
+		var prev = LoginAdmin();
+		Debug.Log("LoginAdmin: " + prev);
+
+		prev = prev && CheckGame();
+		Debug.Log("CheckGame: " + prev);
+		if (!prev)
 		{
-			if (!CheckGame())
+			prev = GetLeaderboardId();
+			Debug.Log("GetLeaderboardId: " + prev);
+			return prev;
+		}
+
+		prev = prev && SetUpGame();
+		Debug.Log("SetUpGame: " + prev);
+
+		prev = prev && SetUpGroups();
+		Debug.Log("SetUpGroups: " + prev);
+
+		prev = prev && _achievementPanel.SetUpAchievements();
+		Debug.Log("SetUpAchievements: " + prev);
+
+		prev = prev && SetUpLeaderboard();
+		Debug.Log("SetUpLeaderboard: " + prev);
+
+		prev = prev && SetUpSkills();
+		Debug.Log("SetUpSkills: " + prev);
+		return prev;
+	}
+
+	private bool SetUpSkills()
+	{
+		var skillClient = Factory.Skill;
+		try
+		{
+			skillClient.Create(new AchievementRequest()
 			{
-				if (SetUpGame())
+				GameId = GameId,
+				Name = "Social Skill",
+				ActorType = ActorType.User,
+				Token = "SOCIAL",
+				CompletionCriteria = new List<AchievementCriteria>()
 				{
-					if (SetUpGroups())
+					new AchievementCriteria()
 					{
-						if (_achievementPanel.SetUpAchievements())
-						{
-							NextView(true);
-							return true;
-						}
+						DataType = GameDataType.Long,
+						Value = "10",
+						Key = "SocialSkill",
+						ComparisonType = ComparisonType.Equals,
+						Scope = CriteriaScope.Actor
+
 					}
 				}
-			}
-			else
-			{
-				NextView(true);
-				return true;
-			}
-			return false;
+			});
+			return true;
 		}
+		catch (Exception exception)
+		{
+			Debug.LogError("Failed to create skill: " + exception.Message);
+		}
+		return false;
+	}
+
+	private bool GetLeaderboardId()
+	{
+		var leaderboardClient = Factory.Leaderboard;
+		try
+		{
+			var leaderboardReponse = leaderboardClient.Get(GameId.ToString());
+			LeaderboardId = leaderboardReponse.Select(x => x.Id).FirstOrDefault();
+			return true;
+		}
+		catch (Exception exception)
+		{
+			Debug.LogError("Could not find leaderboard: " + exception.Message);
+		}
+		return false;
+	}
+
+	private bool SetUpLeaderboard()
+	{
+		var leaderboardClient = Factory.Leaderboard;
+		try
+		{
+			var leaderboardResponse = leaderboardClient.Create(new LeaderboardRequest()
+			{
+				GameId = GameId,
+				Name = "Most Friends",
+				Token = "MOST_FRIENDS",
+				Key = "FriendsAdded",
+				ActorType = ActorType.User,
+				GameDataType = GameDataType.Long,
+				CriteriaScope = CriteriaScope.Actor,
+				LeaderboardType	= LeaderboardType.Cumulative
+			});
+			LeaderboardId = leaderboardResponse.Id;
+			return true;
+		}
+		catch (Exception exception)
+		{
+			Debug.Log("Create Leaderboard fail: " + exception.Message);
+		}
+
 		return false;
 	}
 
@@ -109,7 +189,7 @@ public class Controller : MonoBehaviour
 		}
 		catch (Exception exception)
 		{
-			Debug.Log(exception.Message);
+			Debug.Log("Set Up Groups Failed: " + exception.Message);
 		}
 		return false;
 
@@ -148,7 +228,7 @@ public class Controller : MonoBehaviour
 				if (gameResponse.Name == GameName)
 				{
 					GameId = gameResponse.Id;
-					return true;
+					return false;
 				}
 			}
 		}
@@ -156,7 +236,7 @@ public class Controller : MonoBehaviour
 		{
 			Debug.Log("Failed to find game." + ex.Message);
 		}
-		return false;
+		return true;
 
 	}
 
@@ -194,7 +274,7 @@ public class Controller : MonoBehaviour
 
 	public static void SaveData(int actorId, string key, string value, GameDataType dataType)
 	{
-		var saveDataResponse = _gameDataClient.Add(new GameDataRequest()
+		_gameDataClient.Add(new GameDataRequest()
 		{
 			GameId = GameId,
 			ActorId = actorId,
@@ -204,23 +284,19 @@ public class Controller : MonoBehaviour
 		});
 	}
 
-	public static void NextView(bool first = false)
+	public static void NextView()
 	{
-		if (!first)
+		_views[_viewIndex].SetActive(false);
+		if (_viewIndex == 0)
 		{
-			_views[_viewIndex].SetActive(false);
-			if (_viewIndex == 0)
-			{
-				PreviousButton.interactable = true;
-			}
-			_viewIndex++;
-			if (_viewIndex == _views.Length - 1)
-			{
-				NextButton.interactable = false;
-			}
+			PreviousButton.interactable = true;
+		}
+		_viewIndex++;
+		if (_viewIndex == _views.Length - 1)
+		{
+			NextButton.interactable = false;
 		}
 		_views[_viewIndex].SetActive(true);
-
 	}
 
 	public void PreviousView()

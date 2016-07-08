@@ -131,6 +131,7 @@ public class Member : MonoBehaviour
 			{
 				// Update Achievement Progress
 				Controller.SaveData(Controller.UserId.Value, "FriendsRemoved", "1", GameDataType.Long);
+				Controller.SaveData(Controller.UserId.Value, "FriendsAdded", "-1", GameDataType.Long);
 				Controller.AchievementPanel.GetComponent<Achievement>().UpdateAchivementLists();
 				//Controller.NextView();
 			}
