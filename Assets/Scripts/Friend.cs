@@ -49,12 +49,27 @@ public class Friend : MonoBehaviour {
 				friendItem.GetComponentInChildren<Text>().text = friend.Name;
 				counter++;
 				var friendCopy = friend;
-				friendItem.GetComponentInChildren<Button>().onClick.AddListener(() => RemoveFriend(friendCopy.Id));
+				friendItem.transform.FindChild("RemoveButton").GetComponent<Button>().onClick.AddListener(() => RemoveFriend(friendCopy.Id));
+				friendItem.transform.FindChild("GiftButton").GetComponent<Button>().onClick.AddListener(() => GiftFriend(friendCopy.Id));
 			}
 		}
 		catch (Exception ex)
 		{
 			StatusText.text = "Failed to get friends list. " + ex.Message;
+		}
+	}
+
+	private void GiftFriend(int friendId)
+	{
+		var resourceController = ScriptLocator.GetResourceControl();
+		if (!resourceController.TransferResource("Daily Chocolate", 1, Controller.UserId.Value, friendId))
+		{
+			StatusText.text = "Sending Gift Failed!";
+		}
+		else
+		{
+			StatusText.text = "Gift Sent!";
+			Controller.UpdateUi();
 		}
 	}
 
@@ -76,7 +91,7 @@ public class Friend : MonoBehaviour {
 				// Update Achievement Progress
 				Controller.SaveData(Controller.UserId.Value, "FriendsRemoved", "1", GameDataType.Long);
 				Controller.SaveData(Controller.UserId.Value, "FriendsAdded", "-1", GameDataType.Long);
-				Controller.UpdateAchievements();
+				Controller.UpdateUi();
 			}
 			catch (Exception ex)
 			{

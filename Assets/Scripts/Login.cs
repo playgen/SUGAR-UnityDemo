@@ -57,6 +57,7 @@ public class Login : MonoBehaviour
 				//Controller.LoginToken = accountResponse.Token;
 				StatusText.text = "Login Successful!";
 				Controller.ActivateAchievementPanels();
+				ScriptLocator.GetResourceControl().AddResource("Daily Chocolate", 1, Controller.UserId.Value);
 				Controller.NextView();
 			}
 			catch (Exception ex)

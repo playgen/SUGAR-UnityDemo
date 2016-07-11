@@ -13,6 +13,8 @@ public class Achievement : MonoBehaviour
 	public GameObject AchivementItemPrefab;
 	public GameObject GroupAchievementList;
 
+	public int ListDisplaySize = 4;
+
 	void OnEnable () {
 		UpdateAchivementLists();
 	}
@@ -52,8 +54,8 @@ public class Achievement : MonoBehaviour
 				var achievementItem = Instantiate(AchivementItemPrefab);
 				achievementItem.transform.SetParent(listObject.transform, false);
 				var itemRectTransform = achievementItem.GetComponent<RectTransform>();
-				itemRectTransform.sizeDelta = new Vector2(listRect.width, listRect.height / 10);
-				itemRectTransform.anchoredPosition = new Vector2(0, (counter * -(listRect.height / 10)));
+				itemRectTransform.sizeDelta = new Vector2(listRect.width, listRect.height / ListDisplaySize);
+				itemRectTransform.anchoredPosition = new Vector2(0, (counter * -(listRect.height / ListDisplaySize)));
 				achievementItem.GetComponentInChildren<Text>().text = achievement.Name;
 				if (achievement.Progress != 1.0f)
 				{

@@ -15,6 +15,7 @@ public class Controller : MonoBehaviour
 	private static GameObject[] _views;
 	private static int _viewIndex;
 	private static Achievement _achievementPanel;
+	private static GameObject _skillTracker;
 	private GameClient _gameClient;
 
 	public static SUGARClient Factory;
@@ -26,9 +27,8 @@ public class Controller : MonoBehaviour
 	public string GameName;
 	public string BaseUri;
 	public GameObject Views;
-	public GameObject BtnPanel;
+	public GameObject UiPanel;
 	public GameObject LoginPanel;
-	public static Text SkillText;
 	public static GameObject AchievementPanel;
 	public static GameObject GroupAchievementPanel;
 	public static Button NextButton;
@@ -47,15 +47,18 @@ public class Controller : MonoBehaviour
 			_viewIndex++;
 		}
 		_viewIndex = 0;
-		NextButton = BtnPanel.transform.FindChild("NextBtn").gameObject.GetComponent<Button>();
+		NextButton = UiPanel.transform.FindChild("NextBtn").gameObject.GetComponent<Button>();
 		NextButton.onClick.AddListener(() => NextView());
-		PreviousButton = BtnPanel.transform.FindChild("PreviousBtn").gameObject.GetComponent<Button>();
+		PreviousButton = UiPanel.transform.FindChild("PreviousBtn").gameObject.GetComponent<Button>();
 		PreviousButton.onClick.AddListener(PreviousView);
-		AchievementPanel = BtnPanel.transform.FindChild("AchievementPanel").gameObject;
-		GroupAchievementPanel = BtnPanel.transform.FindChild("GroupAchievementPanel").gameObject;
+		AchievementPanel = UiPanel.transform.FindChild("AchievementPanel").gameObject;
+		GroupAchievementPanel = UiPanel.transform.FindChild("GroupAchievementPanel").gameObject;
 		_achievementPanel = AchievementPanel.GetComponent<Achievement>();
-		var skillMeasure = BtnPanel.transform.FindChild("SkillMeasure").gameObject;
-		SkillText = skillMeasure.GetComponent<Text>();
+		_skillTracker = UiPanel.transform.FindChild("SkillTracker").gameObject;
+		if (_skillTracker == null)
+		{
+			Debug.LogError("Skill Panel not found");
+		}
 	}
 
 	void Start()
@@ -99,13 +102,14 @@ public class Controller : MonoBehaviour
 
 	private static void UpdateSkill()
 	{
-		Debug.Log("UpdateAchievements");
 		var skillClient = Factory.Skill;
 		try
 		{
 			var responses = skillClient.GetGameProgress(UserId.Value.ToString(), GameId.ToString());
 			var response = responses.FirstOrDefault();
-			SkillText.text = response.Name + ": " + response.Progress;			// MAKE THIS WORK
+			Debug.Log("UpdateSkill " + response.Progress);
+			_skillTracker.GetComponentInChildren<Text>().text = response.Name + ":";
+			_skillTracker.GetComponentInChildren<Image>().fillAmount = response.Progress;
 		}
 		catch(Exception exception)
 		{
@@ -129,9 +133,9 @@ public class Controller : MonoBehaviour
 					new AchievementCriteria()
 					{
 						DataType = GameDataType.Long,
-						Value = "10",
+						Value = "8",
 						Key = "FriendsAdded",
-						ComparisonType = ComparisonType.Equals,
+						ComparisonType = ComparisonType.GreaterOrEqual,
 						Scope = CriteriaScope.Actor
 
 					}
@@ -286,8 +290,9 @@ public class Controller : MonoBehaviour
 		GroupAchievementPanel.SetActive(true);
 	}
 
-	public static void UpdateAchievements()
+	public static void UpdateUi()
 	{
+		ScriptLocator.GetResourceControl().UpdateList();
 		UpdateSkill();
 		_achievementPanel.UpdateAchivementLists();
 	}

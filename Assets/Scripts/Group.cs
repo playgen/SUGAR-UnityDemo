@@ -47,7 +47,7 @@ public class Group : MonoBehaviour
 			_userGroups = _groupMember.GetUserGroups(Controller.UserId.Value);
 			if (_userGroups.Any())
 			{
-				StatusText.text = "User already in a group!";
+				StatusText.text = "Group Successfully Joined!!";
 				Controller.GroupId = _userGroups.First().Id;
 			}
 			UpdateGroups();
@@ -115,7 +115,7 @@ public class Group : MonoBehaviour
 				Controller.SaveData(groupId, "MembersLeft", "1", GameDataType.Long);			// ERRR?
 				Controller.GroupId = null;
 				UpdateGroupsList();
-				Controller.UpdateAchievements();
+				Controller.UpdateUi();
 			}
 			catch (Exception ex)
 			{
@@ -146,7 +146,7 @@ public class Group : MonoBehaviour
 				// Update Achievement Progress
 				Controller.SaveData(Controller.UserId.Value, "GroupsJoined", "1", GameDataType.Long);	//error
 				Controller.SaveData(groupId, "MembersJoined", "1", GameDataType.Long);
-				Controller.UpdateAchievements();
+				Controller.UpdateUi();
 			}
 			catch (Exception ex)
 			{
