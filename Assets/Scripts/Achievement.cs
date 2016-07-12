@@ -23,14 +23,14 @@ public class Achievement : MonoBehaviour
 	{
 		if (_achievementClient == null)
 		{
-			_achievementClient = Controller.Factory.Achievement;
+			_achievementClient = ScriptLocator.Controller.Factory.Achievement;
 		}
-		var userId = Controller.UserId;
+		var userId = ScriptLocator.Controller.UserId;
 		if (userId.HasValue)
 		{
 			UpdateAchievementsList(AchievementList, userId.Value);
 		}
-		var groupId = Controller.GroupId;
+		var groupId = ScriptLocator.Controller.GroupId;
 		if (groupId.HasValue)
 		{
 			UpdateAchievementsList(GroupAchievementList, groupId.Value);
@@ -46,7 +46,7 @@ public class Achievement : MonoBehaviour
 		}
 		try
 		{
-			var achievements = _achievementClient.GetGameProgress(Controller.GameId, actorId);
+			var achievements = _achievementClient.GetGameProgress(ScriptLocator.Controller.GameId, actorId);
 			int counter = 0;
 			var listRect = listObject.GetComponent<RectTransform>().rect;
 			foreach (var achievement in achievements)
@@ -75,9 +75,9 @@ public class Achievement : MonoBehaviour
 	{
 		if (_achievementClient == null)
 		{
-			_achievementClient = Controller.Factory.Achievement;
+			_achievementClient = ScriptLocator.Controller.Factory.Achievement;
 		}
-		var gameId = Controller.GameId;
+		var gameId = ScriptLocator.Controller.GameId;
 		try
 		{
 			_achievementClient.Create(new AchievementRequest()
@@ -93,6 +93,7 @@ public class Achievement : MonoBehaviour
 						DataType = GameDataType.Long,
 						Value = "1",
 						Key = "GroupsJoined",
+                        CriteriaQueryType = CriteriaQueryType.Any,
 						ComparisonType = ComparisonType.GreaterOrEqual,
 						Scope = CriteriaScope.Actor
 
@@ -112,7 +113,8 @@ public class Achievement : MonoBehaviour
 						DataType = GameDataType.Long,
 						Value = "2",
 						Key = "FriendsAdded",
-						ComparisonType = ComparisonType.GreaterOrEqual,
+                        CriteriaQueryType = CriteriaQueryType.Sum,
+                        ComparisonType = ComparisonType.GreaterOrEqual,
 						Scope = CriteriaScope.Actor
 					}
 				}
@@ -130,7 +132,8 @@ public class Achievement : MonoBehaviour
 						DataType = GameDataType.Long,
 						Value = "1",
 						Key = "FriendsRemoved",
-						ComparisonType = ComparisonType.GreaterOrEqual,
+                        CriteriaQueryType = CriteriaQueryType.Any,
+                        ComparisonType = ComparisonType.GreaterOrEqual,
 						Scope = CriteriaScope.Actor
 					}
 				}
@@ -148,7 +151,8 @@ public class Achievement : MonoBehaviour
 						DataType = GameDataType.Long,
 						Value = "5",
 						Key = "MembersJoined",
-						ComparisonType = ComparisonType.GreaterOrEqual,
+                        CriteriaQueryType = CriteriaQueryType.Sum,
+                        ComparisonType = ComparisonType.GreaterOrEqual,
 						Scope = CriteriaScope.Actor
 					}
 				}
@@ -166,7 +170,8 @@ public class Achievement : MonoBehaviour
 						DataType = GameDataType.Long,
 						Value = "2",
 						Key = "MembersLeft",
-						ComparisonType = ComparisonType.GreaterOrEqual,
+                        CriteriaQueryType = CriteriaQueryType.Sum,
+                        ComparisonType = ComparisonType.GreaterOrEqual,
 						Scope = CriteriaScope.Actor
 					}
 				}

@@ -832,7 +832,6 @@ GameObject:
   - 224: {fileID: 399317612}
   - 222: {fileID: 399317614}
   - 114: {fileID: 399317613}
-  - 114: {fileID: 399317615}
   m_Layer: 5
   m_Name: LoginPanel
   m_TagString: Untagged
@@ -893,22 +892,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 399317611}
---- !u!114 &399317615
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 399317611}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b058136c963b504459ff27c8634a1646, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UsernameInput: {fileID: 822418630}
-  PasswordInput: {fileID: 840321399}
-  StatusText: {fileID: 1873936702}
-  LoginButton: {fileID: 1506832073}
-  RegisterButton: {fileID: 1518319144}
 --- !u!1 &401696642
 GameObject:
   m_ObjectHideFlags: 0
@@ -3242,18 +3225,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1518319145}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 399317611}
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1518319145
@@ -3974,6 +3946,10 @@ MonoBehaviour:
   Views: {fileID: 886304577}
   UiPanel: {fileID: 1959535266}
   LoginPanel: {fileID: 399317611}
+  AchievementPanel: {fileID: 2074103375}
+  GroupAchievementPanel: {fileID: 2003018008}
+  NextButton: {fileID: 1782869489}
+  PreviousButton: {fileID: 464228321}
 --- !u!114 &1839237904
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3996,11 +3972,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b058136c963b504459ff27c8634a1646, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UsernameInput: {fileID: 0}
-  PasswordInput: {fileID: 0}
-  StatusText: {fileID: 0}
-  LoginButton: {fileID: 0}
-  RegisterButton: {fileID: 0}
+  UsernameInput: {fileID: 822418630}
+  PasswordInput: {fileID: 840321399}
+  StatusText: {fileID: 1873936702}
+  LoginButton: {fileID: 1506832073}
+  RegisterButton: {fileID: 1518319144}
 --- !u!1 &1849620058
 GameObject:
   m_ObjectHideFlags: 0

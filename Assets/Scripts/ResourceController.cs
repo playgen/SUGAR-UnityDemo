@@ -18,7 +18,7 @@ public class ResourceController : MonoBehaviour
 
 	void Start ()
 	{
-		_resourceClient = Controller.Factory.Resource;
+		_resourceClient = ScriptLocator.Controller.Factory.Resource;
 	}
 
 	public void AddResource(string key, int quantity, int userId)
@@ -27,7 +27,7 @@ public class ResourceController : MonoBehaviour
 		{
 			_resourceClient.AddOrUpdate(new ResourceAddRequest()
 			{
-				GameId = Controller.GameId,
+				GameId = ScriptLocator.Controller.GameId,
 				ActorId = userId,
 				Key = key,
 				Quantity = quantity
@@ -46,7 +46,7 @@ public class ResourceController : MonoBehaviour
 		{
 			_resourceClient.Transfer(new ResourceTransferRequest()
 			{
-				GameId = Controller.GameId,
+				GameId = ScriptLocator.Controller.GameId,
 				SenderActorId = userId,
 				RecipientActorId = targetId,
 				Key = key,
@@ -70,7 +70,7 @@ public class ResourceController : MonoBehaviour
 		}
 		try
 		{
-			var resources = _resourceClient.Get(Controller.GameId, Controller.UserId.Value, null);
+			var resources = _resourceClient.Get(ScriptLocator.Controller.GameId, ScriptLocator.Controller.UserId.Value, null);
 			int counter = 0;
 			var listRect = ResourceList.GetComponent<RectTransform>().rect;
 			foreach (var resource in resources)

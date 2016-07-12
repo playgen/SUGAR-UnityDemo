@@ -12,28 +12,28 @@ using UnityEngine.UI;
 
 public class Controller : MonoBehaviour
 {
-	private static GameDataClient _gameDataClient;
-	private static GameObject[] _views;
-	private static int _viewIndex;
-	private static Achievement _achievementPanel;
-	private static GameObject _skillTracker;
+	private GameDataClient _gameDataClient;
+	private GameObject[] _views;
+	private int _viewIndex;
+	private Achievement _achievementPanel;
+	private GameObject _skillTracker;
 	private GameClient _gameClient;
 
-	public static SUGARClient Factory;
-	public static int? UserId { get; set; }
-	public static int? GroupId { get; set; }
-	public static string LoginToken { get; set; }
-	public static int GameId { get; set; }
-	public static int LeaderboardId { get; set; }
+	public SUGARClient Factory;
+	public int? UserId { get; set; }
+	public int? GroupId { get; set; }
+	public string LoginToken { get; set; }
+	public int GameId { get; set; }
+	public string LeaderboardId { get; set; }
 	public string GameName;
 	public string BaseUri;
 	public GameObject Views;
 	public GameObject UiPanel;
 	public GameObject LoginPanel;
-	public static GameObject AchievementPanel;
-	public static GameObject GroupAchievementPanel;
-	public static Button NextButton;
-	public static Button PreviousButton;
+	public GameObject AchievementPanel;
+	public GameObject GroupAchievementPanel;
+	public Button NextButton;
+	public Button PreviousButton;
 
 	void Awake()
 	{
@@ -101,12 +101,12 @@ public class Controller : MonoBehaviour
 		return prev;
 	}
 
-	private static void UpdateSkill()
+	private void UpdateSkill()
 	{
 		var skillClient = Factory.Skill;
 		try
 		{
-			var responses = skillClient.GetGameProgress(UserId.Value.ToString(), GameId.ToString());
+			var responses = skillClient.GetGameProgress(UserId.Value, GameId);
 			var response = responses.FirstOrDefault();
 			Debug.Log("UpdateSkill " + response.Progress);
 			_skillTracker.GetComponentInChildren<Text>().text = response.Name + ":";
@@ -136,6 +136,7 @@ public class Controller : MonoBehaviour
 						DataType = GameDataType.Long,
 						Value = "8",
 						Key = "FriendsAdded",
+						CriteriaQueryType = CriteriaQueryType.Sum,
 						ComparisonType = ComparisonType.GreaterOrEqual,
 						Scope = CriteriaScope.Actor
 
@@ -156,8 +157,8 @@ public class Controller : MonoBehaviour
 		var leaderboardClient = Factory.Leaderboard;
 		try
 		{
-			var leaderboardReponse = leaderboardClient.Get(GameId.ToString());
-			LeaderboardId = leaderboardReponse.Select(x => x.Id).FirstOrDefault();
+			var leaderboardReponse = leaderboardClient.Get(GameId);
+			LeaderboardId = leaderboardReponse.Select(x => x.Token).FirstOrDefault();
 			return true;
 		}
 		catch (Exception exception)
@@ -183,7 +184,7 @@ public class Controller : MonoBehaviour
 				CriteriaScope = CriteriaScope.Actor,
 				LeaderboardType	= LeaderboardType.Cumulative
 			});
-			LeaderboardId = leaderboardResponse.Id;
+			LeaderboardId = leaderboardResponse.Token;
 			return true;
 		}
 		catch (Exception exception)
@@ -289,14 +290,14 @@ public class Controller : MonoBehaviour
 		UiPanel.SetActive(true);
 	}
 
-	public static void UpdateUi()
+	public void UpdateUi()
 	{
 		ScriptLocator.ResourceController.UpdateList();
 		UpdateSkill();
 		_achievementPanel.UpdateAchivementLists();
 	}
 
-	public static void SaveData(int actorId, string key, string value, GameDataType dataType)
+	public void SaveData(int actorId, string key, string value, GameDataType dataType)
 	{
 		_gameDataClient.Add(new GameDataRequest()
 		{
@@ -308,7 +309,7 @@ public class Controller : MonoBehaviour
 		});
 	}
 
-	public static void NextView()
+	public void NextView()
 	{
 		_views[_viewIndex].SetActive(false);
 		if (_viewIndex == 0)

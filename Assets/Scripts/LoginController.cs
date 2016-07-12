@@ -18,12 +18,11 @@ public class LoginController : MonoBehaviour
 
 	void Awake ()
 	{
-		
+		_accountClient = ScriptLocator.Controller.Factory.Account;
 	}
 
 	void Start()
 	{
-		_accountClient = Controller.Factory.Account;
 		LoginButton.onClick.AddListener(LoginUser);
 		RegisterButton.onClick.AddListener(RegisterUser);
 	}
@@ -36,11 +35,12 @@ public class LoginController : MonoBehaviour
 			{
 				var accountResponse = GetRegisterAccountResponse(UsernameInput.text, PasswordInput.text);
 				StatusText.text = "Successfully Registered. ID:" + accountResponse.User.Id + ". Please Login.";
-				Controller.UserId = accountResponse.User.Id;
+				ScriptLocator.Controller.UserId = accountResponse.User.Id;
 			}
-			catch (Exception ex)
+			catch (WebException exception)
 			{
-				StatusText.text = "Failed Registration. " + ex.Message;
+				StatusText.text = "Failed Registration. " + exception.Response;
+				Debug.LogError(exception);
 			}
 		}
 	}
@@ -58,16 +58,17 @@ public class LoginController : MonoBehaviour
 			try
 			{
 				var accountResponse = GetLoginAccountResponse(UsernameInput.text, PasswordInput.text);
-				Controller.UserId = accountResponse.User.Id;
+				ScriptLocator.Controller.UserId = accountResponse.User.Id;
 				//Controller.LoginToken = accountResponse.Token;
 				StatusText.text = "Login Successful!";
 				ScriptLocator.Controller.ActivateAchievementPanels();
-				ScriptLocator.ResourceController.AddResource("Daily Chocolate", 1, Controller.UserId.Value);
-				Controller.NextView();
+				ScriptLocator.ResourceController.AddResource("Daily Chocolate", 1, ScriptLocator.Controller.UserId.Value);
+				ScriptLocator.Controller.NextView();
 			}
 			catch (WebException exception)
 			{
 				StatusText.text = "Failed Login. " + exception;
+				Debug.LogError(exception);
 			}
 		}
 	}
@@ -98,7 +99,6 @@ public class LoginController : MonoBehaviour
 			Name = user,
 			Password = pass,
 			AutoLogin = autoLogin
-
 		};
 	}
    

@@ -33,10 +33,10 @@ public class Friend : MonoBehaviour {
 	private void UpdateFriendsList()
 	{
 		ClearList();
-		var friendclient = Controller.Factory.UserFriend;
+		var friendclient = ScriptLocator.Controller.Factory.UserFriend;
 		try
 		{
-			var friends = friendclient.GetFriends(Controller.UserId.Value);
+			var friends = friendclient.GetFriends(ScriptLocator.Controller.UserId.Value);
 			int counter = 0;
 			var listRect = FriendList.GetComponent<RectTransform>().rect;
 			foreach (var friend in friends)
@@ -62,26 +62,26 @@ public class Friend : MonoBehaviour {
 	private void GiftFriend(int friendId)
 	{
 		var resourceController = ScriptLocator.ResourceController;
-		if (!resourceController.TransferResource("Daily Chocolate", 1, Controller.UserId.Value, friendId))
+		if (!resourceController.TransferResource("Daily Chocolate", 1, ScriptLocator.Controller.UserId.Value, friendId))
 		{
 			StatusText.text = "Sending Gift Failed!";
 		}
 		else
 		{
 			StatusText.text = "Gift Sent!";
-			Controller.UpdateUi();
+			ScriptLocator.Controller.UpdateUi();
 		}
 	}
 
 	private void RemoveFriend(int friendId)
 	{
-		var friend = Controller.Factory.UserFriend;
+		var friend = ScriptLocator.Controller.Factory.UserFriend;
 		try
 		{
 			friend.UpdateFriend(new RelationshipStatusUpdate()
 			{
 				AcceptorId = friendId,
-				RequestorId = Controller.UserId.Value,
+				RequestorId = ScriptLocator.Controller.UserId.Value,
 				Accepted = true
 			});
 			StatusText.text = "Successfully removed friend!";
@@ -89,9 +89,9 @@ public class Friend : MonoBehaviour {
 			try
 			{
 				// Update Achievement Progress
-				Controller.SaveData(Controller.UserId.Value, "FriendsRemoved", "1", GameDataType.Long);
-				Controller.SaveData(Controller.UserId.Value, "FriendsAdded", "-1", GameDataType.Long);
-				Controller.UpdateUi();
+				ScriptLocator.Controller.SaveData(ScriptLocator.Controller.UserId.Value, "FriendsRemoved", "1", GameDataType.Long);
+				ScriptLocator.Controller.SaveData(ScriptLocator.Controller.UserId.Value, "FriendsAdded", "-1", GameDataType.Long);
+				ScriptLocator.Controller.UpdateUi();
 			}
 			catch (Exception ex)
 			{

@@ -18,7 +18,7 @@ public class Leaderboard : MonoBehaviour
 	// Use this for initialization
 	void Awake()
 	{
-		_leaderboardClient = Controller.Factory.Leaderboard;
+		_leaderboardClient = ScriptLocator.Controller.Factory.Leaderboard;
 	}
 
 	void OnEnable()
@@ -33,8 +33,9 @@ public class Leaderboard : MonoBehaviour
 		{
 			var leaderboardStandingsResponse = _leaderboardClient.CreateGetLeaderboardStandings(new LeaderboardStandingsRequest()
 			{
-				LeaderboardId = Controller.LeaderboardId,
-				ActorId = Controller.UserId.Value,
+				LeaderboardToken = ScriptLocator.Controller.LeaderboardId,
+				GameId = ScriptLocator.Controller.GameId,
+				ActorId = ScriptLocator.Controller.UserId.Value,
 				LeaderboardFilterType = LeaderboardFilterType.Near,
 				Limit = 8,
 				Offset = 0
@@ -65,11 +66,6 @@ public class Leaderboard : MonoBehaviour
 			itemScript.ValueText.text = standing.Value;
 		}
 	}
-
-	//void OnDisable()
-	//{
-	//	ClearList();
-	//}
 
 	private void ClearList()
 	{

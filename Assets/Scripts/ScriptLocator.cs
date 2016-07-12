@@ -16,9 +16,7 @@ public class ScriptLocator : MonoBehaviour
 	}
 
 	public static ResourceController ResourceController { get; private set; }
-
 	public static Controller Controller { get; private set; }
-
 	public static LoginController LoginController { get; private set; }
 
 }

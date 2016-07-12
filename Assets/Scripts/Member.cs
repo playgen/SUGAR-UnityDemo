@@ -17,13 +17,13 @@ public class Member : MonoBehaviour
 
 	void Awake()
 	{
-		_friend = Controller.Factory.UserFriend;
-		_groupMember = Controller.Factory.GroupMember;
+		_friend = ScriptLocator.Controller.Factory.UserFriend;
+		_groupMember = ScriptLocator.Controller.Factory.GroupMember;
 	}
 
 	void OnEnable()
 	{
-		if (Controller.GroupId.HasValue)
+		if (ScriptLocator.Controller.GroupId.HasValue)
 		{
 			UpdateMembersList();
 		}
@@ -46,14 +46,14 @@ public class Member : MonoBehaviour
 	void UpdateMembersList()
 	{
 		ClearList();
-		var userFriends = _friend.GetFriends(Controller.UserId.Value);
-		var groupMembers = _groupMember.GetMembers(Controller.GroupId.Value);
+		var userFriends = _friend.GetFriends(ScriptLocator.Controller.UserId.Value);
+		var groupMembers = _groupMember.GetMembers(ScriptLocator.Controller.GroupId.Value);
 		var userFriendIds = new HashSet<int>(userFriends.Select(x => x.Id));
 		int counter = 0;
 		var listRect = MemberList.GetComponent<RectTransform>().rect;
 		foreach (var member in groupMembers)
 		{
-			if (member.Id == Controller.UserId.Value)
+			if (member.Id == ScriptLocator.Controller.UserId.Value)
 			{
 				// do not show self
 				continue;
@@ -80,14 +80,14 @@ public class Member : MonoBehaviour
 
 	void AddFriend(int memberId)
 	{
-		var userFriend = Controller.Factory.UserFriend;
+		var userFriend = ScriptLocator.Controller.Factory.UserFriend;
 		try
 		{
 			// Add friend
 			var relationshipResponse = userFriend.CreateFriendRequest(new RelationshipRequest()
 			{
 				AcceptorId = memberId,
-				RequestorId = Controller.UserId.Value,
+				RequestorId = ScriptLocator.Controller.UserId.Value,
 				AutoAccept = true
 				
 			});
@@ -97,8 +97,8 @@ public class Member : MonoBehaviour
 			try
 			{
 				// Update Achievement Progress
-				Controller.SaveData(Controller.UserId.Value, "FriendsAdded", "1", GameDataType.Long);
-				Controller.AchievementPanel.GetComponent<Achievement>().UpdateAchivementLists();
+				ScriptLocator.Controller.SaveData(ScriptLocator.Controller.UserId.Value, "FriendsAdded", "1", GameDataType.Long);
+				ScriptLocator.Controller.AchievementPanel.GetComponent<Achievement>().UpdateAchivementLists();
 			}
 			catch (Exception ex)
 			{
@@ -115,13 +115,13 @@ public class Member : MonoBehaviour
 
 	private void RemoveFriend(int friendId)
 	{
-		var friend = Controller.Factory.UserFriend;
+		var friend = ScriptLocator.Controller.Factory.UserFriend;
 		try
 		{
 			friend.UpdateFriend(new RelationshipStatusUpdate()
 			{
 				AcceptorId = friendId,
-				RequestorId = Controller.UserId.Value,
+				RequestorId = ScriptLocator.Controller.UserId.Value,
 				Accepted = true
 			});
 			StatusText.text = "Successfully removed friend!";
@@ -129,9 +129,9 @@ public class Member : MonoBehaviour
 			try
 			{
 				// Update Achievement Progress
-				Controller.SaveData(Controller.UserId.Value, "FriendsRemoved", "1", GameDataType.Long);
-				Controller.SaveData(Controller.UserId.Value, "FriendsAdded", "-1", GameDataType.Long);
-				Controller.AchievementPanel.GetComponent<Achievement>().UpdateAchivementLists();
+				ScriptLocator.Controller.SaveData(ScriptLocator.Controller.UserId.Value, "FriendsRemoved", "1", GameDataType.Long);
+				ScriptLocator.Controller.SaveData(ScriptLocator.Controller.UserId.Value, "FriendsAdded", "-1", GameDataType.Long);
+				ScriptLocator.Controller.AchievementPanel.GetComponent<Achievement>().UpdateAchivementLists();
 				//Controller.NextView();
 			}
 			catch (Exception ex)
