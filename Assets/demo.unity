@@ -335,7 +335,7 @@ RectTransform:
   - {fileID: 1849620059}
   - {fileID: 1970386113}
   m_Father: {fileID: 886304578}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -0.000030517578}
@@ -556,8 +556,8 @@ RectTransform:
   - {fileID: 642601301}
   - {fileID: 343259374}
   - {fileID: 1514071178}
-  m_Father: {fileID: 401696643}
-  m_RootOrder: 3
+  m_Father: {fileID: 886304578}
+  m_RootOrder: 2
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0.000030517578}
@@ -839,7 +839,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &399317612
 RectTransform:
   m_ObjectHideFlags: 0
@@ -926,7 +926,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &401696643
 RectTransform:
   m_ObjectHideFlags: 0
@@ -941,9 +941,8 @@ RectTransform:
   - {fileID: 771787956}
   - {fileID: 892119206}
   - {fileID: 933048937}
-  - {fileID: 344433898}
   m_Father: {fileID: 886304578}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -1248,7 +1247,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: <<
+  m_Text: Back
 --- !u!222 &466441640
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2226,6 +2225,7 @@ RectTransform:
   m_Children:
   - {fileID: 399317612}
   - {fileID: 901161260}
+  - {fileID: 344433898}
   - {fileID: 401696643}
   - {fileID: 283983275}
   m_Father: {fileID: 1670152741}
@@ -3652,7 +3652,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: '>>'
+  m_Text: Next
 --- !u!222 &1726924041
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3920,8 +3920,9 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1839237902}
-  - 114: {fileID: 1839237901}
   - 114: {fileID: 1839237903}
+  - 114: {fileID: 1839237901}
+  - 114: {fileID: 1839237905}
   - 114: {fileID: 1839237904}
   m_Layer: 0
   m_Name: Controller
@@ -3938,14 +3939,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1839237900}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11c07d230b54b3d40993cfe853ebd506, type: 3}
+  m_Script: {fileID: 11500000, guid: 7b03a508b776c3148b7c6f2184fd62b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameName: sga2-demo
-  BaseUri: http://localhost:62312/
-  Views: {fileID: 886304577}
-  UiPanel: {fileID: 1959535266}
-  LoginPanel: {fileID: 399317611}
+  ResourcePanel: {fileID: 241167815}
+  ResourceItemPrefab: {fileID: 124812, guid: a430b354b86de1a46996fddc1108dc9c, type: 2}
+  ResourceList: {fileID: 1376624263}
 --- !u!4 &1839237902
 Transform:
   m_ObjectHideFlags: 0
@@ -3967,12 +3966,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1839237900}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b03a508b776c3148b7c6f2184fd62b0, type: 3}
+  m_Script: {fileID: 11500000, guid: 11c07d230b54b3d40993cfe853ebd506, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ResourcePanel: {fileID: 241167815}
-  ResourceItemPrefab: {fileID: 124812, guid: a430b354b86de1a46996fddc1108dc9c, type: 2}
-  ResourceList: {fileID: 1376624263}
+  GameName: sga2-demo
+  BaseUri: http://localhost:62312/
+  Views: {fileID: 886304577}
+  UiPanel: {fileID: 1959535266}
+  LoginPanel: {fileID: 399317611}
 --- !u!114 &1839237904
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3984,6 +3985,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7bad77a32a253e4ab1d75ab56249ac8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1839237905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1839237900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b058136c963b504459ff27c8634a1646, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UsernameInput: {fileID: 0}
+  PasswordInput: {fileID: 0}
+  StatusText: {fileID: 0}
+  LoginButton: {fileID: 0}
+  RegisterButton: {fileID: 0}
 --- !u!1 &1849620058
 GameObject:
   m_ObjectHideFlags: 0
@@ -4216,7 +4233,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1959535267
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4359,7 +4376,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2003018009
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4640,7 +4657,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2074103376
 MonoBehaviour:
   m_ObjectHideFlags: 0

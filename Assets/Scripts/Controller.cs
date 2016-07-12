@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using PlayGen.SUGAR.Client;
 using PlayGen.SUGAR.Contracts;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Controller : MonoBehaviour
@@ -48,7 +49,7 @@ public class Controller : MonoBehaviour
 		}
 		_viewIndex = 0;
 		NextButton = UiPanel.transform.FindChild("NextBtn").gameObject.GetComponent<Button>();
-		NextButton.onClick.AddListener(() => NextView());
+		NextButton.onClick.AddListener(NextView);
 		PreviousButton = UiPanel.transform.FindChild("PreviousBtn").gameObject.GetComponent<Button>();
 		PreviousButton.onClick.AddListener(PreviousView);
 		AchievementPanel = UiPanel.transform.FindChild("AchievementPanel").gameObject;
@@ -220,17 +221,16 @@ public class Controller : MonoBehaviour
 
 	private bool LoginAdmin()
 	{
-		var loginScript = LoginPanel.GetComponent<Login>();
 		try
 		{
-			loginScript.GetLoginAccountResponse("admin", "admin");
+			ScriptLocator.LoginController.GetLoginAccountResponse("admin", "admin");
 			return true;
 		}
 		catch
 		{
 			try
 			{
-				loginScript.GetRegisterAccountResponse("admin", "admin", true);
+				ScriptLocator.LoginController.GetRegisterAccountResponse("admin", "admin", true);
 				return true;
 			}
 			catch (Exception exception)
@@ -284,15 +284,14 @@ public class Controller : MonoBehaviour
 	}
 
 
-	public static void ActivateAchievementPanels()
+	public void ActivateAchievementPanels()
 	{
-		AchievementPanel.SetActive(true);
-		GroupAchievementPanel.SetActive(true);
+		UiPanel.SetActive(true);
 	}
 
 	public static void UpdateUi()
 	{
-		ScriptLocator.GetResourceControl().UpdateList();
+		ScriptLocator.ResourceController.UpdateList();
 		UpdateSkill();
 		_achievementPanel.UpdateAchivementLists();
 	}
@@ -332,11 +331,16 @@ public class Controller : MonoBehaviour
 			NextButton.interactable = true;
 		}
 		_viewIndex--;
-		if (_viewIndex == 0)
+		if (_viewIndex == 1)
 		{
-			PreviousButton.interactable = false;
+			PreviousButton.GetComponent<Text>().text = "Logout";
+			PreviousButton.onClick.AddListener(Logout);
 		}
 		_views[_viewIndex].SetActive(true);
 	}
 
+	private void Logout()
+	{
+		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+	}
 }

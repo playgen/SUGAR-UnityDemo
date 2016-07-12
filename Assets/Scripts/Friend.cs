@@ -61,7 +61,7 @@ public class Friend : MonoBehaviour {
 
 	private void GiftFriend(int friendId)
 	{
-		var resourceController = ScriptLocator.GetResourceControl();
+		var resourceController = ScriptLocator.ResourceController;
 		if (!resourceController.TransferResource("Daily Chocolate", 1, Controller.UserId.Value, friendId))
 		{
 			StatusText.text = "Sending Gift Failed!";

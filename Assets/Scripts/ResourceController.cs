@@ -42,22 +42,22 @@ public class ResourceController : MonoBehaviour
 
 	public bool TransferResource(string key, int quantity, int userId, int targetId)
 	{
-	    try
-	    {
-	        _resourceClient.Transfer(new ResourceTransferRequest()
-	        {
-	            GameId = Controller.GameId,
-	            SenderActorId = userId,
-	            RecipientActorId = targetId,
-	            Key = key,
-	            Quantity = quantity,
-	        });
-	        return true;
-	    }
-	    catch (WebException exception)
-	    {
-	        Debug.LogError("TransferResource Failed: " + exception);
-	    }
+		try
+		{
+			_resourceClient.Transfer(new ResourceTransferRequest()
+			{
+				GameId = Controller.GameId,
+				SenderActorId = userId,
+				RecipientActorId = targetId,
+				Key = key,
+				Quantity = quantity,
+			});
+			return true;
+		}
+		catch (WebException exception)
+		{
+			Debug.LogError("TransferResource Failed: " + exception);
+		}
 		return false;
 	}
 
@@ -75,15 +75,17 @@ public class ResourceController : MonoBehaviour
 			var listRect = ResourceList.GetComponent<RectTransform>().rect;
 			foreach (var resource in resources)
 			{
-				var resourceItem = Instantiate(ResourceItemPrefab);
-				resourceItem.transform.SetParent(ResourceList.transform, false);
-				var itemRectTransform = resourceItem.GetComponent<RectTransform>();
-				itemRectTransform.sizeDelta = new Vector2(listRect.width, listRect.height / 4);
-				itemRectTransform.anchoredPosition = new Vector2(0, (counter * -(listRect.height / 4)));
-				resourceItem.transform.FindChild("Name").GetComponent<Text>().text = resource.Key;
-				resourceItem.transform.FindChild("Quantity").GetComponent<Text>().text = resource.Quantity.ToString();
-				counter++;
-
+				if (resource.Quantity > 0)
+				{
+					var resourceItem = Instantiate(ResourceItemPrefab);
+					resourceItem.transform.SetParent(ResourceList.transform, false);
+					var itemRectTransform = resourceItem.GetComponent<RectTransform>();
+					itemRectTransform.sizeDelta = new Vector2(listRect.width, listRect.height / 4);
+					itemRectTransform.anchoredPosition = new Vector2(0, (counter * -(listRect.height / 4)));
+					resourceItem.transform.FindChild("Name").GetComponent<Text>().text = resource.Key;
+					resourceItem.transform.FindChild("Quantity").GetComponent<Text>().text = resource.Quantity.ToString();
+					counter++;
+				}
 			}
 		}
 		catch (Exception exception)

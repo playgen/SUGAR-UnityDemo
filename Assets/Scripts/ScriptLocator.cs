@@ -1,19 +1,24 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEditor;
 using UnityEngine.Networking;
 
+[RequireComponent(typeof(Controller))]
+[RequireComponent(typeof(ResourceController))]
+[RequireComponent(typeof(LoginController))]
 public class ScriptLocator : MonoBehaviour
 {
-
-	private static ResourceController _resourceController;
-
-	void Start()
+	void Awake()
 	{
-		_resourceController = transform.GetComponent<ResourceController>();
+		ResourceController = transform.GetComponent<ResourceController>();
+		Controller = transform.GetComponent<Controller>();
+		LoginController = transform.GetComponent<LoginController>();
 	}
 
-	public static ResourceController GetResourceControl()
-	{
-		return _resourceController;
-	}
+	public static ResourceController ResourceController { get; private set; }
+
+	public static Controller Controller { get; private set; }
+
+	public static LoginController LoginController { get; private set; }
+
 }

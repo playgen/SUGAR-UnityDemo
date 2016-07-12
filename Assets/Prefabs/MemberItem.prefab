@@ -101,7 +101,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: FRIEND
+  m_Text: Add Friend
 --- !u!114 &11424290
 MonoBehaviour:
   m_ObjectHideFlags: 1

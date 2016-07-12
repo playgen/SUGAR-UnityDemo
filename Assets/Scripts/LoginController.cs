@@ -3,10 +3,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using PlayGen.SUGAR.Client;
 using PlayGen.SUGAR.Contracts;
 
-public class Login : MonoBehaviour
+public class LoginController : MonoBehaviour
 {
 	private AccountClient _accountClient;
 	public InputField UsernameInput;
@@ -15,7 +16,12 @@ public class Login : MonoBehaviour
 	public Button LoginButton;
 	public Button RegisterButton;
 
-	void Start ()
+	void Awake ()
+	{
+		
+	}
+
+	void Start()
 	{
 		_accountClient = Controller.Factory.Account;
 		LoginButton.onClick.AddListener(LoginUser);
@@ -45,7 +51,6 @@ public class Login : MonoBehaviour
 		return _accountClient.Register(accountRequest);
 	}
 
-
 	private void LoginUser()
 	{
 		if (CheckFields())
@@ -56,13 +61,13 @@ public class Login : MonoBehaviour
 				Controller.UserId = accountResponse.User.Id;
 				//Controller.LoginToken = accountResponse.Token;
 				StatusText.text = "Login Successful!";
-				Controller.ActivateAchievementPanels();
-				ScriptLocator.GetResourceControl().AddResource("Daily Chocolate", 1, Controller.UserId.Value);
+				ScriptLocator.Controller.ActivateAchievementPanels();
+				ScriptLocator.ResourceController.AddResource("Daily Chocolate", 1, Controller.UserId.Value);
 				Controller.NextView();
 			}
-			catch (Exception ex)
+			catch (WebException exception)
 			{
-				StatusText.text = "Failed Login. " + ex.Message;
+				StatusText.text = "Failed Login. " + exception;
 			}
 		}
 	}

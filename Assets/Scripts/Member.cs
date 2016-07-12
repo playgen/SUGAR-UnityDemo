@@ -69,8 +69,7 @@ public class Member : MonoBehaviour
 			var itemButton = memberItem.GetComponentInChildren<Button>();
 			if (userFriendIds.Contains(member.Id))
 			{
-				itemButton.GetComponentInChildren<Text>().text = "REMOVE";
-				itemButton.onClick.AddListener(() => RemoveFriend(memberCopy.Id));
+				Destroy(itemButton.gameObject);
 			}
 			else
 			{
