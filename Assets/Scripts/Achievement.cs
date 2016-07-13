@@ -93,7 +93,7 @@ public class Achievement : MonoBehaviour
 						DataType = GameDataType.Long,
 						Value = "1",
 						Key = "GroupsJoined",
-                        CriteriaQueryType = CriteriaQueryType.Any,
+						CriteriaQueryType = CriteriaQueryType.Any,
 						ComparisonType = ComparisonType.GreaterOrEqual,
 						Scope = CriteriaScope.Actor
 
@@ -113,8 +113,8 @@ public class Achievement : MonoBehaviour
 						DataType = GameDataType.Long,
 						Value = "2",
 						Key = "FriendsAdded",
-                        CriteriaQueryType = CriteriaQueryType.Sum,
-                        ComparisonType = ComparisonType.GreaterOrEqual,
+						CriteriaQueryType = CriteriaQueryType.Sum,
+						ComparisonType = ComparisonType.GreaterOrEqual,
 						Scope = CriteriaScope.Actor
 					}
 				}
@@ -132,8 +132,8 @@ public class Achievement : MonoBehaviour
 						DataType = GameDataType.Long,
 						Value = "1",
 						Key = "FriendsRemoved",
-                        CriteriaQueryType = CriteriaQueryType.Any,
-                        ComparisonType = ComparisonType.GreaterOrEqual,
+						CriteriaQueryType = CriteriaQueryType.Any,
+						ComparisonType = ComparisonType.GreaterOrEqual,
 						Scope = CriteriaScope.Actor
 					}
 				}
@@ -151,8 +151,8 @@ public class Achievement : MonoBehaviour
 						DataType = GameDataType.Long,
 						Value = "5",
 						Key = "MembersJoined",
-                        CriteriaQueryType = CriteriaQueryType.Sum,
-                        ComparisonType = ComparisonType.GreaterOrEqual,
+						CriteriaQueryType = CriteriaQueryType.Sum,
+						ComparisonType = ComparisonType.GreaterOrEqual,
 						Scope = CriteriaScope.Actor
 					}
 				}
@@ -170,8 +170,8 @@ public class Achievement : MonoBehaviour
 						DataType = GameDataType.Long,
 						Value = "2",
 						Key = "MembersLeft",
-                        CriteriaQueryType = CriteriaQueryType.Sum,
-                        ComparisonType = ComparisonType.GreaterOrEqual,
+						CriteriaQueryType = CriteriaQueryType.Sum,
+						ComparisonType = ComparisonType.GreaterOrEqual,
 						Scope = CriteriaScope.Actor
 					}
 				}

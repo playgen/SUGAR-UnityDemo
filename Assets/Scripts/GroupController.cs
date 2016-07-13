@@ -132,7 +132,7 @@ public class GroupController : MonoBehaviour
 		}
 	}
 
-	void JoinGroup(int groupId)
+	private void JoinGroup(int groupId)
 	{
 		try
 		{

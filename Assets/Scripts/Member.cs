@@ -111,37 +111,4 @@ public class Member : MonoBehaviour
 			StatusText.text = "Failed to add friend. " + ex.Message;
 		}
 	}
-
-
-	private void RemoveFriend(int friendId)
-	{
-		var friend = ScriptLocator.Controller.Factory.UserFriend;
-		try
-		{
-			friend.UpdateFriend(new RelationshipStatusUpdate()
-			{
-				AcceptorId = friendId,
-				RequestorId = ScriptLocator.Controller.UserId.Value,
-				Accepted = true
-			});
-			StatusText.text = "Successfully removed friend!";
-			UpdateMembersList();
-			try
-			{
-				// Update Achievement Progress
-				ScriptLocator.Controller.SaveData(ScriptLocator.Controller.UserId.Value, "FriendsRemoved", "1", GameDataType.Long);
-				ScriptLocator.Controller.SaveData(ScriptLocator.Controller.UserId.Value, "FriendsAdded", "-1", GameDataType.Long);
-				ScriptLocator.Controller.AchievementPanel.GetComponent<Achievement>().UpdateAchivementLists();
-				//Controller.NextView();
-			}
-			catch (Exception ex)
-			{
-				StatusText.text = "SaveData Fail. " + ex.Message;
-			}
-		}
-		catch (Exception ex)
-		{
-			StatusText.text = "Remove Friend Failed. " + ex.Message;
-		}
-	}
 }
