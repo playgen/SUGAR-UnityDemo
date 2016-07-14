@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using PlayGen.SUGAR.Client;
 using PlayGen.SUGAR.Contracts;
@@ -8,8 +7,6 @@ using UnityEngine.UI;
 
 public class Leaderboard : MonoBehaviour
 {
-
-	//private IEnumerable<ActorResponse> _userGroups;   LEADERS
 	private LeaderboardClient _leaderboardClient;
 	public GameObject LeaderItemPrefab;
 	public GameObject LeaderboardObject;

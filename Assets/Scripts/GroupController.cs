@@ -1,10 +1,8 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using PlayGen.SUGAR.Client;
 using PlayGen.SUGAR.Contracts;
 
@@ -81,6 +79,7 @@ public class GroupController : MonoBehaviour
 			var itemButton = groupItem.GetComponentInChildren<Button>();
 			if (userGroupIds.Contains(group.Id))
 			{
+				ScriptLocator.Controller.UpdateUi();
 				itemButton.GetComponentInChildren<Text>().text = "LEAVE";
 				itemButton.onClick.AddListener(() => LeaveGroup(groupCopy.Id));
 			}

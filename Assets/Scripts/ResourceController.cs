@@ -1,7 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using System.Collections;
-using System.Linq;
 using System.Net;
 using PlayGen.SUGAR.Client;
 using PlayGen.SUGAR.Contracts;
@@ -9,7 +7,7 @@ using UnityEngine.UI;
 
 public class ResourceController : MonoBehaviour
 {
-	private static ResourceClient _resourceClient;
+	private ResourceClient _resourceClient;
 
 	public GameObject ResourcePanel;
 	public GameObject ResourceItemPrefab;
@@ -93,7 +91,6 @@ public class ResourceController : MonoBehaviour
 			Debug.LogError("Update Resource List Failed: " + exception);
 		}
 	}
-
 }
 
 

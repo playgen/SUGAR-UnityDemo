@@ -1,8 +1,5 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
-using System.Collections.Generic;
 using System.Net;
 using PlayGen.SUGAR.Client;
 using PlayGen.SUGAR.Contracts;
@@ -60,8 +57,10 @@ public class LoginController : MonoBehaviour
 				var accountResponse = GetLoginAccountResponse(UsernameInput.text, PasswordInput.text);
 				ScriptLocator.Controller.UserId = accountResponse.User.Id;
 				//Controller.LoginToken = accountResponse.Token;
-				StatusText.text = "Login Successful!";
-				ScriptLocator.Controller.ActivateAchievementPanels();
+				UsernameInput.text = "";
+				PasswordInput.text = "";
+				StatusText.text = "";
+				ScriptLocator.Controller.ActivateUiPanels();
 				ScriptLocator.ResourceController.AddResource("Daily Chocolate", 1, ScriptLocator.Controller.UserId.Value);
 				ScriptLocator.Controller.NextView();
 			}
@@ -75,7 +74,9 @@ public class LoginController : MonoBehaviour
 
 	public AccountResponse GetLoginAccountResponse(string username, string password)
 	{
+		Debug.Log("Loginres");
 		var accountRequest = CreateAccountRequest(username, password);
+		Debug.Log("Logininin");
 		return _accountClient.Login(accountRequest);
 		
 	}

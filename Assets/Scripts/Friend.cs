@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 using System;
-using System.Linq;
 using PlayGen.SUGAR.Contracts;
 
 public class Friend : MonoBehaviour {

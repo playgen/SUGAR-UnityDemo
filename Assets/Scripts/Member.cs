@@ -1,7 +1,6 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using PlayGen.SUGAR.Client;
@@ -99,6 +98,7 @@ public class Member : MonoBehaviour
 				// Update Achievement Progress
 				ScriptLocator.Controller.SaveData(ScriptLocator.Controller.UserId.Value, "FriendsAdded", "1", GameDataType.Long);
 				ScriptLocator.Controller.AchievementPanel.GetComponent<Achievement>().UpdateAchivementLists();
+				ScriptLocator.Controller.UpdateUi();
 			}
 			catch (Exception ex)
 			{

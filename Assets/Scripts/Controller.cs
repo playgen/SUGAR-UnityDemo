@@ -1,10 +1,6 @@
 ﻿using System;
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Net;
 using PlayGen.SUGAR.Client;
 using PlayGen.SUGAR.Contracts;
 using UnityEngine.SceneManagement;
@@ -16,9 +12,7 @@ public class Controller : MonoBehaviour
 	private GameObject[] _views;
 	private int _viewIndex;
 	private Achievement _achievementPanel;
-	private GameObject _skillTracker;
 	private GameClient _gameClient;
-
 	public SUGARClient Factory;
 	public int? UserId { get; set; }
 	public int? GroupId { get; set; }
@@ -26,7 +20,7 @@ public class Controller : MonoBehaviour
 	public int GameId { get; set; }
 	public string LeaderboardId { get; set; }
 	public string GameName;
-	public string BaseUri;
+	
 	public GameObject Views;
 	public GameObject UiPanel;
 	public GameObject LoginPanel;
@@ -35,9 +29,11 @@ public class Controller : MonoBehaviour
 	public Button NextButton;
 	public Button PreviousButton;
 
+	// ReSharper disable once ClassNeverInstantiated.Local
+
 	void Awake()
 	{
-		Factory = new SUGARClient(BaseUri);
+		Factory = new SUGARClient(ScriptLocator.Config.BaseUri);
 		_gameDataClient = Factory.GameData;
 		_gameClient = Factory.Game;
 		_views = new GameObject[Views.transform.childCount];
@@ -55,11 +51,6 @@ public class Controller : MonoBehaviour
 		AchievementPanel = UiPanel.transform.FindChild("AchievementPanel").gameObject;
 		GroupAchievementPanel = UiPanel.transform.FindChild("GroupAchievementPanel").gameObject;
 		_achievementPanel = AchievementPanel.GetComponent<Achievement>();
-		_skillTracker = UiPanel.transform.FindChild("SkillTracker").gameObject;
-		if (_skillTracker == null)
-		{
-			Debug.LogError("Skill Panel not found");
-		}
 	}
 
 	void Start()
@@ -69,6 +60,7 @@ public class Controller : MonoBehaviour
 			Debug.LogError("Setup Failed");
 		}
 	}
+
 
 	private bool SetUp()
 	{
@@ -96,61 +88,12 @@ public class Controller : MonoBehaviour
 		prev = prev && SetUpLeaderboard();
 		Debug.Log("SetUpLeaderboard: " + prev);
 
-		prev = prev && SetUpSkills();
+		prev = prev && ScriptLocator.SkillController.SetUpSkills();
 		Debug.Log("SetUpSkills: " + prev);
 		return prev;
 	}
 
-	private void UpdateSkill()
-	{
-		var skillClient = Factory.Skill;
-		try
-		{
-			var responses = skillClient.GetGameProgress(UserId.Value, GameId);
-			var response = responses.FirstOrDefault();
-			Debug.Log("UpdateSkill " + response.Progress);
-			_skillTracker.GetComponentInChildren<Text>().text = response.Name + ":";
-			_skillTracker.GetComponentInChildren<Image>().fillAmount = response.Progress;
-		}
-		catch(Exception exception)
-		{
-			Debug.Log("Error updating skill: " + exception.Message);
-		}
-	}
 
-	private bool SetUpSkills()
-	{
-		var skillClient = Factory.Skill;
-		try
-		{
-			skillClient.Create(new AchievementRequest()
-			{
-				GameId = GameId,
-				Name = "Social Skill",
-				ActorType = ActorType.User,
-				Token = "SOCIAL",
-				CompletionCriteria = new List<AchievementCriteria>()
-				{
-					new AchievementCriteria()
-					{
-						DataType = GameDataType.Long,
-						Value = "8",
-						Key = "FriendsAdded",
-						CriteriaQueryType = CriteriaQueryType.Sum,
-						ComparisonType = ComparisonType.GreaterOrEqual,
-						Scope = CriteriaScope.Actor
-
-					}
-				}
-			});
-			return true;
-		}
-		catch (Exception exception)
-		{
-			Debug.LogError("Failed to create skill: " + exception.Message);
-		}
-		return false;
-	}
 
 	private bool GetLeaderboardId()
 	{
@@ -285,7 +228,7 @@ public class Controller : MonoBehaviour
 	}
 
 
-	public void ActivateAchievementPanels()
+	public void ActivateUiPanels()
 	{
 		UiPanel.SetActive(true);
 	}
@@ -293,7 +236,7 @@ public class Controller : MonoBehaviour
 	public void UpdateUi()
 	{
 		ScriptLocator.ResourceController.UpdateList();
-		UpdateSkill();
+		ScriptLocator.SkillController.UpdateList();
 		_achievementPanel.UpdateAchivementLists();
 	}
 
@@ -314,8 +257,13 @@ public class Controller : MonoBehaviour
 		_views[_viewIndex].SetActive(false);
 		if (_viewIndex == 0)
 		{
-			PreviousButton.interactable = true;
+			PreviousButton.GetComponentInChildren<Text>().text = "Logout";
 		}
+		else
+		{
+			PreviousButton.GetComponentInChildren<Text>().text = "Back";
+		}
+
 		_viewIndex++;
 		if (_viewIndex == _views.Length - 1)
 		{
@@ -326,17 +274,24 @@ public class Controller : MonoBehaviour
 
 	public void PreviousView()
 	{
+		if (PreviousButton.GetComponentInChildren<Text>().text == "Logout")
+		{
+			UiPanel.SetActive(false);
+		}
+		if (_viewIndex == 2)
+		{
+			PreviousButton.GetComponentInChildren<Text>().text = "Logout";
+		}
+		else
+		{
+			PreviousButton.GetComponentInChildren<Text>().text = "Back";
+		}
 		_views[_viewIndex].SetActive(false);
 		if (_viewIndex == _views.Length - 1)
 		{
 			NextButton.interactable = true;
 		}
 		_viewIndex--;
-		if (_viewIndex == 1)
-		{
-			PreviousButton.GetComponent<Text>().text = "Logout";
-			PreviousButton.onClick.AddListener(Logout);
-		}
 		_views[_viewIndex].SetActive(true);
 	}
 

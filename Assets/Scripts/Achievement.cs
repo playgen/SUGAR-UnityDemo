@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using PlayGen.SUGAR.Client;
 using PlayGen.SUGAR.Contracts;
@@ -35,15 +34,24 @@ public class Achievement : MonoBehaviour
 		{
 			UpdateAchievementsList(GroupAchievementList, groupId.Value);
 		}
+		else
+		{
+			ClearList(GroupAchievementList);
+		}
 	}
 
-	private void UpdateAchievementsList(GameObject listObject, int actorId)
+	private void ClearList(GameObject listObject)
 	{
 		//Remove old achievemnts list
 		foreach (Transform child in listObject.transform)
 		{
 			Destroy(child.gameObject);
 		}
+	}
+
+	private void UpdateAchievementsList(GameObject listObject, int actorId)
+	{
+		ClearList(listObject);
 		try
 		{
 			var achievements = _achievementClient.GetGameProgress(ScriptLocator.Controller.GameId, actorId);
