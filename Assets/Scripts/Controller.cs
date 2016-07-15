@@ -13,6 +13,12 @@ public class Controller : MonoBehaviour
 	private int _viewIndex;
 	private Achievement _achievementPanel;
 	private GameClient _gameClient;
+	private UserClient _userClient;
+	private GroupClient _groupClient;
+    private UserFriendClient _friendClient;
+    private GroupMemberClient _memberClient;
+	private readonly string[] _userNames = new[] {"Burnadette", "Fracheska", "Mr.Magoo", "Mary-Lou", "T-Bone", "Sarah-May-Concertina", "Colonel-Corny-Cobs"};
+	private readonly string[] _groupNames = new[] {"Happy Campers", "Daunting Ducks", "Yellow Submarines", "The Best Group"};
 	public SUGARClient Factory;
 	public int? UserId { get; set; }
 	public int? GroupId { get; set; }
@@ -29,14 +35,21 @@ public class Controller : MonoBehaviour
 	public Button NextButton;
 	public Button PreviousButton;
 
-	// ReSharper disable once ClassNeverInstantiated.Local
+    public string[] UserNames { get { return _userNames; } }
+    public string[] GroupNames { get { return _groupNames; } }
 
-	void Awake()
+    // ReSharper disable once ClassNeverInstantiated.Local
+
+    void Awake()
 	{
 		Factory = new SUGARClient(ScriptLocator.Config.BaseUri);
 		_gameDataClient = Factory.GameData;
 		_gameClient = Factory.Game;
-		_views = new GameObject[Views.transform.childCount];
+		_userClient = Factory.User;
+		_groupClient = Factory.Group;
+        _memberClient = Factory.GroupMember;
+        _friendClient = Factory.UserFriend;
+        _views = new GameObject[Views.transform.childCount];
 		_viewIndex = 0;
 		foreach (Transform child in Views.transform)
 		{
@@ -67,7 +80,7 @@ public class Controller : MonoBehaviour
 		var prev = LoginAdmin();
 		Debug.Log("LoginAdmin: " + prev);
 
-		prev = prev && CheckGame();
+		prev &= CheckGame();
 		Debug.Log("CheckGame: " + prev);
 		if (!prev)
 		{
@@ -76,19 +89,30 @@ public class Controller : MonoBehaviour
 			return prev;
 		}
 
-		prev = prev && SetUpGame();
+		prev &= SetUpGame();
 		Debug.Log("SetUpGame: " + prev);
 
-		prev = prev && SetUpGroups();
+		int[] groupIds;
+		prev &= SetUpGroups(out groupIds);
 		Debug.Log("SetUpGroups: " + prev);
 
-		prev = prev && _achievementPanel.SetUpAchievements();
+	    int[] userIds;
+		prev &= SetupUsers(out userIds);
+		Debug.Log("SetupUsers: " + prev);
+
+        prev &= SetupUserMembers(groupIds, userIds);
+        Debug.Log("SetupUserMembers: " + prev);
+
+        prev &= SetupUserFriends(userIds);
+        Debug.Log("SetupUserFriends: " + prev);
+
+        prev &= _achievementPanel.SetUpAchievements();
 		Debug.Log("SetUpAchievements: " + prev);
 
-		prev = prev && SetUpLeaderboard();
+		prev &= SetUpLeaderboard();
 		Debug.Log("SetUpLeaderboard: " + prev);
 
-		prev = prev && ScriptLocator.SkillController.SetUpSkills();
+		prev &= ScriptLocator.SkillController.SetUpSkills();
 		Debug.Log("SetUpSkills: " + prev);
 		return prev;
 	}
@@ -138,20 +162,19 @@ public class Controller : MonoBehaviour
 		return false;
 	}
 
-	private bool SetUpGroups()
+	private bool SetUpGroups(out int[] ids)
 	{
-		int groupNum = 4;
-		int[] Ids = new int[groupNum];
-		var _groupClient = Factory.Group;
+		ids = new int[_groupNames.Length];
+		_groupClient = Factory.Group;
 		try
 		{
-			for (int i = 0; i < groupNum; i++)
+			for (int i = 0; i < _groupNames.Length; i++)
 			{
 				var actorResponse = _groupClient.Create(new ActorRequest()
 				{
-					Name = "group " + i
+					Name = _groupNames[i]
 				});
-				Ids[i] = actorResponse.Id;
+				ids[i] = actorResponse.Id;
 			}
 			return true;
 		}
@@ -163,7 +186,99 @@ public class Controller : MonoBehaviour
 
 	}
 
-	private bool LoginAdmin()
+	private bool SetupUsers(out int[] userIds)
+	{
+		bool success = true;
+	    userIds = new int[_userNames.Length];
+
+        for (int i = 0; i < _userNames.Length; i++)
+		{			
+			try
+			{
+                var userResponse = _userClient.Create(new ActorRequest
+                {
+                    Name = _userNames[i]
+                });
+
+			    userIds[i] = userResponse.Id;
+                
+				success &= true;
+
+			}
+			catch (Exception e)
+			{
+				Debug.Log("Couldn't create " + name + " because: " + e.Message);
+				success = false;
+			}
+		}
+
+		return success;
+	}
+    
+    private bool SetupUserMembers(int[] groupIds, int[] userIds)
+    {
+        bool success = true;
+
+        for (int i = 0; i < userIds.Length; i++)
+        {
+            int groupId = groupIds[i % groupIds.Length];
+
+            try
+            {
+                var relationshipResponse = _memberClient.CreateMemberRequest(new RelationshipRequest
+                {
+                    AcceptorId = groupId,
+                    RequestorId = userIds[i],
+                    AutoAccept = true
+                });
+
+                success &= true;
+
+            }
+            catch (Exception e)
+            {
+                Debug.Log("Couldn't create " + name + " because: " + e.Message);
+                success = false;
+            }
+        }
+
+        return success;
+    }
+
+    private bool SetupUserFriends(int[] userIds)
+    {
+        bool success = true;
+
+        for (int i = 1; i < userIds.Length; i += 2)
+        {
+            if (i >= userIds.Length)
+            {
+                return success;
+            }
+            
+            try
+            {
+                var relationshipResponse = _friendClient.CreateFriendRequest(new RelationshipRequest
+                {
+                    AcceptorId = userIds[i - 1],
+                    RequestorId = userIds[i],
+                    AutoAccept = true
+                });
+
+                success &= true;
+
+            }
+            catch (Exception e)
+            {
+                Debug.Log("Couldn't create " + name + " because: " + e.Message);
+                success = false;
+            }
+        }
+
+        return success;
+    }
+
+    private bool LoginAdmin()
 	{
 		try
 		{
