@@ -7,18 +7,26 @@ using UnityEngine.UI;
 
 public class Leaderboard : MonoBehaviour
 {
-	private LeaderboardClient _leaderboardClient;
 	public GameObject LeaderItemPrefab;
 	public GameObject LeaderboardObject;
 	public Text StatusText;
 
-	// Use this for initialization
-	void Awake()
+    private LeaderboardClient _leaderboardClient;
+    private string _defaultStatusText;
+
+    // Use this for initialization
+    void Awake()
 	{
 		_leaderboardClient = ScriptLocator.Controller.Factory.Leaderboard;
-	}
+        _defaultStatusText = StatusText.text;
+    }
 
-	void OnEnable()
+    private void Reset()
+    {
+        StatusText.text = _defaultStatusText;
+    }
+
+    void OnEnable()
 	{
 		UpdateLeaderboard();
 	}

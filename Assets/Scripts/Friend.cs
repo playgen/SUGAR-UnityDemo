@@ -9,6 +9,8 @@ public class Friend : MonoBehaviour {
 	public GameObject FriendList;
 	public Text StatusText;
 
+	private string _defaultStatusText;
+
 	void OnEnable()
 	{
 		UpdateFriendsList();
@@ -17,6 +19,16 @@ public class Friend : MonoBehaviour {
 	void OnDisable()
 	{
 		ClearList();
+	}
+
+	void Awake()
+	{
+		_defaultStatusText = StatusText.text;
+	}
+
+	void Reset()
+	{
+		StatusText.text = _defaultStatusText;
 	}
 
 	private void ClearList()

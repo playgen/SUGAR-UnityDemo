@@ -8,16 +8,24 @@ using PlayGen.SUGAR.Contracts;
 
 public class GroupController : MonoBehaviour
 {
-	private IEnumerable<ActorResponse> _userGroups;
-	private GroupMemberClient _groupMember;
 	public GameObject GroupItemPrefab;
 	public GameObject GroupList;
 	public Text StatusText;
+
+    private IEnumerable<ActorResponse> _userGroups;
+    private GroupMemberClient _groupMember;
+    private string _defaultStatusText;
 
 	// Use this for initialization
 	void Awake()
 	{
 		_groupMember = ScriptLocator.Controller.Factory.GroupMember;
+		_defaultStatusText = StatusText.text;
+	}
+
+	void Reset()
+	{
+		StatusText.text = _defaultStatusText;
 	}
 
 	void OnEnable()
@@ -41,6 +49,8 @@ public class GroupController : MonoBehaviour
 
 	void UpdateGroupsList()
 	{
+		ScriptLocator.Controller.GroupId = null;
+
 		try
 		{
 			_userGroups = _groupMember.GetUserGroups(ScriptLocator.Controller.UserId.Value);

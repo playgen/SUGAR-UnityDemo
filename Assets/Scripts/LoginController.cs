@@ -13,12 +13,20 @@ public class LoginController : MonoBehaviour
 	public Button LoginButton;
 	public Button RegisterButton;
 
+    private string _defaultStatusText;
+
 	void Awake ()
 	{
 		_accountClient = ScriptLocator.Controller.Factory.Account;
-	}
+        _defaultStatusText = StatusText.text;
+    }
 
-	void Start()
+    private void Reset()
+    {
+        StatusText.text = _defaultStatusText;
+    }
+
+    void Start()
 	{
 		LoginButton.onClick.AddListener(LoginUser);
 		RegisterButton.onClick.AddListener(RegisterUser);

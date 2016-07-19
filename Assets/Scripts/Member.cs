@@ -8,17 +8,25 @@ using PlayGen.SUGAR.Contracts;
 
 public class Member : MonoBehaviour
 {
-	private UserFriendClient _friend;
-	private GroupMemberClient _groupMember;
 	public GameObject MemberItemPrefab;
 	public GameObject MemberList;
 	public Text StatusText;
+
+    private UserFriendClient _friend;
+    private GroupMemberClient _groupMember;
+    private string _defaultStatusText;
 
 	void Awake()
 	{
 		_friend = ScriptLocator.Controller.Factory.UserFriend;
 		_groupMember = ScriptLocator.Controller.Factory.GroupMember;
-	}
+        _defaultStatusText = StatusText.text;
+    }
+
+    private void Reset()
+    {
+        StatusText.text = _defaultStatusText;
+    }
 
 	void OnEnable()
 	{
