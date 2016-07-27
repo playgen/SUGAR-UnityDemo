@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using System.Net;
 using PlayGen.SUGAR.Client;
@@ -13,20 +14,20 @@ public class LoginController : MonoBehaviour
 	public Button LoginButton;
 	public Button RegisterButton;
 
-    private string _defaultStatusText;
+	private string _defaultStatusText;
 
 	void Awake ()
 	{
 		_accountClient = ScriptLocator.Controller.Factory.Account;
-        _defaultStatusText = StatusText.text;
-    }
+		_defaultStatusText = StatusText.text;
+	}
 
-    private void Reset()
-    {
-        StatusText.text = _defaultStatusText;
-    }
+	private void Reset()
+	{
+		StatusText.text = _defaultStatusText;
+	}
 
-    void Start()
+	void Start()
 	{
 		LoginButton.onClick.AddListener(LoginUser);
 		RegisterButton.onClick.AddListener(RegisterUser);
@@ -36,16 +37,11 @@ public class LoginController : MonoBehaviour
 	{
 		if (CheckFields())
 		{
-			try
+			var accountResponse = GetRegisterAccountResponse(UsernameInput.text, PasswordInput.text);
+			if (accountResponse != null)
 			{
-				var accountResponse = GetRegisterAccountResponse(UsernameInput.text, PasswordInput.text);
 				StatusText.text = "Successfully Registered. ID:" + accountResponse.User.Id + ". Please Login.";
 				ScriptLocator.Controller.UserId = accountResponse.User.Id;
-			}
-			catch (WebException exception)
-			{
-				StatusText.text = "Failed Registration. " + exception.Response;
-				Debug.LogError(exception);
 			}
 		}
 	}
@@ -53,40 +49,51 @@ public class LoginController : MonoBehaviour
 	public AccountResponse GetRegisterAccountResponse(string username, string password, bool autoLogin = false)
 	{
 		var accountRequest = CreateAccountRequest(username, password, autoLogin);
-		return _accountClient.Register(accountRequest);
+		try
+		{
+			return _accountClient.Register(accountRequest);
+		}
+		catch (Exception ex)
+		{
+			StatusText.text = "Failed Register. " + ex.Message;
+			Debug.LogError(ex);
+			return null;
+		}
 	}
 
 	private void LoginUser()
 	{
 		if (CheckFields())
 		{
-			try
+			var accountResponse = GetLoginAccountResponse(UsernameInput.text, PasswordInput.text);
+			if (accountResponse != null)
 			{
-				var accountResponse = GetLoginAccountResponse(UsernameInput.text, PasswordInput.text);
 				ScriptLocator.Controller.UserId = accountResponse.User.Id;
 				//Controller.LoginToken = accountResponse.Token;
 				UsernameInput.text = "";
 				PasswordInput.text = "";
 				StatusText.text = "";
 				ScriptLocator.Controller.ActivateUiPanels();
-				ScriptLocator.ResourceController.AddResource("Daily Chocolate", 1, ScriptLocator.Controller.UserId.Value);
+				ScriptLocator.ResourceController.AddResource("Daily Chocolate", 1, accountResponse.User.Id);
 				ScriptLocator.Controller.NextView();
-			}
-			catch (WebException exception)
-			{
-				StatusText.text = "Failed Login. " + exception;
-				Debug.LogError(exception);
 			}
 		}
 	}
 
 	public AccountResponse GetLoginAccountResponse(string username, string password)
 	{
-		Debug.Log("Loginres");
 		var accountRequest = CreateAccountRequest(username, password);
-		Debug.Log("Logininin");
-		return _accountClient.Login(accountRequest);
-		
+		try
+		{
+			var logged = _accountClient.Login(accountRequest);
+			return logged;
+		}
+		catch (Exception ex)
+		{
+			StatusText.text = "Failed Login. " + ex.Message;
+			Debug.LogError(ex);
+			return null;
+		}
 	}
 
 	private bool CheckFields()

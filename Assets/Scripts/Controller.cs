@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Linq;
 using PlayGen.SUGAR.Client;
+using PlayGen.SUGAR.Client.Unity;
 using PlayGen.SUGAR.Contracts;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -42,13 +43,13 @@ public class Controller : MonoBehaviour
 
 	public void Reset()
 	{
-	    UserId = null;
+		UserId = null;
 		GroupId = null;
 	}
 
 	void Awake()
 	{
-		Factory = new SUGARClient(ScriptLocator.Config.BaseUri);
+		Factory = new SUGARClient(ScriptLocator.Config.BaseUri, new UnityWebGlHttpHandler());
 		_gameDataClient = Factory.GameData;
 		_gameClient = Factory.Game;
 		_userClient = Factory.User;
@@ -285,23 +286,17 @@ public class Controller : MonoBehaviour
 
 	private bool LoginAdmin()
 	{
-		try
-		{
-			ScriptLocator.LoginController.GetLoginAccountResponse("admin", "admin");
-			return true;
-		}
-		catch
-		{
-			try
-			{
-				ScriptLocator.LoginController.GetRegisterAccountResponse("admin", "admin", true);
-				return true;
-			}
-			catch (Exception exception)
-			{
-				throw new Exception(exception.Message);
-			}
-		}
+
+		var response = ScriptLocator.LoginController.GetLoginAccountResponse("admin", "admin");
+	    if (response != null)
+	    {
+	        return true;
+	    }
+	    else
+	    {
+	        throw new Exception("Admin Login Failed");
+	    }
+
 	}
 
 
@@ -396,7 +391,7 @@ public class Controller : MonoBehaviour
 	{
 		if (PreviousButton.GetComponentInChildren<Text>().text == "Logout")
 		{
-            Logout();
+			Logout();
 		}
 		if (_viewIndex == 2)
 		{
@@ -417,16 +412,16 @@ public class Controller : MonoBehaviour
 
 	private void Logout()
 	{
-        UiPanel.SetActive(false);
+		UiPanel.SetActive(false);
 
-        var gos = (GameObject[]) GameObject.FindObjectsOfType(typeof(GameObject));
-	    foreach (var go in gos)
-	    {
-	        go.gameObject.BroadcastMessage("Reset");
-	    }
+		var gos = (GameObject[]) GameObject.FindObjectsOfType(typeof(GameObject));
+		foreach (var go in gos)
+		{
+			go.gameObject.BroadcastMessage("Reset");
+		}
 
-        
+		
 
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
+		//SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+	}
 }

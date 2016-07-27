@@ -5,17 +5,17 @@ using UnityEngine.SceneManagement;
 
 public class ConfigLoader : MonoBehaviour
 {
-    private string ConfigPath
-    {
-        get
-        {
-            string path = Application.streamingAssetsPath + "/config.json";
+	private string ConfigPath
+	{
+		get
+		{
+			string path = Application.streamingAssetsPath + "/config.json";
 #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
-            path = "file:///" + path;
+			path = "file:///" + path;
 #endif
-            return path;
-        }
-    }
+			return path;
+		}
+	}
 
 	private void Start ()
 	{
@@ -25,11 +25,11 @@ public class ConfigLoader : MonoBehaviour
 	private IEnumerator LoadOnlineConfig()
 	{
 		var www = new WWW(ConfigPath);
-        yield return www;
+		yield return www;
 
-        var config = JsonConvert.DeserializeObject<Config>(www.text);
-	    ScriptLocator.Config = config;
+		var config = JsonConvert.DeserializeObject<Config>(www.text);
+		ScriptLocator.Config = config;
 
-        SceneManager.LoadScene(1);
-    }
+		SceneManager.LoadScene(1);
+	}
 }

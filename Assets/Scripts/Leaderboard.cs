@@ -42,8 +42,8 @@ public class Leaderboard : MonoBehaviour
 				GameId = ScriptLocator.Controller.GameId,
 				ActorId = ScriptLocator.Controller.UserId.Value,
 				LeaderboardFilterType = LeaderboardFilterType.Near,
-				Limit = 8,
-				Offset = 0
+				PageLimit = 8,
+				PageOffset = 0
 
 			});
 			UpdateList(leaderboardStandingsResponse);
