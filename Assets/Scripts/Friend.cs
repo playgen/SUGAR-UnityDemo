@@ -43,6 +43,7 @@ public class Friend : MonoBehaviour {
 	private void UpdateFriendsList()
 	{
 		ClearList();
+		Debug.Log("UpdateFriendsList: " + ScriptLocator.ResourceController.ResourceList.transform.childCount);
 		var friendclient = ScriptLocator.Controller.Factory.UserFriend;
 		try
 		{
@@ -60,7 +61,16 @@ public class Friend : MonoBehaviour {
 				counter++;
 				var friendCopy = friend;
 				friendItem.transform.FindChild("RemoveButton").GetComponent<Button>().onClick.AddListener(() => RemoveFriend(friendCopy.Id));
-				friendItem.transform.FindChild("GiftButton").GetComponent<Button>().onClick.AddListener(() => GiftFriend(friendCopy.Id));
+				if (ScriptLocator.ResourceController.ResourceList.transform.childCount > 0)
+				{
+					friendItem.transform.FindChild("GiftButton")
+						.GetComponent<Button>()
+						.onClick.AddListener(() => GiftFriend(friendCopy.Id));
+				}
+				else
+				{
+					Destroy(friendItem.transform.FindChild("GiftButton").gameObject);
+				}
 			}
 		}
 		catch (Exception ex)
@@ -71,6 +81,7 @@ public class Friend : MonoBehaviour {
 
 	private void GiftFriend(int friendId)
 	{
+		Debug.Log("GiftFriend");
 		var resourceController = ScriptLocator.ResourceController;
 		if (!resourceController.TransferResource("Daily Chocolate", 1, ScriptLocator.Controller.UserId.Value, friendId))
 		{
@@ -80,6 +91,7 @@ public class Friend : MonoBehaviour {
 		{
 			StatusText.text = "Gift Sent!";
 			ScriptLocator.Controller.UpdateUi();
+			UpdateFriendsList();
 		}
 	}
 

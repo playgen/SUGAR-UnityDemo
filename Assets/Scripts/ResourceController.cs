@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using UnityEngine;
 using System.Net;
 using PlayGen.SUGAR.Client;
@@ -40,6 +41,8 @@ public class ResourceController : MonoBehaviour
 
 	public bool TransferResource(string key, int quantity, int userId, int targetId)
 	{
+		Debug.Log("TransferResource");
+
 		try
 		{
 			_resourceClient.Transfer(new ResourceTransferRequest()
@@ -61,14 +64,20 @@ public class ResourceController : MonoBehaviour
 
 	public void UpdateList()
 	{
+		Debug.Log("UpdateResourceList");
+
 		//Remove old achievemnts list
 		foreach (Transform child in ResourceList.transform)
 		{
+			// hackey fix
+			child.SetParent(null);
 			Destroy(child.gameObject);
 		}
+
 		try
 		{
 			var resources = _resourceClient.Get(ScriptLocator.Controller.GameId, ScriptLocator.Controller.UserId.Value, null);
+			Debug.Log("UpdateResourceList: " + resources.Count());
 			int counter = 0;
 			var listRect = ResourceList.GetComponent<RectTransform>().rect;
 			foreach (var resource in resources)
@@ -85,6 +94,8 @@ public class ResourceController : MonoBehaviour
 					counter++;
 				}
 			}
+			Debug.Log("ListRect: " + ResourceList.transform.childCount);
+
 		}
 		catch (Exception exception)
 		{
