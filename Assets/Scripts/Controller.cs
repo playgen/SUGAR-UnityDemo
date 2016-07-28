@@ -49,7 +49,11 @@ public class Controller : MonoBehaviour
 
 	void Awake()
 	{
+#if UNITY_WEBGL
 		Factory = new SUGARClient(ScriptLocator.Config.BaseUri, new UnityWebGlHttpHandler());
+#else
+		Factory = new SUGARClient(ScriptLocator.Config.BaseUri);
+#endif
 		_gameDataClient = Factory.GameData;
 		_gameClient = Factory.Game;
 		_userClient = Factory.User;

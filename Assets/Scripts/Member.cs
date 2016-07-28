@@ -12,21 +12,21 @@ public class Member : MonoBehaviour
 	public GameObject MemberList;
 	public Text StatusText;
 
-    private UserFriendClient _friend;
-    private GroupMemberClient _groupMember;
-    private string _defaultStatusText;
+	private UserFriendClient _friend;
+	private GroupMemberClient _groupMember;
+	private string _defaultStatusText;
 
 	void Awake()
 	{
 		_friend = ScriptLocator.Controller.Factory.UserFriend;
 		_groupMember = ScriptLocator.Controller.Factory.GroupMember;
-        _defaultStatusText = StatusText.text;
-    }
+		_defaultStatusText = StatusText.text;
+	}
 
-    private void Reset()
-    {
-        StatusText.text = _defaultStatusText;
-    }
+	private void Reset()
+	{
+		StatusText.text = _defaultStatusText;
+	}
 
 	void OnEnable()
 	{

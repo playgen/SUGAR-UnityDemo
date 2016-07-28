@@ -91,7 +91,7 @@ public class LoginController : MonoBehaviour
 		catch (Exception ex)
 		{
 			StatusText.text = "Failed Login. " + ex.Message;
-			Debug.LogError(ex);
+			Debug.Log(ex);
 			return null;
 		}
 	}
