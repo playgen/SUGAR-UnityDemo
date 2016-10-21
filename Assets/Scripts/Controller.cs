@@ -2,7 +2,6 @@
 using UnityEngine;
 using System.Linq;
 using PlayGen.SUGAR.Client;
-using PlayGen.SUGAR.Client.Unity;
 using PlayGen.SUGAR.Contracts;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;

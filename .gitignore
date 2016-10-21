@@ -54,3 +54,5 @@ test_Data/level0
 test_Data/output_log.txt
 test_Data/sharedassets0.assets
 test_Data/sharedassets0.assets.resS
+
+*.dll
