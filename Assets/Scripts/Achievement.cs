@@ -2,7 +2,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 using PlayGen.SUGAR.Client;
+using PlayGen.SUGAR.Common.Shared;
 using PlayGen.SUGAR.Contracts;
+using PlayGen.SUGAR.Contracts.Shared;
 using UnityEngine.UI;
 
 public class Achievement : MonoBehaviour
@@ -88,15 +90,15 @@ public class Achievement : MonoBehaviour
 		var gameId = ScriptLocator.Controller.GameId;
 		try
 		{
-			_achievementClient.Create(new AchievementRequest()
+			_achievementClient.Create(new EvaluationCreateRequest()
 			{
 				GameId = gameId,
 				Name = "Join a Group!",
 				ActorType = ActorType.User,
 				Token = "join_group",
-				CompletionCriteria = new List<AchievementCriteria>()
+				EvaluationCriterias = new List<EvaluationCriteriaCreateRequest>()
 				{
-					new AchievementCriteria()
+					new EvaluationCriteriaCreateRequest()
 					{
 						DataType = GameDataType.Long,
 						Value = "1",
@@ -108,15 +110,15 @@ public class Achievement : MonoBehaviour
 					}
 				}
 			});
-			_achievementClient.Create(new AchievementRequest()
+			_achievementClient.Create(new EvaluationCreateRequest()
 			{
 				GameId = gameId,
 				Name = "Add 2 Friends!",
 				ActorType = ActorType.User,
 				Token = "add_2_friends",
-				CompletionCriteria = new List<AchievementCriteria>()
+                EvaluationCriterias = new List<EvaluationCriteriaCreateRequest>()
 				{
-					new AchievementCriteria()
+					new EvaluationCriteriaCreateRequest()
 					{
 						DataType = GameDataType.Long,
 						Value = "2",
@@ -127,15 +129,15 @@ public class Achievement : MonoBehaviour
 					}
 				}
 			});
-			_achievementClient.Create(new AchievementRequest()
+			_achievementClient.Create(new EvaluationCreateRequest()
 			{
 				GameId = gameId,
 				Name = "Remove a Friend!",
 				ActorType = ActorType.User,
 				Token = "remove_friend",
-				CompletionCriteria = new List<AchievementCriteria>()
+                EvaluationCriterias = new List<EvaluationCriteriaCreateRequest>()
 				{
-					new AchievementCriteria()
+					new EvaluationCriteriaCreateRequest()
 					{
 						DataType = GameDataType.Long,
 						Value = "1",
@@ -146,15 +148,15 @@ public class Achievement : MonoBehaviour
 					}
 				}
 			});
-			_achievementClient.Create(new AchievementRequest()
+			_achievementClient.Create(new EvaluationCreateRequest()
 			{
 				GameId = gameId,
 				Name = "Gain 5 Members!",
 				ActorType = ActorType.Group,
 				Token = "group_5_members",
-				CompletionCriteria = new List<AchievementCriteria>()
+                EvaluationCriterias = new List<EvaluationCriteriaCreateRequest>()
 				{
-					new AchievementCriteria()
+					new EvaluationCriteriaCreateRequest()
 					{
 						DataType = GameDataType.Long,
 						Value = "5",
@@ -165,15 +167,15 @@ public class Achievement : MonoBehaviour
 					}
 				}
 			});
-			_achievementClient.Create(new AchievementRequest()
+			_achievementClient.Create(new EvaluationCreateRequest()
 			{
 				GameId = gameId,
 				Name = "Lose 2 Members!",
 				ActorType = ActorType.Group,
 				Token = "group_minus_2_members",
-				CompletionCriteria = new List<AchievementCriteria>()
+                EvaluationCriterias = new List<EvaluationCriteriaCreateRequest>()
 				{
-					new AchievementCriteria()
+					new EvaluationCriteriaCreateRequest()
 					{
 						DataType = GameDataType.Long,
 						Value = "2",

@@ -2,7 +2,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 using PlayGen.SUGAR.Client;
+using PlayGen.SUGAR.Common.Shared;
 using PlayGen.SUGAR.Contracts;
+using PlayGen.SUGAR.Contracts.Shared;
 using UnityEngine.UI;
 
 public class Leaderboard : MonoBehaviour

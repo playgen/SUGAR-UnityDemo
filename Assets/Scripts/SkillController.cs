@@ -3,7 +3,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using PlayGen.SUGAR.Client;
+using PlayGen.SUGAR.Common.Shared;
 using PlayGen.SUGAR.Contracts;
+using PlayGen.SUGAR.Contracts.Shared;
 using UnityEngine.UI;
 
 public class SkillController : MonoBehaviour
@@ -54,15 +56,15 @@ public class SkillController : MonoBehaviour
 	{
 		try
 		{
-			_skillClient.Create(new AchievementRequest()
+			_skillClient.Create(new EvaluationCreateRequest()
 			{
 				GameId = ScriptLocator.Controller.GameId,
 				Name = "Social Skill",
 				ActorType = ActorType.User,
 				Token = "SOCIAL",
-				CompletionCriteria = new List<AchievementCriteria>()
+				EvaluationCriterias = new List<EvaluationCriteriaCreateRequest>()
 				{
-					new AchievementCriteria()
+					new EvaluationCriteriaCreateRequest()
 					{
 						DataType = GameDataType.Long,
 						Value = "8",

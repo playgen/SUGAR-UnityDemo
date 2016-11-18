@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Net;
 using PlayGen.SUGAR.Client;
 using PlayGen.SUGAR.Contracts;
+using PlayGen.SUGAR.Contracts.Shared;
 using UnityEngine.UI;
 
 public class ResourceController : MonoBehaviour

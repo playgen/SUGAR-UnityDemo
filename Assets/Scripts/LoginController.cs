@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using System.Net;
 using PlayGen.SUGAR.Client;
 using PlayGen.SUGAR.Contracts;
+using PlayGen.SUGAR.Contracts.Shared;
 
 public class LoginController : MonoBehaviour
 {
