@@ -76,6 +76,13 @@
             <param name="gameId">game ID</param>
             <returns>Returns multiple <see cref="T:PlayGen.SUGAR.Contracts.Shared.EvaluationResponse"/> that hold Achievement details</returns>
         </member>
+        <member name="M:PlayGen.SUGAR.Client.AchievementClient.TryGetPendingNotification(PlayGen.SUGAR.Client.EvaluationEvents.EvaluationNotification@)">
+            <summary>
+            Gets pending achievement progress notifications.
+            </summary>
+            <param name="notification"></param>
+            <returns>Returns a boolean value indicating whether there was a notification to retrieve or not.</returns>
+        </member>
         <member name="M:PlayGen.SUGAR.Client.AchievementClient.GetGlobalProgress(System.Int32)">
             <summary>
             Find the current progress for all global achievements for <param name="actorId"/>.
@@ -111,16 +118,16 @@
         <member name="M:PlayGen.SUGAR.Client.AchievementClient.Create(PlayGen.SUGAR.Contracts.Shared.EvaluationCreateRequest)">
             <summary>
             Create a new Achievement.
-            Requires <see cref="!:EvaluationRequest.Name"/> to be unique to that <see cref="!:EvaluationRequest.GameId"/>.
+            Requires <see cref="P:PlayGen.SUGAR.Contracts.Shared.EvaluationCreateRequest.Name"/> to be unique to that <see cref="P:PlayGen.SUGAR.Contracts.Shared.EvaluationCreateRequest.GameId"/>.
             </summary>
-            <param name="newAchievement"><see cref="!:EvaluationRequest"/> object that holds the details of the new Achievement.</param>
+            <param name="newAchievement"><see cref="T:PlayGen.SUGAR.Contracts.Shared.EvaluationCreateRequest"/> object that holds the details of the new Achievement.</param>
             <returns>Returns a <see cref="T:PlayGen.SUGAR.Contracts.Shared.EvaluationResponse"/> object containing details for the newly created Achievement.</returns>
         </member>
         <member name="M:PlayGen.SUGAR.Client.AchievementClient.Update(PlayGen.SUGAR.Contracts.Shared.EvaluationUpdateRequest)">
             <summary>
             Update an existing Achievement.
             </summary>
-            <param name="achievement"><see cref="!:EvaluationRequest"/> object that holds the details of the Achievement.</param>
+            <param name="achievement"><see cref="T:PlayGen.SUGAR.Contracts.Shared.EvaluationCreateRequest"/> object that holds the details of the Achievement.</param>
         </member>
         <member name="M:PlayGen.SUGAR.Client.AchievementClient.DeleteGlobal(System.String)">
             <summary>
@@ -143,7 +150,7 @@
             <param name="param">URI para</param>
             <returns></returns>
         </member>
-        <member name="M:PlayGen.SUGAR.Client.ClientBase.DeserializeResponse``1(PlayGen.SUGAR.Client.HttpResponse)">
+        <member name="M:PlayGen.SUGAR.Client.ClientBase.UnpackResponse``1(PlayGen.SUGAR.Client.HttpResponse)">
             <summary>
             
             </summary>
@@ -403,7 +410,7 @@
         </member>
         <member name="M:PlayGen.SUGAR.Client.LeaderboardClient.Delete(System.String,System.Int32)">
             <summary>
-            Delete Leaderboards with the <param name="id"/> provided.
+            Delete Leaderboards with the <param name="gameId"/> and <param name="token"/> provided.
             </summary>
             <param name="token">Token of Leaderboard</param>
             <param name="gameId">ID of the Game the Leaderboard is for</param>
@@ -419,7 +426,7 @@
             </summary>
             <param name="gameId">ID of a Game.</param>
             <param name="actorId">ID of a User/Group.</param>
-            <param name="key">Array of Key names.</param>
+            <param name="keys">Array of Key names.</param>
             <returns>A list of <see cref="T:PlayGen.SUGAR.Contracts.Shared.ResourceResponse"/> which match the search criteria.</returns>
         </member>
         <member name="M:PlayGen.SUGAR.Client.ResourceClient.AddOrUpdate(PlayGen.SUGAR.Contracts.Shared.ResourceAddRequest)">
@@ -469,6 +476,13 @@
             <param name="gameId">Game ID</param>
             <returns>Returns multiple <see cref="T:PlayGen.SUGAR.Contracts.Shared.EvaluationResponse"/> that hold Skill details</returns>
         </member>
+        <member name="M:PlayGen.SUGAR.Client.SkillClient.TryGetPendingNotification(PlayGen.SUGAR.Client.EvaluationEvents.EvaluationNotification@)">
+            <summary>
+            Gets pending skill progress notifications.
+            </summary>
+            <param name="notification"></param>
+            <returns>Returns a boolean value indicating whether there was a notification to retrieve or not.</returns>
+        </member>
         <member name="M:PlayGen.SUGAR.Client.SkillClient.GetGlobalProgress(System.Int32)">
             <summary>
             Find the current progress for all global skills for <param name="actorId"/>.
@@ -504,16 +518,16 @@
         <member name="M:PlayGen.SUGAR.Client.SkillClient.Create(PlayGen.SUGAR.Contracts.Shared.EvaluationCreateRequest)">
             <summary>
             Create a new Skill.
-            Requires <see cref="!:EvaluationRequest.Name"/> to be unique to that <see cref="!:EvaluationRequest.GameId"/>.
+            Requires <see cref="P:PlayGen.SUGAR.Contracts.Shared.EvaluationCreateRequest.Name"/> to be unique to that <see cref="P:PlayGen.SUGAR.Contracts.Shared.EvaluationCreateRequest.GameId"/>.
             </summary>
-            <param name="newSkill"><see cref="!:EvaluationRequest"/> object that holds the details of the new Skill.</param>
+            <param name="newSkill"><see cref="T:PlayGen.SUGAR.Contracts.Shared.EvaluationCreateRequest"/> object that holds the details of the new Skill.</param>
             <returns>Returns a <see cref="T:PlayGen.SUGAR.Contracts.Shared.EvaluationResponse"/> object containing details for the newly created Skill.</returns>
         </member>
         <member name="M:PlayGen.SUGAR.Client.SkillClient.Update(PlayGen.SUGAR.Contracts.Shared.EvaluationUpdateRequest)">
             <summary>
             Update an existing Skill.
             </summary>
-            <param name="skill"><see cref="!:EvaluationRequest"/> object that holds the details of the Skill.</param>
+            <param name="skill"><see cref="T:PlayGen.SUGAR.Contracts.Shared.EvaluationCreateRequest"/> object that holds the details of the Skill.</param>
         </member>
         <member name="M:PlayGen.SUGAR.Client.SkillClient.DeleteGlobal(System.String)">
             <summary>
@@ -544,6 +558,7 @@
             Get a list of Users that match <param name="name"/> provided.
             </summary>
             <param name="name">Array of User names.</param>
+            <param name="exactMatch">Match the name exactly.</param>
             <returns>A list of <see cref="T:PlayGen.SUGAR.Contracts.Shared.ActorResponse"/> which match the search criteria.</returns>
         </member>
         <member name="M:PlayGen.SUGAR.Client.UserClient.Get(System.Int32)">
@@ -621,6 +636,26 @@
             Requires the relationship to already exist between the two Users.
             </summary>
             <param name="relationship"><see cref="T:PlayGen.SUGAR.Contracts.Shared.RelationshipStatusUpdate"/> object that holds the details of the relationship.</param>
+        </member>
+        <member name="P:PlayGen.SUGAR.Client.EvaluationEvents.EvaluationNotification.Actor">
+            <summary>
+            The details of the actor whose progress was being checked.
+            </summary>
+        </member>
+        <member name="P:PlayGen.SUGAR.Client.EvaluationEvents.EvaluationNotification.Name">
+            <summary>
+            The name of the achievement/skill which progress was being checked for.
+            </summary>
+        </member>
+        <member name="P:PlayGen.SUGAR.Client.EvaluationEvents.EvaluationNotification.Progress">
+            <summary>
+            Progress of current achievement/skill [0 to 1].
+            </summary>
+        </member>
+        <member name="P:PlayGen.SUGAR.Client.EvaluationEvents.EvaluationNotification.Type">
+            <summary>
+            Skill or Achievement
+            </summary>
         </member>
         <member name="M:PlayGen.SUGAR.Client.Extensions.UriBuilderExtensions.AppendQueryParameters``1(System.UriBuilder,``0[],System.String)">
             <summary>
@@ -962,6 +997,102 @@
             The display name of the user/group.
             </summary>
         </member>
+        <member name="T:PlayGen.SUGAR.Contracts.Shared.ActorRoleRequest">
+            <summary>
+            Encapsulates role details.
+            </summary>
+            <example>
+            JSON
+            {
+            ActorId : 1,
+            RoleId : 1,
+            EntityId : 1
+            }
+            </example>
+        </member>
+        <member name="P:PlayGen.SUGAR.Contracts.Shared.ActorRoleRequest.ActorId">
+            <summary>
+            The ID of the actor related to this actorrole.
+            </summary>
+        </member>
+        <member name="P:PlayGen.SUGAR.Contracts.Shared.ActorRoleRequest.RoleId">
+            <summary>
+            The ID of the role related to this actorrole.
+            </summary>
+        </member>
+        <member name="P:PlayGen.SUGAR.Contracts.Shared.ActorRoleRequest.EntityId">
+            <summary>
+            The ID of the entity (game, actor etc) related to this actorrole.
+            </summary>
+        </member>
+        <member name="T:PlayGen.SUGAR.Contracts.Shared.ActorRoleResponse">
+            <summary>
+            Encapsulates actorrole details from the server.
+            </summary>
+            <example>
+            JSON
+            {
+            Id : 1,
+            ActorId : 1,
+            RoleId : 1,
+            EntityId : 1
+            }
+            </example>
+        </member>
+        <member name="P:PlayGen.SUGAR.Contracts.Shared.ActorRoleResponse.Id">
+            <summary>
+            The unqiue identifier for the actorrole.
+            </summary>
+        </member>
+        <member name="P:PlayGen.SUGAR.Contracts.Shared.ActorRoleResponse.ActorId">
+            <summary>
+            The ID of the actor related to this actorrole.
+            </summary>
+        </member>
+        <member name="P:PlayGen.SUGAR.Contracts.Shared.ActorRoleResponse.RoleId">
+            <summary>
+            The ID of the role related to this actorrole.
+            </summary>
+        </member>
+        <member name="P:PlayGen.SUGAR.Contracts.Shared.ActorRoleResponse.EntityId">
+            <summary>
+            The ID of the entity (game, actor etc) related to this actorrole.
+            </summary>
+        </member>
+        <member name="T:PlayGen.SUGAR.Contracts.Shared.ClaimResponse">
+            <summary>
+            Encapsulates role details.
+            </summary>
+            <example>
+            JSON
+            {
+            Id : 1,
+            Token : "CreateGame",
+            Description : "Allows for the creation of new games",
+            ClaimScope : "Game"
+            }
+            </example>
+        </member>
+        <member name="P:PlayGen.SUGAR.Contracts.Shared.ClaimResponse.Id">
+            <summary>
+            The ID of the claim.
+            </summary>
+        </member>
+        <member name="P:PlayGen.SUGAR.Contracts.Shared.ClaimResponse.Token">
+            <summary>
+            The display name for the claim.
+            </summary>
+        </member>
+        <member name="P:PlayGen.SUGAR.Contracts.Shared.ClaimResponse.Description">
+            <summary>
+            A description of the claim.
+            </summary>
+        </member>
+        <member name="P:PlayGen.SUGAR.Contracts.Shared.ClaimResponse.ClaimScope">
+            <summary>
+            The ClaimScope of this claim.
+            </summary>
+        </member>
         <member name="T:PlayGen.SUGAR.Contracts.Shared.EvaluationCreateRequest">
             <summary>
             Encapsulates achievement/skill details.
@@ -1109,6 +1240,11 @@
         <member name="P:PlayGen.SUGAR.Contracts.Shared.EvaluationProgressResponse.Progress">
             <summary>
             Progress of current achievement/skill [0 to 1].
+            </summary>
+        </member>
+        <member name="P:PlayGen.SUGAR.Contracts.Shared.EvaluationProgressResponse.Type">
+            <summary>
+            Skill or Achievement
             </summary>
         </member>
         <member name="T:PlayGen.SUGAR.Contracts.Shared.EvaluationResponse">
@@ -1804,6 +1940,98 @@
         <member name="P:PlayGen.SUGAR.Contracts.Shared.RewardUpdateRequest.Id">
             <summary>
             The unqiue identifier for this type.
+            </summary>
+        </member>
+        <member name="T:PlayGen.SUGAR.Contracts.Shared.RoleClaimRequest">
+            <summary>
+            Encapsulates roleclaim details.
+            </summary>
+            <example>
+            JSON
+            {
+            RoleId : 1,
+            ClaimId : 1
+            }
+            </example>
+        </member>
+        <member name="P:PlayGen.SUGAR.Contracts.Shared.RoleClaimRequest.RoleId">
+            <summary>
+            The ID of the role related to this roleclaim.
+            </summary>
+        </member>
+        <member name="P:PlayGen.SUGAR.Contracts.Shared.RoleClaimRequest.ClaimId">
+            <summary>
+            The ID of the claim related to this roleclaim.
+            </summary>
+        </member>
+        <member name="T:PlayGen.SUGAR.Contracts.Shared.RoleClaimResponse">
+            <summary>
+            Encapsulates roleclaim details from the server.
+            </summary>
+            <example>
+            JSON
+            {
+            RoleId : 1,
+            ClaimId : 1
+            }
+            </example>
+        </member>
+        <member name="P:PlayGen.SUGAR.Contracts.Shared.RoleClaimResponse.RoleId">
+            <summary>
+            The ID of the role related to this roleclaim.
+            </summary>
+        </member>
+        <member name="P:PlayGen.SUGAR.Contracts.Shared.RoleClaimResponse.ClaimId">
+            <summary>
+            The ID of the claim related to this roleclaim.
+            </summary>
+        </member>
+        <member name="T:PlayGen.SUGAR.Contracts.Shared.RoleRequest">
+            <summary>
+            Encapsulates role details.
+            </summary>
+            <example>
+            JSON
+            {
+            Name : "Role Name"
+            }
+            </example>
+        </member>
+        <member name="P:PlayGen.SUGAR.Contracts.Shared.RoleRequest.Name">
+            <summary>
+            The display name for the role.
+            </summary>
+        </member>
+        <member name="P:PlayGen.SUGAR.Contracts.Shared.RoleRequest.ClaimScope">
+            <summary>
+            The ClaimScope of this role.
+            </summary>
+        </member>
+        <member name="T:PlayGen.SUGAR.Contracts.Shared.RoleResponse">
+            <summary>
+            Encapsulates role details from the server.
+            </summary>
+            <example>
+            JSON
+            {
+            Id : 1,
+            Name : "Role Name"
+            }
+            </example>
+        </member>
+        <member name="P:PlayGen.SUGAR.Contracts.Shared.RoleResponse.Id">
+            <summary>
+            The unqiue identifier for the role.
+            </summary>
+        </member>
+        <member name="P:PlayGen.SUGAR.Contracts.Shared.RoleResponse.Name">
+            <summary>
+            The display name of the role.
+            </summary>
+        </member>
+        <member name="P:PlayGen.SUGAR.Contracts.Shared.RoleResponse.ClaimScope">
+            <summary>
+            The ClaimScope of this role.
             </summary>
         </member>
     </members>

@@ -92,6 +92,7 @@ public class Achievement : MonoBehaviour
 		{
 			_achievementClient.Create(new EvaluationCreateRequest()
 			{
+                
 				GameId = gameId,
 				Name = "Join a Group!",
 				ActorType = ActorType.User,
