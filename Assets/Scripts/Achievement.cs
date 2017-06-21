@@ -12,7 +12,7 @@ public class Achievement : MonoBehaviour
 	private AchievementClient _achievementClient;
 	public GameObject AchievementList;
 	public GameObject AchivementItemPrefab;
-	public GameObject GroupAchievementList;
+	private int _achieveCount;
 
 	public int ListDisplaySize = 4;
 
@@ -34,11 +34,7 @@ public class Achievement : MonoBehaviour
 		var groupId = ScriptLocator.Controller.GroupId;
 		if (groupId.HasValue)
 		{
-			UpdateAchievementsList(GroupAchievementList, groupId.Value);
-		}
-		else
-		{
-			ClearList(GroupAchievementList);
+			UpdateAchievementsList(AchievementList, groupId.Value, false);
 		}
 	}
 
@@ -51,13 +47,16 @@ public class Achievement : MonoBehaviour
 		}
 	}
 
-	private void UpdateAchievementsList(GameObject listObject, int actorId)
+	private void UpdateAchievementsList(GameObject listObject, int actorId, bool clear = true)
 	{
-		ClearList(listObject);
+		if (clear)
+		{
+			ClearList(listObject);
+			_achieveCount = 0;
+		}
 		try
 		{
 			var achievements = _achievementClient.GetGameProgress(ScriptLocator.Controller.GameId, actorId);
-			int counter = 0;
 			var listRect = listObject.GetComponent<RectTransform>().rect;
 			foreach (var achievement in achievements)
 			{
@@ -65,13 +64,13 @@ public class Achievement : MonoBehaviour
 				achievementItem.transform.SetParent(listObject.transform, false);
 				var itemRectTransform = achievementItem.GetComponent<RectTransform>();
 				itemRectTransform.sizeDelta = new Vector2(listRect.width, listRect.height / ListDisplaySize);
-				itemRectTransform.anchoredPosition = new Vector2(0, (counter * -(listRect.height / ListDisplaySize)));
+				itemRectTransform.anchoredPosition = new Vector2(0, (_achieveCount * -(listRect.height / ListDisplaySize)));
 				achievementItem.GetComponentInChildren<Text>().text = achievement.Name;
 				if (achievement.Progress != 1.0f)
 				{
-					Destroy(achievementItem.transform.FindChild("Tick").gameObject);
+					Destroy(achievementItem.transform.Find("Tick").gameObject);
 				}
-				counter++;
+				_achieveCount++;
 
 			}
 		}
@@ -92,7 +91,7 @@ public class Achievement : MonoBehaviour
 		{
 			_achievementClient.Create(new EvaluationCreateRequest()
 			{
-                
+				
 				GameId = gameId,
 				Name = "Join a Group!",
 				ActorType = ActorType.User,
@@ -101,9 +100,9 @@ public class Achievement : MonoBehaviour
 				{
 					new EvaluationCriteriaCreateRequest()
 					{
-						DataType = GameDataType.Long,
+						EvaluationDataType = EvaluationDataType.Long,
 						Value = "1",
-						Key = "GroupsJoined",
+						EvaluationDataKey = "GroupsJoined",
 						CriteriaQueryType = CriteriaQueryType.Any,
 						ComparisonType = ComparisonType.GreaterOrEqual,
 						Scope = CriteriaScope.Actor
@@ -117,13 +116,13 @@ public class Achievement : MonoBehaviour
 				Name = "Add 2 Friends!",
 				ActorType = ActorType.User,
 				Token = "add_2_friends",
-                EvaluationCriterias = new List<EvaluationCriteriaCreateRequest>()
+				EvaluationCriterias = new List<EvaluationCriteriaCreateRequest>()
 				{
 					new EvaluationCriteriaCreateRequest()
 					{
-						DataType = GameDataType.Long,
+						EvaluationDataType = EvaluationDataType.Long,
 						Value = "2",
-						Key = "FriendsAdded",
+						EvaluationDataKey = "FriendsAdded",
 						CriteriaQueryType = CriteriaQueryType.Sum,
 						ComparisonType = ComparisonType.GreaterOrEqual,
 						Scope = CriteriaScope.Actor
@@ -136,13 +135,13 @@ public class Achievement : MonoBehaviour
 				Name = "Remove a Friend!",
 				ActorType = ActorType.User,
 				Token = "remove_friend",
-                EvaluationCriterias = new List<EvaluationCriteriaCreateRequest>()
+				EvaluationCriterias = new List<EvaluationCriteriaCreateRequest>()
 				{
 					new EvaluationCriteriaCreateRequest()
 					{
-						DataType = GameDataType.Long,
+						EvaluationDataType = EvaluationDataType.Long,
 						Value = "1",
-						Key = "FriendsRemoved",
+						EvaluationDataKey = "FriendsRemoved",
 						CriteriaQueryType = CriteriaQueryType.Any,
 						ComparisonType = ComparisonType.GreaterOrEqual,
 						Scope = CriteriaScope.Actor
@@ -155,13 +154,13 @@ public class Achievement : MonoBehaviour
 				Name = "Gain 5 Members!",
 				ActorType = ActorType.Group,
 				Token = "group_5_members",
-                EvaluationCriterias = new List<EvaluationCriteriaCreateRequest>()
+				EvaluationCriterias = new List<EvaluationCriteriaCreateRequest>()
 				{
 					new EvaluationCriteriaCreateRequest()
 					{
-						DataType = GameDataType.Long,
+						EvaluationDataType = EvaluationDataType.Long,
 						Value = "5",
-						Key = "MembersJoined",
+						EvaluationDataKey = "MembersJoined",
 						CriteriaQueryType = CriteriaQueryType.Sum,
 						ComparisonType = ComparisonType.GreaterOrEqual,
 						Scope = CriteriaScope.Actor
@@ -174,13 +173,13 @@ public class Achievement : MonoBehaviour
 				Name = "Lose 2 Members!",
 				ActorType = ActorType.Group,
 				Token = "group_minus_2_members",
-                EvaluationCriterias = new List<EvaluationCriteriaCreateRequest>()
+				EvaluationCriterias = new List<EvaluationCriteriaCreateRequest>()
 				{
 					new EvaluationCriteriaCreateRequest()
 					{
-						DataType = GameDataType.Long,
+						EvaluationDataType = EvaluationDataType.Long,
 						Value = "2",
-						Key = "MembersLeft",
+						EvaluationDataKey = "MembersLeft",
 						CriteriaQueryType = CriteriaQueryType.Sum,
 						ComparisonType = ComparisonType.GreaterOrEqual,
 						Scope = CriteriaScope.Actor

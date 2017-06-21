@@ -88,10 +88,10 @@ public class ResourceController : MonoBehaviour
 					var resourceItem = Instantiate(ResourceItemPrefab);
 					resourceItem.transform.SetParent(ResourceList.transform, false);
 					var itemRectTransform = resourceItem.GetComponent<RectTransform>();
-					itemRectTransform.sizeDelta = new Vector2(listRect.width, listRect.height / 4);
-					itemRectTransform.anchoredPosition = new Vector2(0, (counter * -(listRect.height / 4)));
-					resourceItem.transform.FindChild("Name").GetComponent<Text>().text = resource.Key;
-					resourceItem.transform.FindChild("Quantity").GetComponent<Text>().text = resource.Quantity.ToString();
+					itemRectTransform.sizeDelta = new Vector2(listRect.width, listRect.height / 2);
+					itemRectTransform.anchoredPosition = new Vector2(0, (counter * -(listRect.height / 2)));
+					resourceItem.transform.Find("Name").GetComponent<Text>().text = resource.Key;
+					resourceItem.transform.Find("Quantity").GetComponent<Text>().text = resource.Quantity.ToString();
 					counter++;
 				}
 			}

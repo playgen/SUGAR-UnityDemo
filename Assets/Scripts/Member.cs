@@ -106,7 +106,7 @@ public class Member : MonoBehaviour
 			try
 			{
 				// Update Achievement Progress
-				ScriptLocator.Controller.SaveData(ScriptLocator.Controller.UserId.Value, "FriendsAdded", "1", GameDataType.Long);
+				ScriptLocator.Controller.SaveData(ScriptLocator.Controller.UserId.Value, "FriendsAdded", "1", EvaluationDataType.Long);
 				ScriptLocator.Controller.AchievementPanel.GetComponent<Achievement>().UpdateAchivementLists();
 				ScriptLocator.Controller.UpdateUi();
 			}

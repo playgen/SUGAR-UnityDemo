@@ -14,9 +14,9 @@ public class GroupController : MonoBehaviour
 	public GameObject GroupList;
 	public Text StatusText;
 
-    private IEnumerable<ActorResponse> _userGroups;
-    private GroupMemberClient _groupMember;
-    private string _defaultStatusText;
+	private IEnumerable<ActorResponse> _userGroups;
+	private GroupMemberClient _groupMember;
+	private string _defaultStatusText;
 
 	// Use this for initialization
 	void Awake()
@@ -124,8 +124,8 @@ public class GroupController : MonoBehaviour
 			try
 			{
 				// Update Achievement Progress
-				ScriptLocator.Controller.SaveData(ScriptLocator.Controller.UserId.Value, "GroupsLeft", "1", GameDataType.Long);
-				ScriptLocator.Controller.SaveData(groupId, "MembersLeft", "1", GameDataType.Long);          // ERRR?
+				ScriptLocator.Controller.SaveData(ScriptLocator.Controller.UserId.Value, "GroupsLeft", "1", EvaluationDataType.Long);
+				ScriptLocator.Controller.SaveData(groupId, "MembersLeft", "1", EvaluationDataType.Long);          // ERRR?
 				ScriptLocator.Controller.GroupId = null;
 				UpdateGroupsList();
 				ScriptLocator.Controller.UpdateUi();
@@ -159,8 +159,8 @@ public class GroupController : MonoBehaviour
 			try
 			{
 				// Update Achievement Progress
-				ScriptLocator.Controller.SaveData(ScriptLocator.Controller.UserId.Value, "GroupsJoined", "1", GameDataType.Long); //error
-				ScriptLocator.Controller.SaveData(groupId, "MembersJoined", "1", GameDataType.Long);
+				ScriptLocator.Controller.SaveData(ScriptLocator.Controller.UserId.Value, "GroupsJoined", "1", EvaluationDataType.Long); //error
+				ScriptLocator.Controller.SaveData(groupId, "MembersJoined", "1", EvaluationDataType.Long);
 				ScriptLocator.Controller.UpdateUi();
 			}
 			catch (Exception exception)

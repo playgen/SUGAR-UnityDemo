@@ -9,6 +9,7 @@ using PlayGen.SUGAR.Contracts.Shared;
 public class LoginController : MonoBehaviour
 {
 	private AccountClient _accountClient;
+	private SessionClient _sessionClient;
 	public InputField UsernameInput;
 	public InputField PasswordInput;
 	public Text StatusText;
@@ -20,6 +21,7 @@ public class LoginController : MonoBehaviour
 	void Awake ()
 	{
 		_accountClient = ScriptLocator.Controller.Factory.Account;
+		_sessionClient = ScriptLocator.Controller.Factory.Session;
 		_defaultStatusText = StatusText.text;
 	}
 
@@ -52,7 +54,7 @@ public class LoginController : MonoBehaviour
 		var accountRequest = CreateAccountRequest(username, password, autoLogin);
 		try
 		{
-			return _accountClient.Register(accountRequest);
+			return _accountClient.Create(accountRequest);
 		}
 		catch (Exception ex)
 		{
@@ -74,9 +76,9 @@ public class LoginController : MonoBehaviour
 				UsernameInput.text = "";
 				PasswordInput.text = "";
 				StatusText.text = "";
-				ScriptLocator.Controller.ActivateUiPanels();
 				ScriptLocator.ResourceController.AddResource("Daily Chocolate", 1, accountResponse.User.Id);
 				ScriptLocator.Controller.NextView();
+				ScriptLocator.Controller.ActivateUiPanels();
 			}
 		}
 	}
@@ -86,7 +88,7 @@ public class LoginController : MonoBehaviour
 		var accountRequest = CreateAccountRequest(username, password);
 		try
 		{
-			var logged = _accountClient.Login(accountRequest);
+			var logged = _sessionClient.Login(accountRequest);
 			return logged;
 		}
 		catch (Exception ex)
@@ -116,7 +118,7 @@ public class LoginController : MonoBehaviour
 		{
 			Name = user,
 			Password = pass,
-			AutoLogin = autoLogin
+			SourceToken = "SUGAR"
 		};
 	}
    

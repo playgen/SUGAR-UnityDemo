@@ -33,7 +33,6 @@ public class Controller : MonoBehaviour
 	public GameObject UiPanel;
 	public GameObject LoginPanel;
 	public GameObject AchievementPanel;
-	public GameObject GroupAchievementPanel;
 	public Button NextButton;
 	public Button PreviousButton;
 
@@ -69,13 +68,13 @@ public class Controller : MonoBehaviour
 			_viewIndex++;
 		}
 		_viewIndex = 0;
-		NextButton = UiPanel.transform.FindChild("NextBtn").gameObject.GetComponent<Button>();
+		NextButton = UiPanel.transform.Find("NextBtn").gameObject.GetComponent<Button>();
 		NextButton.onClick.AddListener(NextView);
-		PreviousButton = UiPanel.transform.FindChild("PreviousBtn").gameObject.GetComponent<Button>();
+		PreviousButton = UiPanel.transform.Find("PreviousBtn").gameObject.GetComponent<Button>();
 		PreviousButton.onClick.AddListener(PreviousView);
-		AchievementPanel = UiPanel.transform.FindChild("AchievementPanel").gameObject;
-		GroupAchievementPanel = UiPanel.transform.FindChild("GroupAchievementPanel").gameObject;
+		AchievementPanel = UiPanel.transform.Find("AchievementPanel").gameObject;
 		_achievementPanel = AchievementPanel.GetComponent<Achievement>();
+		UiPanel.SetActive(false);
 	}
 
 	void Start()
@@ -123,8 +122,6 @@ public class Controller : MonoBehaviour
 		prev &= SetUpLeaderboard();
 		Debug.Log("SetUpLeaderboard: " + prev);
 
-		prev &= ScriptLocator.SkillController.SetUpSkills();
-		Debug.Log("SetUpSkills: " + prev);
 		return prev;
 	}
 
@@ -158,7 +155,7 @@ public class Controller : MonoBehaviour
 				Token = "MOST_FRIENDS",
 				Key = "FriendsAdded",
 				ActorType = ActorType.User,
-				GameDataType = GameDataType.Long,
+				EvaluationDataType = EvaluationDataType.Long,
 				CriteriaScope = CriteriaScope.Actor,
 				LeaderboardType	= LeaderboardType.Cumulative
 			});
@@ -181,7 +178,7 @@ public class Controller : MonoBehaviour
 		{
 			for (int i = 0; i < _groupNames.Length; i++)
 			{
-				var actorResponse = _groupClient.Create(new ActorRequest()
+				var actorResponse = _groupClient.Create(new GroupRequest()
 				{
 					Name = _groupNames[i]
 				});
@@ -206,7 +203,7 @@ public class Controller : MonoBehaviour
 		{			
 			try
 			{
-				var userResponse = _userClient.Create(new ActorRequest
+				var userResponse = _userClient.Create(new UserRequest
 				{
 					Name = _userNames[i]
 				});
@@ -356,17 +353,16 @@ public class Controller : MonoBehaviour
 	public void UpdateUi()
 	{
 		ScriptLocator.ResourceController.UpdateList();
-		ScriptLocator.SkillController.UpdateList();
 		_achievementPanel.UpdateAchivementLists();
 	}
 
-	public void SaveData(int actorId, string key, string value, GameDataType dataType)
+	public void SaveData(int actorId, string key, string value, EvaluationDataType dataType)
 	{
-		_gameDataClient.Add(new GameDataRequest()
+		_gameDataClient.Add(new EvaluationDataRequest()
 		{
 			GameId = GameId,
-			ActorId = actorId,
-			GameDataType = dataType,
+			CreatingActorId = actorId,
+			EvaluationDataType = dataType,
 			Value = value,
 			Key = key
 		});
@@ -418,15 +414,5 @@ public class Controller : MonoBehaviour
 	private void Logout()
 	{
 		UiPanel.SetActive(false);
-
-		var gos = (GameObject[]) GameObject.FindObjectsOfType(typeof(GameObject));
-		foreach (var go in gos)
-		{
-			go.gameObject.BroadcastMessage("Reset");
-		}
-
-		
-
-		//SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 	}
 }

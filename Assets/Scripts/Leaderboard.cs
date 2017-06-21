@@ -13,22 +13,22 @@ public class Leaderboard : MonoBehaviour
 	public GameObject LeaderboardObject;
 	public Text StatusText;
 
-    private LeaderboardClient _leaderboardClient;
-    private string _defaultStatusText;
+	private LeaderboardClient _leaderboardClient;
+	private string _defaultStatusText;
 
-    // Use this for initialization
-    void Awake()
+	// Use this for initialization
+	void Awake()
 	{
 		_leaderboardClient = ScriptLocator.Controller.Factory.Leaderboard;
-        _defaultStatusText = StatusText.text;
-    }
+		_defaultStatusText = StatusText.text;
+	}
 
-    private void Reset()
-    {
-        StatusText.text = _defaultStatusText;
-    }
+	private void Reset()
+	{
+		StatusText.text = _defaultStatusText;
+	}
 
-    void OnEnable()
+	void OnEnable()
 	{
 		UpdateLeaderboard();
 	}
