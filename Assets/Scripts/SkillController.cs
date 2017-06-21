@@ -51,37 +51,4 @@ public class SkillController : MonoBehaviour
 			Debug.LogError("Update Resource List Failed: " + exception);
 		}
 	}
-
-	public bool SetUpSkills()
-	{
-		try
-		{
-			_skillClient.Create(new EvaluationCreateRequest()
-			{
-				GameId = ScriptLocator.Controller.GameId,
-				Name = "Social Skill",
-				ActorType = ActorType.User,
-				Token = "SOCIAL",
-				EvaluationCriterias = new List<EvaluationCriteriaCreateRequest>()
-				{
-					new EvaluationCriteriaCreateRequest()
-					{
-						EvaluationDataType = EvaluationDataType.Long,
-						Value = "8",
-						EvaluationDataKey = "FriendsAdded",
-						CriteriaQueryType = CriteriaQueryType.Sum,
-						ComparisonType = ComparisonType.GreaterOrEqual,
-						Scope = CriteriaScope.Actor
-
-					}
-				}
-			});
-			return true;
-		}
-		catch (Exception exception)
-		{
-			Debug.LogError("Failed to create skill: " + exception.Message);
-		}
-		return false;
-	}
 }

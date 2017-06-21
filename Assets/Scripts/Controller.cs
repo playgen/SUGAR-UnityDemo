@@ -15,12 +15,6 @@ public class Controller : MonoBehaviour
 	private int _viewIndex;
 	private Achievement _achievementPanel;
 	private GameClient _gameClient;
-	private UserClient _userClient;
-	private GroupClient _groupClient;
-	private UserFriendClient _friendClient;
-	private GroupMemberClient _memberClient;
-	private readonly string[] _userNames = new[] {"Burnadette", "Fracheska", "Mr.Magoo", "Mary-Lou", "T-Bone", "Sarah-May-Concertina", "Colonel-Corny-Cobs"};
-	private readonly string[] _groupNames = new[] {"Happy Campers", "Daunting Ducks", "Yellow Submarines", "The Best Group"};
 	public SUGARClient Factory;
 	public int? UserId { get; set; }
 	public int? GroupId { get; set; }
@@ -35,9 +29,6 @@ public class Controller : MonoBehaviour
 	public GameObject AchievementPanel;
 	public Button NextButton;
 	public Button PreviousButton;
-
-	public string[] UserNames { get { return _userNames; } }
-	public string[] GroupNames { get { return _groupNames; } }
 
 	// ReSharper disable once ClassNeverInstantiated.Local
 
@@ -56,10 +47,6 @@ public class Controller : MonoBehaviour
 #endif
 		_gameDataClient = Factory.GameData;
 		_gameClient = Factory.Game;
-		_userClient = Factory.User;
-		_groupClient = Factory.Group;
-		_memberClient = Factory.GroupMember;
-		_friendClient = Factory.UserFriend;
 		_views = new GameObject[Views.transform.childCount];
 		_viewIndex = 0;
 		foreach (Transform child in Views.transform)
@@ -77,56 +64,6 @@ public class Controller : MonoBehaviour
 		UiPanel.SetActive(false);
 	}
 
-	void Start()
-	{
-		if (!SetUp())
-		{
-			Debug.LogError("Setup Failed");
-		}
-	}
-
-	private bool SetUp()
-	{
-		var prev = LoginAdmin();
-		Debug.Log("LoginAdmin: " + prev);
-
-		prev &= CheckGame();
-		Debug.Log("CheckGame: " + prev);
-		if (!prev)
-		{
-			prev = GetLeaderboardId();
-			Debug.Log("GetLeaderboardId: " + prev);
-			return prev;
-		}
-
-		prev &= SetUpGame();
-		Debug.Log("SetUpGame: " + prev);
-
-		int[] groupIds;
-		prev &= SetUpGroups(out groupIds);
-		Debug.Log("SetUpGroups: " + prev);
-
-		int[] userIds;
-		prev &= SetupUsers(out userIds);
-		Debug.Log("SetupUsers: " + prev);
-
-		prev &= SetupUserMembers(groupIds, userIds);
-		Debug.Log("SetupUserMembers: " + prev);
-
-		prev &= SetupUserFriends(userIds);
-		Debug.Log("SetupUserFriends: " + prev);
-
-		prev &= _achievementPanel.SetUpAchievements();
-		Debug.Log("SetUpAchievements: " + prev);
-
-		prev &= SetUpLeaderboard();
-		Debug.Log("SetUpLeaderboard: " + prev);
-
-		return prev;
-	}
-
-
-
 	private bool GetLeaderboardId()
 	{
 		var leaderboardClient = Factory.Leaderboard;
@@ -143,166 +80,7 @@ public class Controller : MonoBehaviour
 		return false;
 	}
 
-	private bool SetUpLeaderboard()
-	{
-		var leaderboardClient = Factory.Leaderboard;
-		try
-		{
-			var leaderboardResponse = leaderboardClient.Create(new LeaderboardRequest()
-			{
-				GameId = GameId,
-				Name = "Most Friends",
-				Token = "MOST_FRIENDS",
-				Key = "FriendsAdded",
-				ActorType = ActorType.User,
-				EvaluationDataType = EvaluationDataType.Long,
-				CriteriaScope = CriteriaScope.Actor,
-				LeaderboardType	= LeaderboardType.Cumulative
-			});
-			LeaderboardId = leaderboardResponse.Token;
-			return true;
-		}
-		catch (Exception exception)
-		{
-			Debug.Log("Create Leaderboard fail: " + exception.Message);
-		}
-
-		return false;
-	}
-
-	private bool SetUpGroups(out int[] ids)
-	{
-		ids = new int[_groupNames.Length];
-		_groupClient = Factory.Group;
-		try
-		{
-			for (int i = 0; i < _groupNames.Length; i++)
-			{
-				var actorResponse = _groupClient.Create(new GroupRequest()
-				{
-					Name = _groupNames[i]
-				});
-				ids[i] = actorResponse.Id;
-			}
-			return true;
-		}
-		catch (Exception exception)
-		{
-			Debug.Log("Set Up Groups Failed: " + exception.Message);
-		}
-		return false;
-
-	}
-
-	private bool SetupUsers(out int[] userIds)
-	{
-		bool success = true;
-		userIds = new int[_userNames.Length];
-
-		for (int i = 0; i < _userNames.Length; i++)
-		{			
-			try
-			{
-				var userResponse = _userClient.Create(new UserRequest
-				{
-					Name = _userNames[i]
-				});
-
-				userIds[i] = userResponse.Id;
-				
-				success &= true;
-
-			}
-			catch (Exception e)
-			{
-				Debug.Log("Couldn't create " + name + " because: " + e.Message);
-				success = false;
-			}
-		}
-
-		return success;
-	}
-	
-	private bool SetupUserMembers(int[] groupIds, int[] userIds)
-	{
-		bool success = true;
-
-		for (int i = 0; i < userIds.Length; i++)
-		{
-			int groupId = groupIds[i % groupIds.Length];
-
-			try
-			{
-				var relationshipResponse = _memberClient.CreateMemberRequest(new RelationshipRequest
-				{
-					AcceptorId = groupId,
-					RequestorId = userIds[i],
-					AutoAccept = true
-				});
-
-				success &= true;
-
-			}
-			catch (Exception e)
-			{
-				Debug.Log("Couldn't create " + name + " because: " + e.Message);
-				success = false;
-			}
-		}
-
-		return success;
-	}
-
-	private bool SetupUserFriends(int[] userIds)
-	{
-		bool success = true;
-
-		for (int i = 1; i < userIds.Length; i += 2)
-		{
-			if (i >= userIds.Length)
-			{
-				return success;
-			}
-			
-			try
-			{
-				var relationshipResponse = _friendClient.CreateFriendRequest(new RelationshipRequest
-				{
-					AcceptorId = userIds[i - 1],
-					RequestorId = userIds[i],
-					AutoAccept = true
-				});
-
-				success &= true;
-
-			}
-			catch (Exception e)
-			{
-				Debug.Log("Couldn't create " + name + " because: " + e.Message);
-				success = false;
-			}
-		}
-
-		return success;
-	}
-
-	private bool LoginAdmin()
-	{
-
-		var response = ScriptLocator.LoginController.GetLoginAccountResponse("admin", "admin");
-	    if (response != null)
-	    {
-	        return true;
-	    }
-	    else
-	    {
-	        throw new Exception("Admin Login Failed");
-	    }
-
-	}
-
-
-	private bool CheckGame()
+	public bool CheckGame()
 	{
 		try
 		{
@@ -312,6 +90,7 @@ public class Controller : MonoBehaviour
 				if (gameResponse.Name == GameName)
 				{
 					GameId = gameResponse.Id;
+					GetLeaderboardId();
 					return false;
 				}
 			}
@@ -323,27 +102,6 @@ public class Controller : MonoBehaviour
 		return true;
 
 	}
-
-	private bool SetUpGame()
-	{
-		try
-		{
-			var gameResponse = _gameClient.Create(new GameRequest
-			{
-				Name = GameName
-			});
-			GameId = gameResponse.Id;
-			Debug.Log("Created Game. ID: " + gameResponse.Id);
-			return true;
-		}
-		catch (Exception ex)
-		{
-			Debug.Log("Create Game Failed: " + ex.Message);
-
-		}
-		return false;
-	}
-
 
 	public void ActivateUiPanels()
 	{

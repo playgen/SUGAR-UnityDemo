@@ -56,7 +56,7 @@ public class Member : MonoBehaviour
 	{
 		ClearList();
 		var userFriends = _friend.GetFriends(ScriptLocator.Controller.UserId.Value);
-		var groupMembers = _groupMember.GetMembers(ScriptLocator.Controller.GroupId.Value);
+		var groupMembers = _groupMember.GetMembers(ScriptLocator.Controller.GroupId.Value).Where(m => m.Id > 5 && m.Id < 13);
 		var userFriendIds = new HashSet<int>(userFriends.Select(x => x.Id));
 		int counter = 0;
 		var listRect = MemberList.GetComponent<RectTransform>().rect;
@@ -112,13 +112,13 @@ public class Member : MonoBehaviour
 			}
 			catch (Exception ex)
 			{
-				StatusText.text = "SaveData Fail. " + ex.Message;
+				Debug.Log(ex.Message);
 			}
 
 		}
 		catch (Exception ex)
 		{
-			StatusText.text = "Failed to add friend. " + ex.Message;
+			Debug.Log(ex.Message);
 		}
 	}
 }

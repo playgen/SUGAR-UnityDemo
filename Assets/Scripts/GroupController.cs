@@ -65,7 +65,7 @@ public class GroupController : MonoBehaviour
 		}
 		catch (Exception exception)
 		{
-			StatusText.text = "Failed to get user's Groups" + exception.Message;
+			StatusText.text = "Failed to get user's groups" + exception.Message;
 			Debug.LogError(exception);
 		}
 	}
@@ -74,7 +74,10 @@ public class GroupController : MonoBehaviour
 	{
 		ClearList();
 		var groupclient = ScriptLocator.Controller.Factory.Group;
-		var groups = groupclient.Get();
+		var groups = groupclient.Get().Select(g => (ActorResponse)g).ToList();
+		groups.AddRange(_groupMember.GetUserGroups(ScriptLocator.Controller.UserId.Value));
+		groups = groups.Where(g => g.GetType() == typeof(GroupResponse) || groups.Count(a => a.Id == g.Id) == 1).ToList();
+		groups = groups.Where(g => g.Id > 1 && g.Id < 6).ToList();
 		int counter = 0;
 		var userGroupIds = new HashSet<int>(_userGroups.Select(x => x.Id));
 		var listRect = GroupList.GetComponent<RectTransform>().rect;
@@ -120,7 +123,7 @@ public class GroupController : MonoBehaviour
 				AcceptorId = groupId,
 				RequestorId = ScriptLocator.Controller.UserId.Value
 			});
-			StatusText.text = "Successfully Left the group!";
+			StatusText.text = "Successfully left the group!";
 			try
 			{
 				// Update Achievement Progress
@@ -132,13 +135,11 @@ public class GroupController : MonoBehaviour
 			}
 			catch (Exception exception)
 			{
-				StatusText.text = "SaveData Fail. " + exception.Message;
 				Debug.LogError(exception);
 			}
 		}
 		catch (Exception exception)
 		{
-			StatusText.text = "Leave Group Failed. " + exception.Message;
 			Debug.LogError(exception);
 		}
 	}
@@ -154,7 +155,7 @@ public class GroupController : MonoBehaviour
 				AutoAccept = true
 			});
 			ScriptLocator.Controller.GroupId = relationshipResponse.AcceptorId;
-			StatusText.text = "Successfully Joined the group!";
+			StatusText.text = "Successfully joined the group!";
 			UpdateGroupsList();
 			try
 			{
@@ -165,13 +166,11 @@ public class GroupController : MonoBehaviour
 			}
 			catch (Exception exception)
 			{
-				StatusText.text = "SaveData Fail. " + exception.Message;
 				Debug.LogError(exception);
 			}
 		}
 		catch (Exception exception)
 		{
-			StatusText.text = "Join Group Failed. " + exception.Message;
 			Debug.LogError(exception);
 		}
 	}

@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System;
+using System.Linq;
+
 using PlayGen.SUGAR.Common.Shared;
 using PlayGen.SUGAR.Contracts;
 using PlayGen.SUGAR.Contracts.Shared;
@@ -49,7 +51,7 @@ public class Friend : MonoBehaviour {
 		var friendclient = ScriptLocator.Controller.Factory.UserFriend;
 		try
 		{
-			var friends = friendclient.GetFriends(ScriptLocator.Controller.UserId.Value);
+			var friends = friendclient.GetFriends(ScriptLocator.Controller.UserId.Value).Where(m => m.Id > 5 && m.Id < 13);
 			int counter = 0;
 			var listRect = FriendList.GetComponent<RectTransform>().rect;
 			foreach (var friend in friends)
@@ -119,12 +121,12 @@ public class Friend : MonoBehaviour {
 			}
 			catch (Exception ex)
 			{
-				StatusText.text = "SaveData Fail. " + ex.Message;
+				Debug.Log(ex.Message);
 			}
 		}
 		catch (Exception ex)
 		{
-			StatusText.text = "Remove Friend Failed. " + ex.Message;
+			Debug.Log(ex.Message);
 		}
 	}
 }

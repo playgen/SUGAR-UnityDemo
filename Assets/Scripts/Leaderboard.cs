@@ -52,7 +52,7 @@ public class Leaderboard : MonoBehaviour
 		}
 		catch (Exception exception)
 		{
-			StatusText.text = exception.Message;
+			Debug.Log(exception.Message);
 		}
 	}
 

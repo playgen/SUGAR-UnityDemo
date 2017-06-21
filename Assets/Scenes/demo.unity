@@ -3971,12 +3971,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c07d230b54b3d40993cfe853ebd506, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameName: sga2-demo
+  GameName: SUGAR-Demo
   Views: {fileID: 886304577}
   UiPanel: {fileID: 1959535266}
   LoginPanel: {fileID: 399317611}
   AchievementPanel: {fileID: 2074103375}
-  GroupAchievementPanel: {fileID: 0}
   NextButton: {fileID: 1782869489}
   PreviousButton: {fileID: 464228321}
 --- !u!114 &1839237904
@@ -4522,7 +4521,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AchievementList: {fileID: 1137120782}
   AchivementItemPrefab: {fileID: 197258, guid: fdec8eba8bad3ee4ca971fe03b63ab37, type: 2}
-  GroupAchievementList: {fileID: 0}
   ListDisplaySize: 8
 --- !u!114 &2074103377
 MonoBehaviour:

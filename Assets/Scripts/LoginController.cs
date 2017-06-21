@@ -43,7 +43,7 @@ public class LoginController : MonoBehaviour
 			var accountResponse = GetRegisterAccountResponse(UsernameInput.text, PasswordInput.text);
 			if (accountResponse != null)
 			{
-				StatusText.text = "Successfully Registered. ID:" + accountResponse.User.Id + ". Please Login.";
+				StatusText.text = "Successfully registered. Please Login.";
 				ScriptLocator.Controller.UserId = accountResponse.User.Id;
 			}
 		}
@@ -58,7 +58,7 @@ public class LoginController : MonoBehaviour
 		}
 		catch (Exception ex)
 		{
-			StatusText.text = "Failed Register. " + ex.Message;
+			StatusText.text = "Failed to register. " + ex.Message;
 			Debug.LogError(ex);
 			return null;
 		}
@@ -76,6 +76,7 @@ public class LoginController : MonoBehaviour
 				UsernameInput.text = "";
 				PasswordInput.text = "";
 				StatusText.text = "";
+				ScriptLocator.Controller.CheckGame();
 				ScriptLocator.ResourceController.AddResource("Daily Chocolate", 1, accountResponse.User.Id);
 				ScriptLocator.Controller.NextView();
 				ScriptLocator.Controller.ActivateUiPanels();
@@ -93,7 +94,7 @@ public class LoginController : MonoBehaviour
 		}
 		catch (Exception ex)
 		{
-			StatusText.text = "Failed Login. " + ex.Message;
+			StatusText.text = "Failed Login. ";
 			Debug.Log(ex);
 			return null;
 		}
