@@ -1,10 +1,8 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Net;
 using PlayGen.SUGAR.Client;
 using PlayGen.SUGAR.Contracts;
-using PlayGen.SUGAR.Contracts.Shared;
 
 public class LoginController : MonoBehaviour
 {
@@ -69,6 +67,7 @@ public class LoginController : MonoBehaviour
 		if (CheckFields())
 		{
 			var accountResponse = GetLoginAccountResponse(UsernameInput.text, PasswordInput.text);
+			Debug.Log("Has Response: " + (accountResponse != null));
 			if (accountResponse != null)
 			{
 				ScriptLocator.Controller.UserId = accountResponse.User.Id;

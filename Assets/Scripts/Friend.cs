@@ -5,7 +5,6 @@ using System.Linq;
 
 using PlayGen.SUGAR.Common.Shared;
 using PlayGen.SUGAR.Contracts;
-using PlayGen.SUGAR.Contracts.Shared;
 
 public class Friend : MonoBehaviour {
 

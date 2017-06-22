@@ -2,10 +2,9 @@
 using UnityEngine;
 using System.Linq;
 using PlayGen.SUGAR.Client;
+using PlayGen.SUGAR.Client.Unity;
 using PlayGen.SUGAR.Common.Shared;
 using PlayGen.SUGAR.Contracts;
-using PlayGen.SUGAR.Contracts.Shared;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Controller : MonoBehaviour
@@ -40,8 +39,9 @@ public class Controller : MonoBehaviour
 
 	void Awake()
 	{
+		ConsoleDebugRedirect.Redirect();
 #if UNITY_WEBGL
-		Factory = new SUGARClient(ScriptLocator.Config.BaseUri, new UnityWebGlHttpHandler());
+		Factory = new SUGARClient(ScriptLocator.Config.BaseUri, new UnityWebGlHttpHandler(), false);
 #else
 		Factory = new SUGARClient(ScriptLocator.Config.BaseUri);
 #endif

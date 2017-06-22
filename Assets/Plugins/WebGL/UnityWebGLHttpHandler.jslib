@@ -1,6 +1,6 @@
 ﻿var UnityWebGlHttpHandlerPlugin = { 
 	HttpRequest: function (requestPointer) {
-		var debug = false;
+		var debug = true;
 		debug && console.debug("HttpRequest");
 		try {
 			var requestString = Pointer_stringify(requestPointer);
