@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using System;
 using System.Linq;
 
-using PlayGen.SUGAR.Common.Shared;
+using PlayGen.SUGAR.Common;
 using PlayGen.SUGAR.Contracts;
 
 public class Friend : MonoBehaviour {
@@ -50,7 +50,7 @@ public class Friend : MonoBehaviour {
 		var friendclient = ScriptLocator.Controller.Factory.UserFriend;
 		try
 		{
-			var friends = friendclient.GetFriends(ScriptLocator.Controller.UserId.Value).Where(m => m.Id > 5 && m.Id < 13);
+			var friends = friendclient.GetFriends(ScriptLocator.Controller.UserId.Value).Items.Where(m => m.Id > 5 && m.Id < 13);
 			int counter = 0;
 			var listRect = FriendList.GetComponent<RectTransform>().rect;
 			foreach (var friend in friends)

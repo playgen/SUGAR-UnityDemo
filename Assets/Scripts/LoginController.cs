@@ -75,6 +75,7 @@ public class LoginController : MonoBehaviour
 				UsernameInput.text = "";
 				PasswordInput.text = "";
 				StatusText.text = "";
+				Debug.Log("LoginController::LoginUser[PreCheck]");
 				ScriptLocator.Controller.CheckGame();
 				ScriptLocator.ResourceController.AddResource("Daily Chocolate", 1, accountResponse.User.Id);
 				ScriptLocator.Controller.NextView();

@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
 using PlayGen.SUGAR.Client;
-using PlayGen.SUGAR.Common.Shared;
+using PlayGen.SUGAR.Common;
 using PlayGen.SUGAR.Contracts;
 
 public class GroupController : MonoBehaviour
@@ -54,8 +54,8 @@ public class GroupController : MonoBehaviour
 
 		try
 		{
-			_userGroups = _groupMember.GetUserGroups(ScriptLocator.Controller.UserId.Value);
-			if (_userGroups.Any())
+			_userGroups = _groupMember.GetUserGroups(ScriptLocator.Controller.UserId.Value).Items;
+			if (_userGroups != null && _userGroups.Any())
 			{
 				StatusText.text = "Group Successfully Joined!!";
 				ScriptLocator.Controller.GroupId = _userGroups.First().Id;
@@ -73,8 +73,8 @@ public class GroupController : MonoBehaviour
 	{
 		ClearList();
 		var groupclient = ScriptLocator.Controller.Factory.Group;
-		var groups = groupclient.Get().Select(g => (ActorResponse)g).ToList();
-		groups.AddRange(_groupMember.GetUserGroups(ScriptLocator.Controller.UserId.Value));
+		var groups = groupclient.Get().Items.Select(g => (ActorResponse)g).ToList();
+		groups.AddRange(_groupMember.GetUserGroups(ScriptLocator.Controller.UserId.Value).Items);
 		groups = groups.Where(g => g.GetType() == typeof(GroupResponse) || groups.Count(a => a.Id == g.Id) == 1).ToList();
 		groups = groups.Where(g => g.Id > 1 && g.Id < 6).ToList();
 		int counter = 0;

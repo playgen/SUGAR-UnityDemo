@@ -2,7 +2,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using PlayGen.SUGAR.Client;
-using PlayGen.SUGAR.Common.Shared;
+using PlayGen.SUGAR.Common;
 using PlayGen.SUGAR.Contracts;
 using UnityEngine.UI;
 
@@ -47,7 +47,7 @@ public class Leaderboard : MonoBehaviour
 				PageOffset = 0
 
 			});
-			UpdateList(leaderboardStandingsResponse);
+			UpdateList(leaderboardStandingsResponse.Items);
 		}
 		catch (Exception exception)
 		{

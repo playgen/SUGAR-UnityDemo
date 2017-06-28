@@ -2,7 +2,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using PlayGen.SUGAR.Client;
-using PlayGen.SUGAR.Common.Shared;
+using PlayGen.SUGAR.Common;
 using PlayGen.SUGAR.Contracts;
 using UnityEngine.UI;
 
@@ -57,7 +57,7 @@ public class Achievement : MonoBehaviour
 		{
 			var achievements = _achievementClient.GetGameProgress(ScriptLocator.Controller.GameId, actorId);
 			var listRect = listObject.GetComponent<RectTransform>().rect;
-			foreach (var achievement in achievements)
+			foreach (var achievement in achievements.Items)
 			{
 				var achievementItem = Instantiate(AchivementItemPrefab);
 				achievementItem.transform.SetParent(listObject.transform, false);

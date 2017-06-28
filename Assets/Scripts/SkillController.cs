@@ -25,7 +25,7 @@ public class SkillController : MonoBehaviour
 		}
 		try
 		{
-			var responses = _skillClient.GetGameProgress(ScriptLocator.Controller.GameId, ScriptLocator.Controller.UserId.Value);
+			var responses = _skillClient.GetGameProgress(ScriptLocator.Controller.GameId, ScriptLocator.Controller.UserId.Value).Items;
 			int counter = 0;
 			var listRect = SkillList.GetComponent<RectTransform>().rect;
 			foreach (var response in responses)

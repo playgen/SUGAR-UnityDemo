@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
 using PlayGen.SUGAR.Client;
-using PlayGen.SUGAR.Common.Shared;
+using PlayGen.SUGAR.Common;
 using PlayGen.SUGAR.Contracts;
 
 public class Member : MonoBehaviour
@@ -55,8 +55,8 @@ public class Member : MonoBehaviour
 	{
 		ClearList();
 		var userFriends = _friend.GetFriends(ScriptLocator.Controller.UserId.Value);
-		var groupMembers = _groupMember.GetMembers(ScriptLocator.Controller.GroupId.Value).Where(m => m.Id > 5 && m.Id < 13);
-		var userFriendIds = new HashSet<int>(userFriends.Select(x => x.Id));
+		var groupMembers = _groupMember.GetMembers(ScriptLocator.Controller.GroupId.Value).Items.Where(m => m.Id > 5 && m.Id < 13);
+		var userFriendIds = new HashSet<int>(userFriends.Items.Select(x => x.Id));
 		int counter = 0;
 		var listRect = MemberList.GetComponent<RectTransform>().rect;
 		foreach (var member in groupMembers)

@@ -64,7 +64,7 @@ public class ResourceController : MonoBehaviour
 
 	public void UpdateList()
 	{
-		Debug.Log("UpdateResourceList");
+		Debug.Log("ResourceController::UpdateList");
 
 		//Remove old achievemnts list
 		foreach (Transform child in ResourceList.transform)
@@ -76,7 +76,8 @@ public class ResourceController : MonoBehaviour
 
 		try
 		{
-			var resources = _resourceClient.Get(ScriptLocator.Controller.GameId, ScriptLocator.Controller.UserId.Value, null);
+			Debug.Log("ResourceController::UpdateList[Get]");
+			var resources = _resourceClient.Get(ScriptLocator.Controller.GameId, ScriptLocator.Controller.UserId.Value, null).Items;
 			Debug.Log("UpdateResourceList: " + resources.Count());
 			int counter = 0;
 			var listRect = ResourceList.GetComponent<RectTransform>().rect;

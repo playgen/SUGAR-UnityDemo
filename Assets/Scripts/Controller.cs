@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Linq;
 using PlayGen.SUGAR.Client;
 using PlayGen.SUGAR.Client.Unity;
-using PlayGen.SUGAR.Common.Shared;
+using PlayGen.SUGAR.Common;
 using PlayGen.SUGAR.Contracts;
 using UnityEngine.UI;
 
@@ -70,7 +70,7 @@ public class Controller : MonoBehaviour
 		try
 		{
 			var leaderboardReponse = leaderboardClient.Get(GameId);
-			LeaderboardId = leaderboardReponse.Select(x => x.Token).FirstOrDefault();
+			LeaderboardId = leaderboardReponse.Items.Select(x => x.Token).FirstOrDefault();
 			return true;
 		}
 		catch (Exception exception)
@@ -84,9 +84,12 @@ public class Controller : MonoBehaviour
 	{
 		try
 		{
-			var gameResponses = _gameClient.Get(GameName);
+			Debug.Log("Controller::CheckGame[PreGet]");
+			var gameResponses = _gameClient.Get(GameName).Items;
+			Debug.Log("Controller::CheckGame[PostGet]: " + (gameResponses != null));
 			foreach (var gameResponse in gameResponses)
 			{
+				Debug.Log("Controller::CheckGame[ForEach]");
 				if (gameResponse.Name == GameName)
 				{
 					GameId = gameResponse.Id;
