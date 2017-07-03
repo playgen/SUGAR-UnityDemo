@@ -1,0 +1,113 @@
+{
+  "game": "SUGAR-Demo",
+  "achievements": [
+    {
+      "Token": "join_group",
+      "GameId": null,
+      "Name": "Join a Group",
+      "Description": "",
+      "ActorType": "User",
+      "EvaluationCriterias": [
+        {
+          "EvaluationDataKey": "GroupsJoined",
+          "EvaluationDataCategory": "GameData",
+          "EvaluationDataType": "Long",
+          "CriteriaQueryType": "Any",
+          "ComparisonType": "GreaterOrEqual",
+          "Scope": "Actor",
+          "Value": "1"
+        }
+      ],
+      "Rewards": []
+    },
+    {
+      "Token": "add_2_friends",
+      "GameId": null,
+      "Name": "Add 2 Friends!",
+      "Description": "",
+      "ActorType": "User",
+      "EvaluationCriterias": [
+        {
+          "EvaluationDataKey": "FriendsAdded",
+          "EvaluationDataCategory": "GameData",
+          "EvaluationDataType": "Long",
+          "CriteriaQueryType": "Sum",
+          "ComparisonType": "GreaterOrEqual",
+          "Scope": "Actor",
+          "Value": "2"
+        }
+      ],
+      "Rewards": []
+    },
+    {
+      "Token": "remove_friend",
+      "GameId": null,
+      "Name": "Remove a Friend!",
+      "Description": "",
+      "ActorType": "User",
+      "EvaluationCriterias": [
+        {
+          "EvaluationDataKey": "FriendsRemoved",
+          "EvaluationDataCategory": "GameData",
+          "EvaluationDataType": "Long",
+          "CriteriaQueryType": "Any",
+          "ComparisonType": "GreaterOrEqual",
+          "Scope": "Actor",
+          "Value": "1"
+        }
+      ],
+      "Rewards": []
+    },
+    {
+      "Token": "group_5_members",
+      "GameId": null,
+      "Name": "Gain 5 Members!",
+      "Description": "",
+      "ActorType": "Group",
+      "EvaluationCriterias": [
+        {
+          "EvaluationDataKey": "MembersJoined",
+          "EvaluationDataCategory": "GameData",
+          "EvaluationDataType": "Long",
+          "CriteriaQueryType": "Sum",
+          "ComparisonType": "GreaterOrEqual",
+          "Scope": "Actor",
+          "Value": "5"
+        }
+      ],
+      "Rewards": []
+    },
+    {
+      "Token": "group_minus_2_members",
+      "GameId": null,
+      "Name": "Lose 2 Members!",
+      "Description": "",
+      "ActorType": "Group",
+      "EvaluationCriterias": [
+        {
+          "EvaluationDataKey": "MembersLeft",
+          "EvaluationDataCategory": "GameData",
+          "EvaluationDataType": "Long",
+          "CriteriaQueryType": "Sum",
+          "ComparisonType": "GreaterOrEqual",
+          "Scope": "Actor",
+          "Value": "2"
+        }
+      ],
+      "Rewards": []
+    }
+  ],
+  "leaderboards": [
+    {
+      "Token": "MOST_FRIENDS",
+      "GameId": null,
+      "Name": "Most Friends",
+      "EvaluationDataCategory": "GameData",
+      "Key": "FriendsAdded",
+      "ActorType": "User",
+      "EvaluationDataType": "Long",
+      "CriteriaScope": "Actor",
+      "LeaderboardType": "Cumulative"
+    }
+  ]
+}
