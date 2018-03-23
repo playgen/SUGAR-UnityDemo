@@ -67,7 +67,7 @@ public class Achievement : MonoBehaviour
 				achievementItem.GetComponentInChildren<Text>().text = achievement.Name;
 				if (achievement.Progress != 1.0f)
 				{
-					Destroy(achievementItem.transform.FindChild("Tick").gameObject);
+					Destroy(achievementItem.transform.Find("Tick").gameObject);
 				}
 				counter++;
 

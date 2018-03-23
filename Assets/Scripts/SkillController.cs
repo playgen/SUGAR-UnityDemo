@@ -38,8 +38,8 @@ public class SkillController : MonoBehaviour
 				var itemRectTransform = skillItem.GetComponent<RectTransform>();
 				itemRectTransform.sizeDelta = new Vector2(listRect.width, listRect.height / 5);
 				itemRectTransform.anchoredPosition = new Vector2(0, (counter * -(listRect.height / 5)));
-				skillItem.transform.FindChild("Name").GetComponent<Text>().text = response.Name + ":";
-				skillItem.transform.FindChild("Bar").GetComponent<Image>().fillAmount = response.Progress;
+				skillItem.transform.Find("Name").GetComponent<Text>().text = response.Name + ":";
+				skillItem.transform.Find("Bar").GetComponent<Image>().fillAmount = response.Progress;
 				counter++;
 			}
 		   

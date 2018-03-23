@@ -60,16 +60,16 @@ public class Friend : MonoBehaviour {
 				friendItem.GetComponentInChildren<Text>().text = friend.Name;
 				counter++;
 				var friendCopy = friend;
-				friendItem.transform.FindChild("RemoveButton").GetComponent<Button>().onClick.AddListener(() => RemoveFriend(friendCopy.Id));
+				friendItem.transform.Find("RemoveButton").GetComponent<Button>().onClick.AddListener(() => RemoveFriend(friendCopy.Id));
 				if (ScriptLocator.ResourceController.ResourceList.transform.childCount > 0)
 				{
-					friendItem.transform.FindChild("GiftButton")
+					friendItem.transform.Find("GiftButton")
 						.GetComponent<Button>()
 						.onClick.AddListener(() => GiftFriend(friendCopy.Id));
 				}
 				else
 				{
-					Destroy(friendItem.transform.FindChild("GiftButton").gameObject);
+					Destroy(friendItem.transform.Find("GiftButton").gameObject);
 				}
 			}
 		}

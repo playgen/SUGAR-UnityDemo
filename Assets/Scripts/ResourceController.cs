@@ -89,8 +89,8 @@ public class ResourceController : MonoBehaviour
 					var itemRectTransform = resourceItem.GetComponent<RectTransform>();
 					itemRectTransform.sizeDelta = new Vector2(listRect.width, listRect.height / 4);
 					itemRectTransform.anchoredPosition = new Vector2(0, (counter * -(listRect.height / 4)));
-					resourceItem.transform.FindChild("Name").GetComponent<Text>().text = resource.Key;
-					resourceItem.transform.FindChild("Quantity").GetComponent<Text>().text = resource.Quantity.ToString();
+					resourceItem.transform.Find("Name").GetComponent<Text>().text = resource.Key;
+					resourceItem.transform.Find("Quantity").GetComponent<Text>().text = resource.Quantity.ToString();
 					counter++;
 				}
 			}

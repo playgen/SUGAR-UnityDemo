@@ -68,12 +68,12 @@ public class Controller : MonoBehaviour
 			_viewIndex++;
 		}
 		_viewIndex = 0;
-		NextButton = UiPanel.transform.FindChild("NextBtn").gameObject.GetComponent<Button>();
+		NextButton = UiPanel.transform.Find("NextBtn").gameObject.GetComponent<Button>();
 		NextButton.onClick.AddListener(NextView);
-		PreviousButton = UiPanel.transform.FindChild("PreviousBtn").gameObject.GetComponent<Button>();
+		PreviousButton = UiPanel.transform.Find("PreviousBtn").gameObject.GetComponent<Button>();
 		PreviousButton.onClick.AddListener(PreviousView);
-		AchievementPanel = UiPanel.transform.FindChild("AchievementPanel").gameObject;
-		GroupAchievementPanel = UiPanel.transform.FindChild("GroupAchievementPanel").gameObject;
+		AchievementPanel = UiPanel.transform.Find("AchievementPanel").gameObject;
+		GroupAchievementPanel = UiPanel.transform.Find("GroupAchievementPanel").gameObject;
 		_achievementPanel = AchievementPanel.GetComponent<Achievement>();
 	}
 
