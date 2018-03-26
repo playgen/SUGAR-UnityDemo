@@ -25,3 +25,6 @@ sysinfo.txt
 *.apk
 *.exe
 *.unitypackage
+
+# Build
+*.log
