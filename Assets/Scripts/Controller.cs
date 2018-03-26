@@ -1,179 +1,96 @@
-﻿using System;
-using UnityEngine;
-using System.Linq;
-using PlayGen.SUGAR.Client;
-using PlayGen.SUGAR.Client.Unity;
-using PlayGen.SUGAR.Common;
+﻿using System.Linq;
+
 using PlayGen.SUGAR.Contracts;
-using UnityEngine.UI;
+using PlayGen.SUGAR.Unity;
+
+using UnityEngine;
 
 public class Controller : MonoBehaviour
 {
-	private GameDataClient _gameDataClient;
-	private GameObject[] _views;
-	private int _viewIndex;
-	private Achievement _achievementPanel;
-	private GameClient _gameClient;
-	public SUGARClient Factory;
-	public int? UserId { get; set; }
-	public int? GroupId { get; set; }
-	public string LoginToken { get; set; }
-	public int GameId { get; set; }
-	public string LeaderboardId { get; set; }
-	public string GameName;
-	
-	public GameObject Views;
-	public GameObject UiPanel;
-	public GameObject LoginPanel;
-	public GameObject AchievementPanel;
-	public Button NextButton;
-	public Button PreviousButton;
+	[SerializeField]
+	private UserSidePanel _userButtonPanel;
+	[SerializeField]
+	private GroupSidePanel _groupButtonPanel;
+	[SerializeField]
+	private int[] _groupIDs;
+	[SerializeField]
+	private GroupPanel _groupPanel;
 
-	// ReSharper disable once ClassNeverInstantiated.Local
-
-	public void Reset()
-	{
-		UserId = null;
-		GroupId = null;
-	}
-
-	void Awake()
+	void Start()
 	{
 		ConsoleDebugRedirect.Redirect();
-#if UNITY_WEBGL
-		Factory = new SUGARClient(ScriptLocator.Config.BaseUri, new UnityWebGlHttpHandler(), false);
-#else
-		Factory = new SUGARClient(ScriptLocator.Config.BaseUri);
-#endif
-		_gameDataClient = Factory.GameData;
-		_gameClient = Factory.Game;
-		_views = new GameObject[Views.transform.childCount];
-		_viewIndex = 0;
-		foreach (Transform child in Views.transform)
+		_userButtonPanel.gameObject.SetActive(false);
+		_groupButtonPanel.gameObject.SetActive(false);
+		SUGARManager.Account.DisplayPanel(success =>
 		{
-			_views[_viewIndex] = child.gameObject;
-			_viewIndex++;
-		}
-		_viewIndex = 0;
-		NextButton = UiPanel.transform.Find("NextBtn").gameObject.GetComponent<Button>();
-		NextButton.onClick.AddListener(NextView);
-		PreviousButton = UiPanel.transform.Find("PreviousBtn").gameObject.GetComponent<Button>();
-		PreviousButton.onClick.AddListener(PreviousView);
-		AchievementPanel = UiPanel.transform.Find("AchievementPanel").gameObject;
-		_achievementPanel = AchievementPanel.GetComponent<Achievement>();
-		UiPanel.SetActive(false);
-	}
-
-	private bool GetLeaderboardId()
-	{
-		var leaderboardClient = Factory.Leaderboard;
-		try
-		{
-			var leaderboardReponse = leaderboardClient.Get(GameId);
-			LeaderboardId = leaderboardReponse.Items.Select(x => x.Token).FirstOrDefault();
-			return true;
-		}
-		catch (Exception exception)
-		{
-			Debug.LogError("Could not find leaderboard: " + exception.Message);
-		}
-		return false;
-	}
-
-	public bool CheckGame()
-	{
-		try
-		{
-			Debug.Log("Controller::CheckGame[PreGet]");
-			var gameResponses = _gameClient.Get(GameName).Items;
-			Debug.Log("Controller::CheckGame[PostGet]: " + (gameResponses != null));
-			foreach (var gameResponse in gameResponses)
+			if (success)
 			{
-				Debug.Log("Controller::CheckGame[ForEach]");
-				if (gameResponse.Name == GameName)
+				_userButtonPanel.Display();
+				SUGARManager.Resource.Add("Chocolate", 5, resourceSuccess => { });
+				var groupMatch = SUGARManager.UserGroup.Groups.Where(g => _groupIDs.Contains(g.Actor.Id)).ToList();
+				if (groupMatch.Count == 1)
 				{
-					GameId = gameResponse.Id;
-					GetLeaderboardId();
-					return false;
+					UpdateGroup(groupMatch.First().Actor);
+				}
+				else if (groupMatch.Count > 1)
+				{
+					_groupPanel.DisplayPrimary(groupMatch.Select(g => g.Actor.Id).ToList());
+				}
+				else
+				{
+					_groupPanel.DisplayJoin(groupMatch.Select(g => g.Actor.Id).ToList());
 				}
 			}
-		}
-		catch (Exception ex)
-		{
-			Debug.Log("Failed to find game." + ex.Message);
-		}
-		return true;
-
-	}
-
-	public void ActivateUiPanels()
-	{
-		UiPanel.SetActive(true);
-	}
-
-	public void UpdateUi()
-	{
-		ScriptLocator.ResourceController.UpdateList();
-		_achievementPanel.UpdateAchivementLists();
-	}
-
-	public void SaveData(int actorId, string key, string value, EvaluationDataType dataType)
-	{
-		_gameDataClient.Add(new EvaluationDataRequest()
-		{
-			GameId = GameId,
-			CreatingActorId = actorId,
-			EvaluationDataType = dataType,
-			Value = value,
-			Key = key
 		});
 	}
 
-	public void NextView()
+	public void UpdateGroup(ActorResponse actor)
 	{
-		_views[_viewIndex].SetActive(false);
-		if (_viewIndex == 0)
-		{
-			PreviousButton.GetComponentInChildren<Text>().text = "Logout";
-		}
-		else
-		{
-			PreviousButton.GetComponentInChildren<Text>().text = "Back";
-		}
-
-		_viewIndex++;
-		if (_viewIndex == _views.Length - 1)
-		{
-			NextButton.interactable = false;
-		}
-		_views[_viewIndex].SetActive(true);
+		SUGARManager.CurrentGroup = actor;
+		_groupButtonPanel.Display();
+		_groupPanel.gameObject.SetActive(false);
 	}
 
-	public void PreviousView()
+	private void DisplayGroups()
 	{
-		if (PreviousButton.GetComponentInChildren<Text>().text == "Logout")
-		{
-			Logout();
-		}
-		if (_viewIndex == 2)
-		{
-			PreviousButton.GetComponentInChildren<Text>().text = "Logout";
-		}
-		else
-		{
-			PreviousButton.GetComponentInChildren<Text>().text = "Back";
-		}
-		_views[_viewIndex].SetActive(false);
-		if (_viewIndex == _views.Length - 1)
-		{
-			NextButton.interactable = true;
-		}
-		_viewIndex--;
-		_views[_viewIndex].SetActive(true);
+		//TODO Display SU Group UI - maybe custom to restrict functionality for demo?
+		//TODO This UI likely needs a way of selecting 'primary' group
+		//TODO Need to pre-create groups and alliances between these groups
 	}
 
-	private void Logout()
+	private void DisplayGroupMembers()
 	{
-		UiPanel.SetActive(false);
+		//TODO Display SU Group Member UI for primary group. Functionality should be inaccessible/redirect to group UI if user is in no groups.
+	}
+
+	private void DisplayFriends()
+	{
+		//TODO Display SU Friends UI - maybe custom to restrict functionality for demo?
+	}
+
+	private void DisplayLeaderboards()
+	{
+		//TODO Display SU leaderboard selection UI
+	}
+
+	private void DisplayGroupLeaderboard()
+	{
+		//TODO Display SU leaderboard selection UI
+	}
+
+	private void DisplayAchievements()
+	{
+		//TODO Display SU achievement UI for the user
+	}
+
+	private void DisplayGroupAchievements()
+	{
+		//TODO Display SU achievement UI for the group
+		//TODO SU needs a way of showing group achievements
+	}
+
+	private void DisplayResources()
+	{
+		//TODO Display custom UI for seeing current user and primary group chocolate amounts and for giving chocolate to the group
 	}
 }
