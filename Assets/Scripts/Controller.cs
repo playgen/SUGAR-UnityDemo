@@ -1,45 +1,52 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
 
 using PlayGen.SUGAR.Contracts;
 using PlayGen.SUGAR.Unity;
 
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Controller : MonoBehaviour
 {
+	private int _currentStep;
 	[SerializeField]
-	private UserSidePanel _userButtonPanel;
+	private Button _previous;
 	[SerializeField]
-	private GroupSidePanel _groupButtonPanel;
+	private Button _next;
 	[SerializeField]
-	private int[] _groupIDs;
+	private List<int> _groupIds;
+	[SerializeField]
+	private List<int> _userIds;
 	[SerializeField]
 	private GroupPanel _groupPanel;
+	[SerializeField]
+	private GroupInfoPanel _groupInfoPanel;
+	[SerializeField]
+	private ResourcePanel _resourcePanel;
+	[SerializeField]
+	private Text _title;
+	[SerializeField]
+	private Text _characterText;
 
-	void Start()
+	void Awake()
 	{
 		ConsoleDebugRedirect.Redirect();
-		_userButtonPanel.gameObject.SetActive(false);
-		_groupButtonPanel.gameObject.SetActive(false);
+		_previous.gameObject.SetActive(false);
+		_next.gameObject.SetActive(false);
+		_groupInfoPanel.gameObject.SetActive(false);
+		_groupPanel.gameObject.SetActive(false);
+		_resourcePanel.gameObject.SetActive(false);
+		_title.text = "SUGAR Sign-in";
+		_characterText.text = "";
 		SUGARManager.Account.DisplayPanel(success =>
 		{
 			if (success)
 			{
-				_userButtonPanel.Display();
-				SUGARManager.Resource.Add("Chocolate", 5, resourceSuccess => { });
-				var groupMatch = SUGARManager.UserGroup.Groups.Where(g => _groupIDs.Contains(g.Actor.Id)).ToList();
-				if (groupMatch.Count == 1)
-				{
-					UpdateGroup(groupMatch.First().Actor);
-				}
-				else if (groupMatch.Count > 1)
-				{
-					_groupPanel.DisplayPrimary(groupMatch.Select(g => g.Actor.Id).ToList());
-				}
-				else
-				{
-					_groupPanel.DisplayJoin(groupMatch.Select(g => g.Actor.Id).ToList());
-				}
+				SUGARManager.Resource.Add("Chocolate", 100, resourceSuccess => { });
+				SUGARManager.Evaluation.ForceNotification("Chocolate Count: 100");
+				_groupPanel.Display(_groupIds);
+				_title.text = "Join a Group";
+				_characterText.text = "";
 			}
 		});
 	}
@@ -47,50 +54,94 @@ public class Controller : MonoBehaviour
 	public void UpdateGroup(ActorResponse actor)
 	{
 		SUGARManager.CurrentGroup = actor;
-		_groupButtonPanel.Display();
 		_groupPanel.gameObject.SetActive(false);
+		_currentStep = 1;
+		_previous.gameObject.SetActive(true);
+		_next.gameObject.SetActive(true);
+		LoadStep();
 	}
 
-	private void DisplayGroups()
+	public void Previous()
 	{
-		//TODO Display SU Group UI - maybe custom to restrict functionality for demo?
-		//TODO This UI likely needs a way of selecting 'primary' group
-		//TODO Need to pre-create groups and alliances between these groups
+		HideCurrent();
+		if (_currentStep > 1)
+		{
+			_currentStep--;
+			LoadStep();
+		}
 	}
 
-	private void DisplayGroupMembers()
+	public void Next()
 	{
-		//TODO Display SU Group Member UI for primary group. Functionality should be inaccessible/redirect to group UI if user is in no groups.
+		HideCurrent();
+		if (_currentStep < 6)
+		{
+			_currentStep++;
+			LoadStep();
+		}
 	}
 
-	private void DisplayFriends()
+	private void HideCurrent()
 	{
-		//TODO Display SU Friends UI - maybe custom to restrict functionality for demo?
+		switch (_currentStep)
+		{
+			case 1:
+				_groupInfoPanel.gameObject.SetActive(false);
+				break;
+			case 2:
+				SUGARManager.Leaderboard.Hide();
+				break;
+			case 3:
+				_resourcePanel.gameObject.SetActive(false);
+				break;
+			case 4:
+				SUGARManager.Evaluation.Hide();
+				break;
+			case 5:
+				SUGARManager.Leaderboard.Hide();
+				break;
+			case 6:
+				SUGARManager.Evaluation.Hide();
+				break;
+		}
 	}
 
-	private void DisplayLeaderboards()
+	private void LoadStep()
 	{
-		//TODO Display SU leaderboard selection UI
-	}
-
-	private void DisplayGroupLeaderboard()
-	{
-		//TODO Display SU leaderboard selection UI
-	}
-
-	private void DisplayAchievements()
-	{
-		//TODO Display SU achievement UI for the user
-	}
-
-	private void DisplayGroupAchievements()
-	{
-		//TODO Display SU achievement UI for the group
-		//TODO SU needs a way of showing group achievements
-	}
-
-	private void DisplayResources()
-	{
-		//TODO Display custom UI for seeing current user and primary group chocolate amounts and for giving chocolate to the group
+		_previous.interactable = _currentStep > 1;
+		_next.interactable = _currentStep < 6;
+		switch (_currentStep)
+		{
+			case 1:
+				_groupInfoPanel.Display(_groupIds, _userIds);
+				_title.text = "Group Details";
+				_characterText.text = "";
+				break;
+			case 2:
+				SUGARManager.Leaderboard.Display("MOST_CHOCOLATE_USER", PlayGen.SUGAR.Common.LeaderboardFilterType.Top);
+				_title.text = "User Leaderboard";
+				_characterText.text = "";
+				break;
+			case 3:
+				_resourcePanel.Display(_userIds);
+				_title.text = "";
+				_characterText.text = "";
+				break;
+			case 4:
+				SUGARManager.Evaluation.DisplayAchievementList();
+				_title.text = "User Achievements";
+				_characterText.text = "";
+				break;
+			case 5:
+				SUGARManager.Leaderboard.Display("MOST_CHOCOLATE_GROUP", PlayGen.SUGAR.Common.LeaderboardFilterType.Top);
+				_title.text = "Group Leaderbaord";
+				_characterText.text = "";
+				break;
+			case 6:
+				SUGARManager.Evaluation.DisplayGroupAchievementList();
+				_title.text = "Group Achievements";
+				_characterText.text = "";
+				break;
+		}
 	}
 }

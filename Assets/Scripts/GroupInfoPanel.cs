@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using PlayGen.SUGAR.Unity;
+using PlayGen.Unity.Utilities.Loading;
 
 using UnityEngine;
 
@@ -13,9 +15,11 @@ public class GroupInfoPanel : MonoBehaviour {
 	private UserPrefab _userPrefab;
 	[SerializeField]
 	private GroupPrefab _groupPrefab;
+	private bool _loadedOne;
 
-	public void Display(int id)
+	public void Display(List<int> groups, List<int> users)
 	{
+		_loadedOne = false;
 		gameObject.SetActive(true);
 		foreach (Transform child in _memberContainer)
 		{
@@ -25,51 +29,54 @@ public class GroupInfoPanel : MonoBehaviour {
 		{
 			Destroy(child.gameObject);
 		}
-		SUGARManager.Client.GroupMember.GetMembersAsync(id, success =>
+		Loading.Start();
+		SUGARManager.Client.GroupMember.GetMembersAsync(SUGARManager.CurrentGroup.Id, success =>
 		{
 			var memberList = success.ToList();
-			foreach (var member in memberList)
+			SUGARManager.UserFriend.GetFriendsList(gotFriends =>
 			{
-				var user = Instantiate(_userPrefab, _memberContainer, true);
-				if (SUGARManager.UserFriend.Friends.Select(f => f.Actor.Id).Contains(member.Id))
+				var friends = SUGARManager.UserFriend.Friends.Select(f => f.Actor.Id).ToList();
+				foreach (var member in memberList)
 				{
-					user.SetUp(member, 0);
+					if (users.Contains(member.Id))
+					{
+						var user = Instantiate(_userPrefab, _memberContainer, true);
+						user.SetUp(member, friends.Contains(member.Id));
+					}
 				}
-				else if (SUGARManager.UserFriend.PendingSent.Select(f => f.Actor.Id).Contains(member.Id))
-				{
-					user.SetUp(member, 1);
-				}
-				else if (SUGARManager.UserFriend.PendingReceived.Select(f => f.Actor.Id).Contains(member.Id))
-				{
-					user.SetUp(member, 2);
-				}
-				else
-				{
-					user.SetUp(member, 3);
-				}
-			}
+			});
+			Loaded();
 		}, error =>
 		{
 
 		});
-		SUGARManager.Client.AllianceClient.GetAlliancesAsync(id, success =>
+		SUGARManager.Client.AllianceClient.GetAlliancesAsync(SUGARManager.CurrentGroup.Id, success =>
 		{
 			var allianceList = success.ToList();
 			foreach (var ally in allianceList)
 			{
-				var group = Instantiate(_groupPrefab, _memberContainer, true);
-				if (SUGARManager.UserGroup.Groups.Select(f => f.Actor.Id).Contains(ally.Id))
+				if (groups.Contains(ally.Id))
 				{
-					group.SetUp(ally, true);
-				}
-				else
-				{
-					group.SetUp(ally, false);
+					var group = Instantiate(_groupPrefab, _allianceContainer, true);
+					group.SetUp(ally);
 				}
 			}
+			Loaded();
 		}, error =>
 		{
 
 		});
+	}
+
+	private void Loaded()
+	{
+		if (!_loadedOne)
+		{
+			_loadedOne = true;
+		}
+		else
+		{
+			Loading.Stop();
+		}
 	}
 }

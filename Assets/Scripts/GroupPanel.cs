@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+
 using PlayGen.SUGAR.Unity;
+using PlayGen.Unity.Utilities.Loading;
 
 using UnityEngine;
 
@@ -10,39 +13,24 @@ public class GroupPanel : MonoBehaviour {
 	[SerializeField]
 	private GroupPrefab _prefab;
 
-	public void DisplayPrimary(List<int> ids)
-	{
-		gameObject.SetActive(true);
-		foreach (Transform child in transform)
-		{
-			Destroy(child.gameObject);
-		}
-		foreach (var id in ids)
-		{
-			SUGARManager.Client.Group.GetAsync(id, success =>
-			{
-				var group = Instantiate(_prefab, _container, true);
-				group.SetUp(success, true);
-			}, error =>
-			{
-
-			});
-		}
-	}
-
-	public void DisplayJoin(List<int> ids)
+	public void Display(List<int> ids)
 	{
 		gameObject.SetActive(true);
 		foreach (Transform child in _container)
 		{
 			Destroy(child.gameObject);
 		}
+		Loading.Start();
 		foreach (var id in ids)
 		{
 			SUGARManager.Client.Group.GetAsync(id, success =>
 			{
 				var group = Instantiate(_prefab, _container, true);
-				group.SetUp(success, false);
+				group.SetUp(success);
+				if (_container.childCount == ids.Count)
+				{
+					Loading.Stop();
+				}
 			}, error =>
 			{
 

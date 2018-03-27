@@ -935,7 +935,7 @@ MonoBehaviour:
   m_Script: {fileID: -1251820456, guid: 2b083f1431a721345bc19aaea6890473, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _returnButton: {fileID: 0}
+  _returnButton: {fileID: 114000010799422944}
   _escapeButton: {fileID: 0}
 --- !u!222 &222000010040566640
 CanvasRenderer:
