@@ -52,7 +52,6 @@ public class LeaderboardInterface : BaseLeaderboardInterface
 	/// </summary>
 	private void OnEnable()
 	{
-		DoBestFit();
 		BestFit.ResolutionChange += DoBestFit;
 		Localization.LanguageChange += OnLanguageChange;
 	}
@@ -112,7 +111,7 @@ public class LeaderboardInterface : BaseLeaderboardInterface
 				_nextButton.interactable = resultUp.ToList().Count > 0;
 			});
 		});
-		_leaderboardPositions.Select(t => t.gameObject).BestFit();
+		DoBestFit();
 	}
 
 	/// <summary>
@@ -138,7 +137,7 @@ public class LeaderboardInterface : BaseLeaderboardInterface
 	private void DoBestFit()
 	{
 		_leaderboardPositions.Select(t => t.gameObject).BestFit();
-		GetComponentsInChildren<Button>(true).Select(t => t.gameObject).BestFit();
+		GetComponentsInChildren<Button>().Select(t => t.gameObject).BestFit();
 	}
 
 	/// <summary>

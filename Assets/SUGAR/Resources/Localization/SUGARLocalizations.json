@@ -1,4 +1,4 @@
-[{"Key":"ACHIEVEMENT_LOAD_ERROR","en":"Error: Unable to gather current achievement progress."},
+[{"Key":"EVALUATION_LOAD_ERROR","en":"Error: Unable to gather current evaluation progress."},
 {"Key":"ACHIEVEMENTS","en":"Achievements"},
 {"Key":"CLOSE","en":"Close"},
 {"Key":"COMBINED","en":"Combined"},
@@ -20,7 +20,7 @@
 {"Key":"NEAR","en":"Near"},
 {"Key":"NEARBY","en":"Nearby"},
 {"Key":"NEXT","en":"Next"},
-{"Key":"NO_ACHIEVEMENT_ERROR","en":"No achievements are currently available for this game."},
+{"Key":"NO_EVALUATION_ERROR","en":"No evaluations are currently available for this game."},
 {"Key":"NO_LEADERBOARD_ERROR","en":"No standings are currently available for this leaderboard for this filter."},
 {"Key":"NO_LEADERBOARD_LIST_ERROR","en":"No leaderboards are currently available for this game for this filter."},
 {"Key":"NO_RESULTS_ERROR","en":"No results found."},
@@ -38,5 +38,5 @@
 {"Key":"USERNAME","en":"Username:"},
 {"Key":"VALUE","en":"Score"},
 {"Key":"GROUPS_LOAD_ERROR","en":"Error: Unable to gather list of group members."},
-{"Key":"GROUP_MEMBERS","en":"Group Members"},
+{"Key":"GROUPMEMBERS","en":"Group Members"},
 {"Key":"ALLIANCES","en":"Alliances"}]

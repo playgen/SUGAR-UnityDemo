@@ -2,6 +2,7 @@
 using System.Linq;
 
 using PlayGen.SUGAR.Unity;
+using PlayGen.Unity.Utilities.BestFit;
 using PlayGen.Unity.Utilities.Loading;
 
 using UnityEngine;
@@ -24,43 +25,61 @@ public class ResourcePanel : MonoBehaviour {
 			Destroy(child.gameObject);
 		}
 		Loading.Start();
-		var friendHeader = Instantiate(_resourceCount, _container, true);
-		friendHeader.text = "Friends";
 		SUGARManager.UserFriend.GetFriendsList(gotFriends =>
 		{
+			var friendFound = false;
 			foreach (var friend in SUGARManager.UserFriend.Friends)
 			{
 				if (users.Contains(friend.Actor.Id))
 				{
-					var friendObj = Instantiate(_prefab, _container, true);
+					if (!friendFound)
+					{
+						var friendHeader = Instantiate(_resourceCount, _container, false);
+						friendHeader.text = "Friends";
+						((RectTransform)friendHeader.transform).sizeDelta = new Vector2(((RectTransform)friendHeader.transform).sizeDelta.x, 15);
+						friendFound = true;
+					}
+					var friendObj = Instantiate(_prefab, _container, false);
 					friendObj.SetUp(friend.Actor);
 				}
 			}
-			var groupTitle = Instantiate(_resourceCount, _container, true);
-			groupTitle.text = "Groups";
-			var group = Instantiate(_prefab, _container, true);
-			group.SetUp(SUGARManager.CurrentGroup);
-			var groupMembers = Instantiate(_resourceCount, _container, true);
-			groupMembers.text = "Group Members";
-			SUGARManager.Client.GroupMember.GetMembersAsync(SUGARManager.CurrentGroup.Id, success =>
+			if (SUGARManager.CurrentGroup != null)
 			{
-				var memberList = success.ToList();
-				foreach (var member in memberList)
+				var groupTitle = Instantiate(_resourceCount, _container, false);
+				groupTitle.text = "Groups";
+				((RectTransform)groupTitle.transform).sizeDelta = new Vector2(((RectTransform)groupTitle.transform).sizeDelta.x, 15);
+				var group = Instantiate(_prefab, _container, false);
+				group.SetUp(SUGARManager.CurrentGroup);
+				SUGARManager.Client.GroupMember.GetMembersAsync(SUGARManager.CurrentGroup.Id, success =>
 				{
-					if (users.Contains(member.Id))
+					var memberList = success.ToList();
+					var memberFound = false;
+					foreach (var member in memberList)
 					{
-						var memberObj = Instantiate(_prefab, _container, true);
-						memberObj.SetUp(member);
+						if (!memberFound)
+						{
+							var groupMembers = Instantiate(_resourceCount, _container, false);
+							groupMembers.text = "Group Members";
+							((RectTransform)groupMembers.transform).sizeDelta = new Vector2(((RectTransform)groupMembers.transform).sizeDelta.x, 15);
+							memberFound = true;
+						}
+						if (users.Contains(member.Id))
+						{
+							var memberObj = Instantiate(_prefab, _container, false);
+							memberObj.SetUp(member);
+						}
+						if (member == memberList.Last())
+						{
+							Loading.Stop();
+							_container.GetComponentsInChildren<Text>(true).Where(t => t.name == "Username").ToList().BestFit();
+							_container.GetComponentsInChildren<Button>(true).Select(t => t.gameObject).ToList().BestFit();
+						}
 					}
-					if (member == memberList.Last())
-					{
-						Loading.Stop();
-					}
-				}
-			}, error =>
-			{
+				}, error =>
+				{
 
-			});
+				});
+			}
 		});
 	}
 

@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using PlayGen.SUGAR.Unity;
+using PlayGen.Unity.Utilities.BestFit;
 using PlayGen.Unity.Utilities.Loading;
 
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GroupInfoPanel : MonoBehaviour {
 
@@ -40,12 +42,13 @@ public class GroupInfoPanel : MonoBehaviour {
 				{
 					if (users.Contains(member.Id))
 					{
-						var user = Instantiate(_userPrefab, _memberContainer, true);
+						var user = Instantiate(_userPrefab, _memberContainer, false);
 						user.SetUp(member, friends.Contains(member.Id));
 					}
 				}
+				_memberContainer.GetComponentsInChildren<Text>(true).Where(t => t.name == "Username").ToList().BestFit();
+				Loaded();
 			});
-			Loaded();
 		}, error =>
 		{
 
@@ -57,10 +60,11 @@ public class GroupInfoPanel : MonoBehaviour {
 			{
 				if (groups.Contains(ally.Id))
 				{
-					var group = Instantiate(_groupPrefab, _allianceContainer, true);
+					var group = Instantiate(_groupPrefab, _allianceContainer, false);
 					group.SetUp(ally);
 				}
 			}
+			_allianceContainer.GetComponentsInChildren<Text>(true).Where(t => t.name == "Username").ToList().BestFit();
 			Loaded();
 		}, error =>
 		{

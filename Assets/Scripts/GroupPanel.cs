@@ -2,9 +2,11 @@
 using System.Linq;
 
 using PlayGen.SUGAR.Unity;
+using PlayGen.Unity.Utilities.BestFit;
 using PlayGen.Unity.Utilities.Loading;
 
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GroupPanel : MonoBehaviour {
 
@@ -25,12 +27,13 @@ public class GroupPanel : MonoBehaviour {
 		{
 			SUGARManager.Client.Group.GetAsync(id, success =>
 			{
-				var group = Instantiate(_prefab, _container, true);
+				var group = Instantiate(_prefab, _container, false);
 				group.SetUp(success);
 				if (_container.childCount == ids.Count)
 				{
 					Loading.Stop();
 				}
+				_container.GetComponentsInChildren<Text>(true).Where(t => t.name == "Username").ToList().BestFit();
 			}, error =>
 			{
 

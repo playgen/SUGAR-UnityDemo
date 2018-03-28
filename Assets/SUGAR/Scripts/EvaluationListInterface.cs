@@ -22,7 +22,6 @@ public class EvaluationListInterface : BaseEvaluationListInterface
 	/// </summary>
 	private void OnEnable()
 	{
-		DoBestFit();
 		BestFit.ResolutionChange += DoBestFit;
 		Localization.LanguageChange += OnLanguageChange;
 	}
@@ -48,7 +47,7 @@ public class EvaluationListInterface : BaseEvaluationListInterface
 	/// </summary>
 	protected override void Draw()
 	{
-		var evaluationList = SUGARManager.Evaluation.Progress.Skip(_evaluationItems.Length).Take(_evaluationItems.Length).ToList();
+		var evaluationList = SUGARManager.Evaluation.Progress.Take(_evaluationItems.Length).ToList();
 		for (int i = 0; i < _evaluationItems.Length; i++)
 		{
 			if (i >= evaluationList.Count)
@@ -60,7 +59,7 @@ public class EvaluationListInterface : BaseEvaluationListInterface
 				_evaluationItems[i].SetText(evaluationList[i], Mathf.Approximately(evaluationList[i].Progress, 1.0f));
 			}
 		}
-		_evaluationItems.Select(t => t.gameObject).BestFit();
+		DoBestFit();
 	}
 
 	/// <summary>
@@ -76,8 +75,9 @@ public class EvaluationListInterface : BaseEvaluationListInterface
 	/// </summary>
 	private void DoBestFit()
 	{
-		_evaluationItems.Select(t => t.gameObject).BestFit();
-		GetComponentsInChildren<Button>(true).Select(t => t.gameObject).BestFit();
+		_evaluationItems.Select(t => t.transform.Find("Name").gameObject).BestFit();
+		_evaluationItems.Select(t => t.transform.Find("Description").gameObject).BestFit();
+		GetComponentsInChildren<Button>().Select(t => t.gameObject).BestFit();
 	}
 
 	/// <summary>

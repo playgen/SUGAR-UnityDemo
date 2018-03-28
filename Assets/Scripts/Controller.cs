@@ -2,6 +2,7 @@
 
 using PlayGen.SUGAR.Contracts;
 using PlayGen.SUGAR.Unity;
+using PlayGen.Unity.Utilities.BestFit;
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -37,7 +38,7 @@ public class Controller : MonoBehaviour
 		_groupPanel.gameObject.SetActive(false);
 		_resourcePanel.gameObject.SetActive(false);
 		_title.text = "SUGAR Sign-in";
-		_characterText.text = "";
+		_characterText.text = "Register to start the demo and get 100 chocolate!";
 		SUGARManager.Account.DisplayPanel(success =>
 		{
 			if (success)
@@ -46,7 +47,7 @@ public class Controller : MonoBehaviour
 				SUGARManager.Evaluation.ForceNotification("Chocolate Count: 100");
 				_groupPanel.Display(_groupIds);
 				_title.text = "Join a Group";
-				_characterText.text = "";
+				_characterText.text = "Choose which group you want to join";
 			}
 		});
 	}
@@ -74,7 +75,7 @@ public class Controller : MonoBehaviour
 	public void Next()
 	{
 		HideCurrent();
-		if (_currentStep < 6)
+		if (_currentStep < 8)
 		{
 			_currentStep++;
 			LoadStep();
@@ -98,9 +99,15 @@ public class Controller : MonoBehaviour
 				SUGARManager.Evaluation.Hide();
 				break;
 			case 5:
-				SUGARManager.Leaderboard.Hide();
+				SUGARManager.Evaluation.Hide();
 				break;
 			case 6:
+				SUGARManager.Leaderboard.Hide();
+				break;
+			case 7:
+				SUGARManager.Evaluation.Hide();
+				break;
+			case 8:
 				SUGARManager.Evaluation.Hide();
 				break;
 		}
@@ -109,39 +116,51 @@ public class Controller : MonoBehaviour
 	private void LoadStep()
 	{
 		_previous.interactable = _currentStep > 1;
-		_next.interactable = _currentStep < 6;
+		_next.interactable = _currentStep < 8;
 		switch (_currentStep)
 		{
 			case 1:
 				_groupInfoPanel.Display(_groupIds, _userIds);
-				_title.text = "Group Details";
-				_characterText.text = "";
+				_title.text = "Group Relationships";
+				_characterText.text = "Here are your fellow group members and the other groups yours is allied with";
 				break;
 			case 2:
 				SUGARManager.Leaderboard.Display("MOST_CHOCOLATE_USER", PlayGen.SUGAR.Common.LeaderboardFilterType.Top);
 				_title.text = "User Leaderboard";
-				_characterText.text = "";
+				_characterText.text = "See how your chocolate count compares to others";
 				break;
 			case 3:
 				_resourcePanel.Display(_userIds);
-				_title.text = "";
-				_characterText.text = "";
+				_title.text = "Resoruce Sharing";
+				_characterText.text = "You've got plenty of chocolate to share with your group and friends";
 				break;
 			case 4:
 				SUGARManager.Evaluation.DisplayAchievementList();
 				_title.text = "User Achievements";
-				_characterText.text = "";
+				_characterText.text = "Your actions earn you progress toward achievements. How have you been doing?";
 				break;
 			case 5:
-				SUGARManager.Leaderboard.Display("MOST_CHOCOLATE_GROUP", PlayGen.SUGAR.Common.LeaderboardFilterType.Top);
-				_title.text = "Group Leaderbaord";
-				_characterText.text = "";
+				SUGARManager.Evaluation.DisplaySkillList();
+				_title.text = "User Skills";
+				_characterText.text = "Cooperating earns you progress toward completing this skill";
 				break;
 			case 6:
+				SUGARManager.Leaderboard.Display("MOST_CHOCOLATE_GROUP", PlayGen.SUGAR.Common.LeaderboardFilterType.Top);
+				_title.text = "Group Leaderbaord";
+				_characterText.text = "Transferring chocolate to your group will help them rank highly";
+				break;
+			case 7:
 				SUGARManager.Evaluation.DisplayGroupAchievementList();
 				_title.text = "Group Achievements";
-				_characterText.text = "";
+				_characterText.text = "Groups also have achievements we keep track of";
+				break;
+			case 8:
+				SUGARManager.Evaluation.DisplayGroupSkillList();
+				_title.text = "Group Skills";
+				_characterText.text = "Achievements and skills for groups can be based on the actions of their members as well as the group itself";
 				break;
 		}
+		var buttons = new List<GameObject> { _previous.gameObject, _next.gameObject };
+		buttons.BestFit();
 	}
 }
