@@ -41,7 +41,7 @@ public class EvaluationItemInterface : MonoBehaviour
 			_evaluationDescription.text = evaluation.Description;
 		}
 		_evaluationImage.enabled = completed;
-		_evaluationProgress.text = completed ? string.Empty : ((int)(evaluation.Progress * 100)) + "%";
+		_evaluationProgress.text = completed ? string.Empty : (Mathf.Round(evaluation.Progress * 100)) + "%";
 	}
 
 	/// <summary>

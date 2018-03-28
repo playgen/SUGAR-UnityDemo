@@ -1,5 +1,5 @@
 {
-  "game": "SUGAR-Demo",
+  "game": "SUGAR-Demo-4",
   "achievements": [
     {
       "Token": "CHOCOLATE_COLLECTOR",
@@ -16,25 +16,6 @@
           "ComparisonType": "GreaterOrEqual",
           "Scope": "Actor",
           "Value": "100"
-        }
-      ],
-      "Rewards": []
-    },
-    {
-      "Token": "ONE_OF_US",
-      "GameId": null,
-      "Name": "One of Us",
-      "Description": "Join a group",
-      "ActorType": "User",
-      "EvaluationCriterias": [
-        {
-          "EvaluationDataKey": "GROUPS_JOINED",
-          "EvaluationDataCategory": "GameData",
-          "EvaluationDataType": "Long",
-          "CriteriaQueryType": "Sum",
-          "ComparisonType": "GreaterOrEqual",
-          "Scope": "Actor",
-          "Value": "1"
         }
       ],
       "Rewards": []

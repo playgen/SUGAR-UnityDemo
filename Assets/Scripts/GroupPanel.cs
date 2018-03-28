@@ -28,7 +28,6 @@ public class GroupPanel : MonoBehaviour {
 			SUGARManager.Client.Group.GetAsync(id, success =>
 			{
 				var group = Instantiate(_prefab, _container, false);
-				group.SetUp(success);
 				if (_container.childCount == ids.Count)
 				{
 					Loading.Stop();

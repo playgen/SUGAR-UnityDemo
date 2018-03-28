@@ -33,42 +33,84 @@ public class ResourcePrefab : MonoBehaviour {
 		_giveFive.onClick.AddListener(() => Loading.Start());
 		_giveTen.onClick.AddListener(() => Loading.Start());
 		_giveTwentyFive.onClick.AddListener(() => Loading.Start());
-		_giveOne.onClick.AddListener(() => SUGARManager.Resource.Transfer(_actor.Id, "Chocolate", 1, success =>
+		if (ResourcePanel.User)
 		{
-			if (success)
+			_giveOne.onClick.AddListener(() => SUGARManager.Resource.Transfer(_actor.Id, "Chocolate", 1, success =>
 			{
-				SUGARManager.GameData.Send("CHOCOLATE_SHARED", 1);
-			}
-			GetComponentInParent<Canvas>().GetComponentsInChildren<ResourcePrefab>(true).ToList().ForEach(r => r.UpdateCount());
-			Loading.Stop();
-		}));
-		_giveFive.onClick.AddListener(() => SUGARManager.Resource.Transfer(_actor.Id, "Chocolate", 5, success =>
+				if (success)
+				{
+					SUGARManager.GameData.Send("CHOCOLATE_SHARED", 1);
+				}
+				GetComponentInParent<Canvas>().GetComponentsInChildren<ResourcePrefab>(true).ToList().ForEach(r => r.UpdateCount());
+				Loading.Stop();
+			}));
+			_giveFive.onClick.AddListener(() => SUGARManager.Resource.Transfer(_actor.Id, "Chocolate", 5, success =>
+			{
+				if (success)
+				{
+					SUGARManager.GameData.Send("CHOCOLATE_SHARED", 5);
+				}
+				GetComponentInParent<Canvas>().GetComponentsInChildren<ResourcePrefab>(true).ToList().ForEach(r => r.UpdateCount());
+				Loading.Stop();
+			}));
+			_giveTen.onClick.AddListener(() => SUGARManager.Resource.Transfer(_actor.Id, "Chocolate", 10, success =>
+			{
+				if (success)
+				{
+					SUGARManager.GameData.Send("CHOCOLATE_SHARED", 10);
+				}
+				GetComponentInParent<Canvas>().GetComponentsInChildren<ResourcePrefab>(true).ToList().ForEach(r => r.UpdateCount());
+				Loading.Stop();
+			}));
+			_giveTwentyFive.onClick.AddListener(() => SUGARManager.Resource.Transfer(_actor.Id, "Chocolate", 25, success =>
+			{
+				if (success)
+				{
+					SUGARManager.GameData.Send("CHOCOLATE_SHARED", 25);
+				}
+				GetComponentInParent<Canvas>().GetComponentsInChildren<ResourcePrefab>(true).ToList().ForEach(r => r.UpdateCount());
+				Loading.Stop();
+			}));
+		}
+		else
 		{
-			if (success)
+			_giveOne.onClick.AddListener(() => SUGARManager.Client.Resource.TransferAsync(new ResourceTransferRequest{SenderActorId = SUGARManager.CurrentGroup.Id, GameId = SUGARManager.GameId, Key = "Chocolate", Quantity = 1, RecipientActorId = _actor.Id}, success =>
 			{
-				SUGARManager.GameData.Send("CHOCOLATE_SHARED", 5);
-			}
-			GetComponentInParent<Canvas>().GetComponentsInChildren<ResourcePrefab>(true).ToList().ForEach(r => r.UpdateCount());
-			Loading.Stop();
-		}));
-		_giveTen.onClick.AddListener(() => SUGARManager.Resource.Transfer(_actor.Id, "Chocolate", 10, success =>
-		{
-			if (success)
+				GetComponentInParent<Canvas>().GetComponentsInChildren<ResourcePrefab>(true).ToList().ForEach(r => r.UpdateCount());
+				Loading.Stop();
+			},
+			error =>
 			{
-				SUGARManager.GameData.Send("CHOCOLATE_SHARED", 10);
-			}
-			GetComponentInParent<Canvas>().GetComponentsInChildren<ResourcePrefab>(true).ToList().ForEach(r => r.UpdateCount());
-			Loading.Stop();
-		}));
-		_giveTwentyFive.onClick.AddListener(() => SUGARManager.Resource.Transfer(_actor.Id, "Chocolate", 25, success =>
-		{
-			if (success)
+					
+			}));
+			_giveFive.onClick.AddListener(() => SUGARManager.Client.Resource.TransferAsync(new ResourceTransferRequest { SenderActorId = SUGARManager.CurrentGroup.Id, GameId = SUGARManager.GameId, Key = "Chocolate", Quantity = 5, RecipientActorId = _actor.Id }, success =>
 			{
-				SUGARManager.GameData.Send("CHOCOLATE_SHARED", 25);
-			}
-			GetComponentInParent<Canvas>().GetComponentsInChildren<ResourcePrefab>(true).ToList().ForEach(r => r.UpdateCount());
-			Loading.Stop();
-		}));
+				GetComponentInParent<Canvas>().GetComponentsInChildren<ResourcePrefab>(true).ToList().ForEach(r => r.UpdateCount());
+				Loading.Stop();
+			},
+			error =>
+			{
+
+			}));
+			_giveTen.onClick.AddListener(() => SUGARManager.Client.Resource.TransferAsync(new ResourceTransferRequest { SenderActorId = SUGARManager.CurrentGroup.Id, GameId = SUGARManager.GameId, Key = "Chocolate", Quantity = 10, RecipientActorId = _actor.Id }, success =>
+			{
+				GetComponentInParent<Canvas>().GetComponentsInChildren<ResourcePrefab>(true).ToList().ForEach(r => r.UpdateCount());
+				Loading.Stop();
+			},
+			error =>
+			{
+
+			}));
+			_giveTwentyFive.onClick.AddListener(() => SUGARManager.Client.Resource.TransferAsync(new ResourceTransferRequest { SenderActorId = SUGARManager.CurrentGroup.Id, GameId = SUGARManager.GameId, Key = "Chocolate", Quantity = 25, RecipientActorId = _actor.Id }, success =>
+			{
+				GetComponentInParent<Canvas>().GetComponentsInChildren<ResourcePrefab>(true).ToList().ForEach(r => r.UpdateCount());
+				Loading.Stop();
+			},
+			error =>
+			{
+
+			}));
+		}
 	}
 
 	private void OnEnable()
@@ -83,11 +125,29 @@ public class ResourcePrefab : MonoBehaviour {
 
 	private void UpdateCount()
 	{
-		long choc = 0;
-		SUGARManager.Resource.UserGameResources.TryGetValue("Chocolate", out choc);
-		_giveOne.interactable = choc >= 1;
-		_giveFive.interactable = choc >= 5;
-		_giveTen.interactable = choc >= 10;
-		_giveTwentyFive.interactable = choc >= 25;
+		if (ResourcePanel.User)
+		{
+			long choc = 0;
+			SUGARManager.Resource.UserGameResources.TryGetValue("Chocolate", out choc);
+			_giveOne.interactable = choc >= 1;
+			_giveFive.interactable = choc >= 5;
+			_giveTen.interactable = choc >= 10;
+			_giveTwentyFive.interactable = choc >= 25;
+		}
+		else
+		{
+			SUGARManager.Client.Resource.GetAsync(SUGARManager.GameId, SUGARManager.CurrentGroup.Id, new[] { "Chocolate" }, success =>
+			{
+				var choc = success.First(s => s.Key == "Chocolate").Quantity;
+				_giveOne.interactable = choc >= 1;
+				_giveFive.interactable = choc >= 5;
+				_giveTen.interactable = choc >= 10;
+				_giveTwentyFive.interactable = choc >= 25;
+			}, error =>
+			{
+
+			});
+		}
+		
 	}
 }

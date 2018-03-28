@@ -34,17 +34,20 @@ public class GroupInfoPanel : MonoBehaviour {
 		Loading.Start();
 		SUGARManager.Client.GroupMember.GetMembersAsync(SUGARManager.CurrentGroup.Id, success =>
 		{
-			var memberList = success.ToList();
+			var memberList = success.Select(f => f.Id).ToList();
 			SUGARManager.UserFriend.GetFriendsList(gotFriends =>
 			{
 				var friends = SUGARManager.UserFriend.Friends.Select(f => f.Actor.Id).ToList();
-				foreach (var member in memberList)
+				foreach (var user in users)
 				{
-					if (users.Contains(member.Id))
+					SUGARManager.Client.User.GetAsync(user, userDetails =>
 					{
-						var user = Instantiate(_userPrefab, _memberContainer, false);
-						user.SetUp(member, friends.Contains(member.Id));
-					}
+						var userObj = Instantiate(_userPrefab, _memberContainer, false);
+						userObj.SetUp(userDetails, friends.Contains(user), memberList.Contains(user));
+					}, userError =>
+					{
+
+					});
 				}
 				_memberContainer.GetComponentsInChildren<Text>(true).Where(t => t.name == "Username").ToList().BestFit();
 				Loaded();
@@ -55,14 +58,18 @@ public class GroupInfoPanel : MonoBehaviour {
 		});
 		SUGARManager.Client.AllianceClient.GetAlliancesAsync(SUGARManager.CurrentGroup.Id, success =>
 		{
-			var allianceList = success.ToList();
-			foreach (var ally in allianceList)
+			var allianceList = success.Select(f => f.Id).ToList();
+			foreach (var group in groups)
 			{
-				if (groups.Contains(ally.Id))
+				SUGARManager.Client.Group.GetAsync(group, groupDetails =>
 				{
-					var group = Instantiate(_groupPrefab, _allianceContainer, false);
-					group.SetUp(ally);
-				}
+					var groupObj = Instantiate(_groupPrefab, _allianceContainer, false);
+					groupObj.SetUp(groupDetails, allianceList.Contains(group));
+				}, groupError =>
+				{
+
+				});
+				
 			}
 			_allianceContainer.GetComponentsInChildren<Text>(true).Where(t => t.name == "Username").ToList().BestFit();
 			Loaded();

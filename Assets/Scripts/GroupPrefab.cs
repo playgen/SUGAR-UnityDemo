@@ -1,5 +1,6 @@
 ﻿using PlayGen.SUGAR.Contracts;
 using PlayGen.SUGAR.Unity;
+using PlayGen.Unity.Utilities.Loading;
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,17 +10,29 @@ public class GroupPrefab : MonoBehaviour {
 	[SerializeField]
 	private Text _groupName;
 	[SerializeField]
-	private Button _join;
+	private Button _ally;
 	private ActorResponse _actor;
 
-	public void SetUp(ActorResponse actor)
+	public void SetUp(ActorResponse actor, bool ally)
 	{
 		_actor = actor;
 		_groupName.text = actor.Name;
-		_join.onClick.RemoveAllListeners();
-		_join.gameObject.SetActive(SUGARManager.CurrentGroup == null);
-		_join.onClick.AddListener(() => SUGARManager.UserGroup.AddGroup(actor.Id, false));
-		_join.onClick.AddListener(() => GetComponentInParent<Canvas>().GetComponentInChildren<Controller>(true).UpdateGroup(_actor));
-		_join.onClick.AddListener(() => SUGARManager.GameData.Send("GROUPS_JOINED", 1));
+		_ally.gameObject.SetActive(!ally);
+		_ally.onClick.RemoveAllListeners();
+		_ally.onClick.AddListener(AllianceRequest);
+		_ally.onClick.AddListener(() => _ally.gameObject.SetActive(false));
+	}
+
+	private void AllianceRequest()
+	{
+		Loading.Start();
+		SUGARManager.Client.AllianceClient.CreateAllianceRequestAsync(new RelationshipRequest { RequestorId = SUGARManager.CurrentGroup.Id, AcceptorId = _actor.Id, AutoAccept = true },
+			success =>
+			{
+				Loading.Stop();
+			}, error =>
+			{
+				Loading.Stop();
+			});
 	}
 }
