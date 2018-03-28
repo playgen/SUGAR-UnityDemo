@@ -26,6 +26,9 @@ public class EvaluationItemInterface : MonoBehaviour
 	[SerializeField]
 	private Image _evaluationImage;
 
+	[SerializeField]
+	private Text _evaluationProgress;
+
 	/// <summary>
 	/// Enable the GameObject, set the text and enable/disable the image.
 	/// </summary>
@@ -38,6 +41,7 @@ public class EvaluationItemInterface : MonoBehaviour
 			_evaluationDescription.text = evaluation.Description;
 		}
 		_evaluationImage.enabled = completed;
+		_evaluationProgress.text = completed ? string.Empty : ((int)(evaluation.Progress * 100)) + "%";
 	}
 
 	/// <summary>
