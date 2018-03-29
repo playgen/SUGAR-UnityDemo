@@ -7,7 +7,7 @@ public static class ConsoleDebugRedirect
 {
 	private class UnityTextWriter : TextWriter
 	{
-		private StringBuilder buffer = new StringBuilder();
+		private readonly StringBuilder buffer = new StringBuilder();
 
 		public override void Flush()
 		{

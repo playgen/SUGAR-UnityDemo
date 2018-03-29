@@ -6,7 +6,6 @@ using PlayGen.Unity.Utilities.BestFit;
 using UnityEngine;
 using UnityEngine.UI;
 using PlayGen.Unity.Utilities.Localization;
-using PlayGen.SUGAR.Common;
 
 public class LeaderboardInterface : BaseLeaderboardInterface
 {
@@ -83,7 +82,7 @@ public class LeaderboardInterface : BaseLeaderboardInterface
 			UpdatePageNumber(-1);
 			return;
 		}
-		if ((!SUGARManager.Leaderboard.CurrentStandings.Any() && _pageNumber < 0))
+		if (!SUGARManager.Leaderboard.CurrentStandings.Any() && _pageNumber < 0)
 		{
 			UpdatePageNumber(1);
 			return;

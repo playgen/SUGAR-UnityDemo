@@ -127,7 +127,7 @@ public class ResourcePrefab : MonoBehaviour {
 	{
 		if (ResourcePanel.User)
 		{
-			long choc = 0;
+			long choc;
 			SUGARManager.Resource.UserGameResources.TryGetValue("Chocolate", out choc);
 			_giveOne.interactable = choc >= 1;
 			_giveFive.interactable = choc >= 5;

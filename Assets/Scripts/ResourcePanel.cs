@@ -139,7 +139,7 @@ public class ResourcePanel : MonoBehaviour {
 	{
 		if (User)
 		{
-			long choc = 0;
+			long choc;
 			SUGARManager.Resource.UserGameResources.TryGetValue("Chocolate", out choc);
 			_resourceCount.text = "Chocolate: " + choc;
 		}
