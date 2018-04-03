@@ -323,71 +323,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 114796202535955300, guid: 991ef3e1f70851f458b55f5f7eae55a2,
-        type: 2}
-      propertyPath: _baseAddress
-      value: http://localhost:59400
-      objectReference: {fileID: 0}
-    - target: {fileID: 114796202535955300, guid: 991ef3e1f70851f458b55f5f7eae55a2,
-        type: 2}
-      propertyPath: _gameToken
-      value: SUGAR-Demo-4
-      objectReference: {fileID: 0}
-    - target: {fileID: 114796202535955300, guid: 991ef3e1f70851f458b55f5f7eae55a2,
-        type: 2}
-      propertyPath: _gameId
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 114796202535955300, guid: 991ef3e1f70851f458b55f5f7eae55a2,
-        type: 2}
-      propertyPath: _uiSpinner
-      value: 
-      objectReference: {fileID: 114457698309810782, guid: 225fde9262ab3a441a877acceec873ec,
-        type: 2}
-    - target: {fileID: 114597521308858716, guid: 991ef3e1f70851f458b55f5f7eae55a2,
-        type: 2}
-      propertyPath: _landscapeInterface
-      value: 
-      objectReference: {fileID: 114000014259607728, guid: bb12776c4b045cc45ab0ef3d57d1d79d,
-        type: 2}
-    - target: {fileID: 114597521308858716, guid: 991ef3e1f70851f458b55f5f7eae55a2,
-        type: 2}
-      propertyPath: _allowAutoLogin
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114000012611603444, guid: 991ef3e1f70851f458b55f5f7eae55a2,
-        type: 2}
-      propertyPath: _landscapeInterface
-      value: 
-      objectReference: {fileID: 114000011335328718, guid: da1b3e420bd0de7438fc02f71340f4d4,
-        type: 2}
-    - target: {fileID: 114000012611603444, guid: 991ef3e1f70851f458b55f5f7eae55a2,
-        type: 2}
-      propertyPath: _landscapeAchievementPopup
-      value: 
-      objectReference: {fileID: 114000013413874684, guid: 30bf371ff31e0bc429751b3218cfa999,
-        type: 2}
-    - target: {fileID: 114365565946979862, guid: 991ef3e1f70851f458b55f5f7eae55a2,
-        type: 2}
-      propertyPath: _landscapeInterface
-      value: 
-      objectReference: {fileID: 114000013210295108, guid: e29d7a7dd4a690245a2e6d8cf00df004,
-        type: 2}
-    - target: {fileID: 114365565946979862, guid: 991ef3e1f70851f458b55f5f7eae55a2,
-        type: 2}
-      propertyPath: _positionCount
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 114672035085703510, guid: 991ef3e1f70851f458b55f5f7eae55a2,
-        type: 2}
-      propertyPath: _resourceCheckRate
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114938960575845522, guid: 991ef3e1f70851f458b55f5f7eae55a2,
-        type: 2}
-      propertyPath: MaxFontSize
-      value: 25
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 991ef3e1f70851f458b55f5f7eae55a2, type: 2}
   m_IsPrefabParent: 0
@@ -1938,8 +1873,8 @@ MonoBehaviour:
   _nameGroup: {fileID: 976636526}
   _username: {fileID: 1450002118}
   _groupName: {fileID: 2137101223}
-  _groupIds: 0b0000000c0000000d0000000e000000
-  _userIds: 030000000400000005000000060000000700000008000000090000000a000000
+  _groupIds: 23000000240000002500000026000000
+  _userIds: 1b0000001c0000001d0000001e0000001f000000200000002100000022000000
   _groupInfoPanel: {fileID: 1265308973}
   _resourcePanel: {fileID: 408480118}
   _title: {fileID: 1807997041}
