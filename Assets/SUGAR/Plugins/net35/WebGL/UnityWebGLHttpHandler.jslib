@@ -1,6 +1,6 @@
 ﻿var UnityWebGlHttpHandlerPlugin = { 
 	HttpRequest: function (requestPointer) {
-		var debug = true;
+		var debug = false;
 		debug && console.debug("HttpRequest");
 		try {
 			var requestString = Pointer_stringify(requestPointer);
@@ -31,7 +31,7 @@
 			
 			debug && console.debug("HttpRequest::XMLHttpRequest::send");
 			xhr.send(request.content);
-			
+
 			debug && console.debug("HttpRequest::XMLHttpRequest::getAllResponseHeaders");
 			var headersObj = {};
 			xhr.getAllResponseHeaders()
