@@ -33,7 +33,7 @@ public class Controller : MonoBehaviour
 	[SerializeField]
 	private Text _characterText;
 
-	void Awake()
+	void Start()
 	{
 		ConsoleDebugRedirect.Redirect();
 		_previous.gameObject.SetActive(false);
