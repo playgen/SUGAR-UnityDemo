@@ -12,3 +12,6 @@ Done!
 6. Click Seed Game.
 
 Note: You will also need to have the users and groups defined in the Canvas/Controller component created with matching Ids as well as a small amount of "chocolate" allocated to each.
+
+You can find a dump of the required tables in databse/required-data.sql
+This has the required game, users, groups with resources etc but note that this does not include the admin account so it is not a replacement for the actual sugar databse, it is an addition/insertion to be added once the initial database has been setup.
