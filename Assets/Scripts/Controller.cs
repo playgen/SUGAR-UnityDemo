@@ -2,8 +2,7 @@
 
 using PlayGen.SUGAR.Contracts;
 using PlayGen.SUGAR.Unity;
-using PlayGen.Unity.Utilities.BestFit;
-
+using PlayGen.Unity.Utilities.Text;
 using UnityEngine;
 using UnityEngine.UI;
 

@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using System.Linq;
 using PlayGen.SUGAR.Common;
 using PlayGen.SUGAR.Unity;
-using PlayGen.Unity.Utilities.BestFit;
+using PlayGen.Unity.Utilities.Text;
 using PlayGen.Unity.Utilities.Localization;
 
 public class LeaderboardListInterface : BaseLeaderboardListInterface

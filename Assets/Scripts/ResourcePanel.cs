@@ -2,9 +2,8 @@
 using System.Linq;
 
 using PlayGen.SUGAR.Unity;
-using PlayGen.Unity.Utilities.BestFit;
 using PlayGen.Unity.Utilities.Loading;
-
+using PlayGen.Unity.Utilities.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
